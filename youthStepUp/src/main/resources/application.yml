@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    url: ${DB_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+openapi:
+  key: ${OPEN_API_KEY}
