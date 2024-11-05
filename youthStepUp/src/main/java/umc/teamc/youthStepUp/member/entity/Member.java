@@ -1,6 +1,5 @@
 package umc.teamc.youthStepUp.member.entity;
 
-import jakarta.persistence.Access;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -27,16 +26,18 @@ public class Member {
     String nickName;
     @Column(name = "age")
     int age;
-    @Enumerated(value= EnumType.STRING)
+    @Column(name = "kakao_id")
+    Long kakaoId;
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "education")
     Education education;
-    @Enumerated(value= EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "region")
     Region region;
-    @Enumerated(value= EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "category")
     Major major;
-    @Enumerated(value= EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "keyword")
     Keyword keyword;
 
