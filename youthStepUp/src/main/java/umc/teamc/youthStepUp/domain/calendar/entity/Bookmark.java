@@ -16,6 +16,9 @@ public class Bookmark extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "is_completed")
     private boolean isCompleted;
 
