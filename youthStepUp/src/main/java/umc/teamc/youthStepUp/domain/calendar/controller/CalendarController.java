@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import umc.teamc.youthStepUp.domain.calendar.converter.BookmarkConverter;
 import umc.teamc.youthStepUp.domain.calendar.entity.Bookmark;
 import umc.teamc.youthStepUp.domain.calendar.recode.request.UpdateBookmarkCompletionRecord;
-import umc.teamc.youthStepUp.domain.calendar.recode.response.ResponseCalendarBookmarkByDateListRecord;
-import umc.teamc.youthStepUp.domain.calendar.recode.response.ResponseCalendarBookmarkByDateRecord;
-import umc.teamc.youthStepUp.domain.calendar.recode.response.ResponseCalendarBookmarkByMonthListRecord;
 import umc.teamc.youthStepUp.domain.calendar.service.command.CalendarBookmarkCommandService;
 import umc.teamc.youthStepUp.domain.calendar.service.query.CalendarBookmarkQueryService;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
@@ -37,12 +34,12 @@ public class CalendarController {
      */
     @Operation(summary = "월 기준 정책 검색")
     @GetMapping("/month")
-    public CustomResponse<ResponseCalendarBookmarkByMonthListRecord> getPoliciesByMonth(
+    public CustomResponse<?> getPoliciesByMonth(
             @RequestParam int year,
             @RequestParam int month) {
         String toMonth = year + "-" + month;
         List<Bookmark> bookmarks = bookmarkQueryService.findByPolicyPeriodMonth(toMonth);
-        return CustomResponse.onSuccess(generalSuccessCode, BookmarkConverter.toResponseCalendarBookmarkByMonthList(bookmarks));
+        return CustomResponse.onSuccess(generalSuccessCode, BookmarkConverter.toBookmarkResponseByMonthListRecord(bookmarks));
     }
 
     /**
@@ -53,13 +50,13 @@ public class CalendarController {
      */
     @Operation(summary = "일 기준 정책 검색")
     @GetMapping("/date")
-    public CustomResponse<ResponseCalendarBookmarkByDateListRecord> getBookmarksByDate(
+    public CustomResponse<?> getBookmarksByDate(
             @RequestParam int year,
             @RequestParam int month,
             @RequestParam int date) {
         String toDate = year + "-" + month + "-" + date;
         List<Bookmark> bookmarks = bookmarkQueryService.findByPolicyPeriodDate(toDate);
-        return CustomResponse.onSuccess(generalSuccessCode, BookmarkConverter.toResponseCalendarBookmarkByDateList(bookmarks));
+        return CustomResponse.onSuccess(generalSuccessCode, BookmarkConverter.toBookmarkResponseByDateListRecord(bookmarks));
     }
 
     /**
@@ -70,9 +67,9 @@ public class CalendarController {
      */
     @Operation(summary = "정책 완료 여부 수정")
     @PatchMapping("/is-complete")
-    public CustomResponse<ResponseCalendarBookmarkByDateRecord> updatePolicyCompletionStatus(@RequestBody UpdateBookmarkCompletionRecord request) {
+    public CustomResponse<?> updatePolicyCompletionStatus(@RequestBody UpdateBookmarkCompletionRecord request) {
         Bookmark bookmark = bookmarkCommandService.updateIsCompleted(request.bookmarkId(), request.isComplete());
 
-        return CustomResponse.onSuccess(generalSuccessCode, BookmarkConverter.toResponseCalendarBookmarkByDate(bookmark));
+        return CustomResponse.onSuccess(generalSuccessCode, BookmarkConverter.toBookmarkResponseByDateRecord(bookmark));
     }
 }

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class BookmarkConverter {
 
-    public static BookmarkResponseByMonthRecord toResponseCalendarBookmarkByMonth(Bookmark bookmark) {
+    public static BookmarkResponseByMonthRecord toBookmarkResponseByMonthRecord(Bookmark bookmark) {
         return new BookmarkResponseByMonthRecord(
                 bookmark.getId(),
                 bookmark.getName(),
@@ -20,7 +20,7 @@ public class BookmarkConverter {
         );
     }
 
-    public static BookmarkResponseByDateRecord toResponseCalendarBookmarkByDate(Bookmark bookmark) {
+    public static BookmarkResponseByDateRecord toBookmarkResponseByDateRecord(Bookmark bookmark) {
         return new BookmarkResponseByDateRecord(
                 bookmark.getId(),
                 bookmark.getName(),
@@ -30,16 +30,16 @@ public class BookmarkConverter {
         );
     }
 
-    public static BookmarkResponseByMonthListRecord toResponseCalendarBookmarkByMonthList(List<Bookmark> bookmarks) {
+    public static BookmarkResponseByMonthListRecord toBookmarkResponseByMonthListRecord(List<Bookmark> bookmarks) {
         List<BookmarkResponseByMonthRecord> records = bookmarks.stream()
-                .map(BookmarkConverter::toResponseCalendarBookmarkByMonth)
+                .map(BookmarkConverter::toBookmarkResponseByMonthRecord)
                 .collect(Collectors.toList());
         return new BookmarkResponseByMonthListRecord(records);
     }
 
-    public static BookmarkResponseByDateListRecord toResponseCalendarBookmarkByDateList(List<Bookmark> bookmarks) {
+    public static BookmarkResponseByDateListRecord toBookmarkResponseByDateListRecord(List<Bookmark> bookmarks) {
         List<BookmarkResponseByDateRecord> records = bookmarks.stream()
-                .map(BookmarkConverter::toResponseCalendarBookmarkByDate)
+                .map(BookmarkConverter::toBookmarkResponseByDateRecord)
                 .collect(Collectors.toList());
         return new BookmarkResponseByDateListRecord(records);
     }
