@@ -1,18 +1,9 @@
 package umc.teamc.youthStepUp.member.entity;
 
-import jakarta.persistence.Access;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,17 +18,19 @@ public class Member {
     String nickName;
     @Column(name = "age")
     int age;
-    @Enumerated(value= EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "education")
     Education education;
-    @Enumerated(value= EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "region")
-    Region region;
-    @Enumerated(value= EnumType.STRING)
+    List<Region> region;
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "category")
-    Major major;
-    @Enumerated(value= EnumType.STRING)
+    List<Major> major;
+
+
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "keyword")
-    Keyword keyword;
+    List<Keyword> keyword;
 
 }
