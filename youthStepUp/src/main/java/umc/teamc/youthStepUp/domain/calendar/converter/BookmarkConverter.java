@@ -7,7 +7,6 @@ import umc.teamc.youthStepUp.domain.calendar.recode.response.BookmarkResponseByM
 import umc.teamc.youthStepUp.domain.calendar.recode.response.BookmarkResponseByMonthRecord;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class BookmarkConverter {
 
@@ -33,14 +32,14 @@ public class BookmarkConverter {
     public static BookmarkResponseByMonthListRecord toBookmarkResponseByMonthListRecord(List<Bookmark> bookmarks) {
         List<BookmarkResponseByMonthRecord> records = bookmarks.stream()
                 .map(BookmarkConverter::toBookmarkResponseByMonthRecord)
-                .collect(Collectors.toList());
+                .toList();
         return new BookmarkResponseByMonthListRecord(records);
     }
 
     public static BookmarkResponseByDateListRecord toBookmarkResponseByDateListRecord(List<Bookmark> bookmarks) {
         List<BookmarkResponseByDateRecord> records = bookmarks.stream()
                 .map(BookmarkConverter::toBookmarkResponseByDateRecord)
-                .collect(Collectors.toList());
+                .toList();
         return new BookmarkResponseByDateListRecord(records);
     }
 }
