@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass // 자식 클래스에게 매핑 정보(@ManyToOne, @Column...)를 제공
 @EntityListeners(AuditingEntityListener.class) // 엔티티의 생성 및 수정 시간을 자동으로 추적
 @Getter
-public class BaseEntity {
+public abstract class BaseEntity {
 
     // 해당 Column에 생성시간 자동 mapping
     @CreatedDate
