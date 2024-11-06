@@ -76,10 +76,6 @@ public class KakaoAuthService {
                 + "&logout_redirect_uri=" + "/";
     }
 
-    public void reissueToken() {
-
-    }
-
     public KakaoUserInfoDTO getUserInfo(String token) {
         return WebClient.create()
                 .get()

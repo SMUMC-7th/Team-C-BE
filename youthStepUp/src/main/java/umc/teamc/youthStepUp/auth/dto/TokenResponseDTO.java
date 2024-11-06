@@ -1,6 +1,6 @@
 package umc.teamc.youthStepUp.auth.dto;
 
-public record LoginResponseDTO(
+public record TokenResponseDTO(
         String accessToken,
         long accessExpiresIn,
         String refreshToken,

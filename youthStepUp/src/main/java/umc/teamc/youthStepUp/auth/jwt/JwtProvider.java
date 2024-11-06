@@ -15,7 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import umc.teamc.youthStepUp.auth.dto.LoginResponseDTO;
+import umc.teamc.youthStepUp.auth.dto.TokenResponseDTO;
 import umc.teamc.youthStepUp.auth.jwt.error.JwtErrorCode;
 import umc.teamc.youthStepUp.auth.jwt.error.exception.JwtException;
 import umc.teamc.youthStepUp.auth.service.CustomUserDetailService;
@@ -42,8 +42,8 @@ public class JwtProvider {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
     }
 
-    public LoginResponseDTO getToken(Long id) {
-        return new LoginResponseDTO(
+    public TokenResponseDTO getToken(Long id) {
+        return new TokenResponseDTO(
                 createAccessToken(id),
                 accessExpiration,
                 createRefreshToken(id),

@@ -10,7 +10,8 @@ import umc.teamc.youthStepUp.global.error.BaseErrorCode;
 public enum JwtErrorCode implements BaseErrorCode {
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "TOKEN401", "토큰이 만료되었습니다."),
     TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "TOKEN401", "유효한 토큰 형식이 아닙니다."),
-    HEADER_NO_TOKEN(HttpStatus.BAD_REQUEST, "TOKEN400", "헤더가 비어있습니다.");
+    HEADER_NO_TOKEN(HttpStatus.BAD_REQUEST, "TOKEN400", "헤더가 비어있습니다."),
+    TOKEN_NO_AUTH(HttpStatus.UNAUTHORIZED, "TOKEN401", "인증자격이 없습니다.");
     private final HttpStatus status;
     private final String code;
     private final String message;
