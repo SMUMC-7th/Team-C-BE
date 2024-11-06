@@ -25,7 +25,7 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
     public Member updateProfile(Long memberId, UpdateProfileRequest request) {
         Member profile = profileRepository.findById(memberId).orElseThrow(() ->
                 new ProfileException(ProfileErrorCode.NOT_FOUND));
-        //profile.updateProfile(memberId, request); // 프로필 수정 로직을 엔티티에서 수행
+        //profile.updateProfile(memberId, request); // 프로필 수정 로직을 엔티티에서 수행.
         profileRepository.save(profile);
         return profile;
     }
