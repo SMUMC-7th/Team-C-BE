@@ -3,8 +3,14 @@ package umc.teamc.youthStepUp.calendar.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import umc.teamc.youthStepUp.calendar.converter.BookmarkConverter;
 import umc.teamc.youthStepUp.calendar.entity.Bookmark;
 import umc.teamc.youthStepUp.calendar.recode.request.UpdateBookmarkCompletionRecord;
@@ -12,8 +18,6 @@ import umc.teamc.youthStepUp.calendar.service.command.CalendarBookmarkCommandSer
 import umc.teamc.youthStepUp.calendar.service.query.CalendarBookmarkQueryService;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
-
-import java.util.List;
 
 @Tag(name = "캘린더 API")
 @RestController
@@ -23,7 +27,6 @@ public class CalendarController {
 
     private final CalendarBookmarkQueryService bookmarkQueryService;
     private final CalendarBookmarkCommandService bookmarkCommandService;
-    private GeneralSuccessCode generalSuccessCode;
 
     /**
      * 해당하는 월에 시작되거나 종료하는 일자가 있는 정책들을 전부 가져옴
@@ -39,7 +42,8 @@ public class CalendarController {
             @RequestParam int month) {
         String toMonth = year + "-" + month;
         List<Bookmark> bookmarks = bookmarkQueryService.findByPolicyPeriodMonth(toMonth);
-        return CustomResponse.onSuccess(generalSuccessCode, BookmarkConverter.toBookmarkResponseByMonthListRecord(bookmarks));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK,
+                BookmarkConverter.toBookmarkResponseByMonthListRecord(bookmarks));
     }
 
     /**
@@ -56,7 +60,8 @@ public class CalendarController {
             @RequestParam int date) {
         String toDate = year + "-" + month + "-" + date;
         List<Bookmark> bookmarks = bookmarkQueryService.findByPolicyPeriodDate(toDate);
-        return CustomResponse.onSuccess(generalSuccessCode, BookmarkConverter.toBookmarkResponseByDateListRecord(bookmarks));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK,
+                BookmarkConverter.toBookmarkResponseByDateListRecord(bookmarks));
     }
 
     /**
@@ -70,6 +75,7 @@ public class CalendarController {
     public CustomResponse<?> updatePolicyCompletionStatus(@RequestBody UpdateBookmarkCompletionRecord request) {
         Bookmark bookmark = bookmarkCommandService.updateIsCompleted(request.bookmarkId(), request.isComplete());
 
-        return CustomResponse.onSuccess(generalSuccessCode, BookmarkConverter.toBookmarkResponseByDateRecord(bookmark));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK,
+                BookmarkConverter.toBookmarkResponseByDateRecord(bookmark));
     }
 }

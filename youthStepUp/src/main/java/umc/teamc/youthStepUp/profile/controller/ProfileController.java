@@ -4,7 +4,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import umc.teamc.youthStepUp.calendar.entity.Bookmark;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
@@ -23,7 +30,6 @@ public class ProfileController {
 
     private final ProfileQueryService profileQueryService;
     private final ProfileCommandService profileCommandService;
-    private GeneralSuccessCode generalSuccessCode;
 
     /**
      * 프로필 조회
@@ -35,7 +41,7 @@ public class ProfileController {
     public CustomResponse<?> getProfile() {
         Long memberId = 0L;//헤더에서 가져오는 구문, @RequestHeader("Authorization") String token매개변수에 이런식으로 가져옴
         Member member = profileQueryService.getProfile(memberId);
-        return CustomResponse.onSuccess(generalSuccessCode, ProfileConverter.toProfileResponse(member));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, ProfileConverter.toProfileResponse(member));
     }
 
     /**
@@ -48,7 +54,7 @@ public class ProfileController {
     public CustomResponse<?> getProfileDetail() {
         Long memberId = 0L;//헤더에서 가져오는 구문
         Member member = profileQueryService.getProfile(memberId);
-        return CustomResponse.onSuccess(generalSuccessCode, ProfileConverter.toProfileDetailResponse(member));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, ProfileConverter.toProfileDetailResponse(member));
     }
 
     /**
@@ -62,7 +68,7 @@ public class ProfileController {
     public CustomResponse<?> updateProfile(@RequestBody UpdateProfileRequest request) {
         Long memberId = 0L;
         Member member = profileCommandService.updateProfile(memberId, request);
-        return CustomResponse.onSuccess(generalSuccessCode, ProfileConverter.toProfileDetailResponse(member));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, ProfileConverter.toProfileDetailResponse(member));
     }
 
     /**
@@ -75,7 +81,7 @@ public class ProfileController {
     public CustomResponse<?> deleteProfile(@RequestBody String name) {
         Long memberId = 0L;
         profileCommandService.deleteProfile(memberId, name);
-        return CustomResponse.onSuccess(generalSuccessCode);
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK);
     }
 
     /**
@@ -89,7 +95,8 @@ public class ProfileController {
                                           @RequestParam(value = "offset", defaultValue = "10") int offset) {
         Long memberId = 0L;
         Slice<Bookmark> bookmarkList = profileQueryService.getBookmarks(cursor, offset, memberId);
-        return CustomResponse.onSuccess(generalSuccessCode, BookmarkConverter.toBookmarkSliceResponseRecord(bookmarkList));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK,
+                BookmarkConverter.toBookmarkSliceResponseRecord(bookmarkList));
     }
 
     /**
@@ -102,6 +109,6 @@ public class ProfileController {
     @DeleteMapping("/bookmarks/{bookmarkId}")
     public CustomResponse<?> deleteBookmark(@PathVariable Long bookmarkId) {
         profileCommandService.deleteBookmark(bookmarkId);
-        return CustomResponse.onSuccess(generalSuccessCode);
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK);
     }
 }
