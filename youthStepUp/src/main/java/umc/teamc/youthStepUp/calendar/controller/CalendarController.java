@@ -23,7 +23,6 @@ public class CalendarController {
 
     private final CalendarBookmarkQueryService bookmarkQueryService;
     private final CalendarBookmarkCommandService bookmarkCommandService;
-    private GeneralSuccessCode generalSuccessCode;
 
     /**
      * 해당하는 월에 시작되거나 종료하는 일자가 있는 정책들을 전부 가져옴
@@ -39,7 +38,7 @@ public class CalendarController {
             @RequestParam int month) {
         String toMonth = year + "-" + month;
         List<Bookmark> bookmarks = bookmarkQueryService.findByPolicyPeriodMonth(toMonth);
-        return CustomResponse.onSuccess(generalSuccessCode, BookmarkConverter.toBookmarkResponseByMonthListRecord(bookmarks));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, BookmarkConverter.toBookmarkResponseByMonthListRecord(bookmarks));
     }
 
     /**
@@ -56,7 +55,7 @@ public class CalendarController {
             @RequestParam int date) {
         String toDate = year + "-" + month + "-" + date;
         List<Bookmark> bookmarks = bookmarkQueryService.findByPolicyPeriodDate(toDate);
-        return CustomResponse.onSuccess(generalSuccessCode, BookmarkConverter.toBookmarkResponseByDateListRecord(bookmarks));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, BookmarkConverter.toBookmarkResponseByDateListRecord(bookmarks));
     }
 
     /**
@@ -70,6 +69,6 @@ public class CalendarController {
     public CustomResponse<?> updatePolicyCompletionStatus(@RequestBody UpdateBookmarkCompletionRecord request) {
         Bookmark bookmark = bookmarkCommandService.updateIsCompleted(request.bookmarkId(), request.isComplete());
 
-        return CustomResponse.onSuccess(generalSuccessCode, BookmarkConverter.toBookmarkResponseByDateRecord(bookmark));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, BookmarkConverter.toBookmarkResponseByDateRecord(bookmark));
     }
 }
