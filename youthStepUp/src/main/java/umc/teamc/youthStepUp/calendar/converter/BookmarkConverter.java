@@ -11,22 +11,23 @@ import java.util.List;
 public class BookmarkConverter {
 
     public static BookmarkResponseByMonthRecord toBookmarkResponseByMonthRecord(Bookmark bookmark) {
-        return new BookmarkResponseByMonthRecord(
-                bookmark.getId(),
-                bookmark.getName(),
-                bookmark.getPolicyPeriod(),
-                bookmark.getPolicy().getId()
-        );
+        return BookmarkResponseByMonthRecord.builder()
+                .id(bookmark.getId())
+                .name(bookmark.getName())
+                .policyPeriod(bookmark.getPolicyPeriod())
+                .policyId(bookmark.getPolicy().getId())
+                .build();
+
     }
 
     public static BookmarkResponseByDateRecord toBookmarkResponseByDateRecord(Bookmark bookmark) {
-        return new BookmarkResponseByDateRecord(
-                bookmark.getId(),
-                bookmark.getName(),
-                bookmark.getPolicyPeriod(),
-                bookmark.isCompleted(),
-                bookmark.getPolicy().getId()
-        );
+        return BookmarkResponseByDateRecord.builder()
+                .id(bookmark.getId())
+                .name(bookmark.getName())
+                .policyPeriod(bookmark.getPolicyPeriod())
+                .isCompleted(bookmark.isCompleted())
+                .policyId(bookmark.getPolicy().getId())
+                .build();
     }
 
     public static BookmarkResponseByMonthListRecord toBookmarkResponseByMonthListRecord(List<Bookmark> bookmarks) {

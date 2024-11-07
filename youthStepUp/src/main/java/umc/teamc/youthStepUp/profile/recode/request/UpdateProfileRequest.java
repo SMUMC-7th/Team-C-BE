@@ -1,5 +1,6 @@
 package umc.teamc.youthStepUp.profile.recode.request;
 
+
 import umc.teamc.youthStepUp.member.entity.Education;
 import umc.teamc.youthStepUp.member.entity.Keyword;
 import umc.teamc.youthStepUp.member.entity.Major;
@@ -11,9 +12,9 @@ public record UpdateProfileRequest(
         String nickName,
         Integer age,
         Education education,
-        Major major,
-        Region region,
-        List<Keyword> keywords,
+        List<Major> major,
+        List<Region> region,
+        List<Keyword> keyword,
         String profileImg
 ) {
 }
