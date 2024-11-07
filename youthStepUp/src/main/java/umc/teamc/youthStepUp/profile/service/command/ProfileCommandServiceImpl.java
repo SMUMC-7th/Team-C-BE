@@ -13,7 +13,7 @@ import umc.teamc.youthStepUp.profile.exception.ProfileErrorCode;
 import umc.teamc.youthStepUp.profile.exception.ProfileException;
 import umc.teamc.youthStepUp.profile.repository.ProfileRepository;
 
-@Transactional
+
 @Service
 @RequiredArgsConstructor
 public class ProfileCommandServiceImpl implements ProfileCommandService {
@@ -21,6 +21,7 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
     private final ProfileRepository profileRepository;
     private final BookmarkRepository bookmarkRepository;
 
+    @Transactional
     @Override
     public Member updateProfile(Long memberId, UpdateProfileRequestDTO request) {
         Member profile = profileRepository.findById(memberId).orElseThrow(() ->
@@ -30,6 +31,7 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
         return profile;
     }
 
+    @Transactional
     @Override
     public void deleteProfile(Long memberId, String name) {
         Member profile = profileRepository.findById(memberId).orElseThrow(() ->
@@ -42,6 +44,7 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
         }
     }
 
+    @Transactional
     //피그마에는 북마크 제거 버튼 없긴 함, 안 만들 계획 이라면 없애도 될 듯
     @Override
     public void deleteBookmark(Long bookmarkId) {
