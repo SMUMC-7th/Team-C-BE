@@ -6,8 +6,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import umc.teamc.youthStepUp.calendar.converter.BookmarkConverter;
+import umc.teamc.youthStepUp.calendar.dto.request.UpdateBookmarkCompletionDTO;
 import umc.teamc.youthStepUp.calendar.entity.Bookmark;
-import umc.teamc.youthStepUp.calendar.recode.request.UpdateBookmarkCompletionRecord;
 import umc.teamc.youthStepUp.calendar.service.command.CalendarBookmarkCommandService;
 import umc.teamc.youthStepUp.calendar.service.query.CalendarBookmarkQueryService;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
@@ -66,7 +66,7 @@ public class CalendarController {
      */
     @Operation(summary = "정책 완료 여부 수정")
     @PatchMapping("/is-complete")
-    public CustomResponse<?> updatePolicyCompletionStatus(@RequestBody UpdateBookmarkCompletionRecord request) {
+    public CustomResponse<?> updatePolicyCompletionStatus(@RequestBody UpdateBookmarkCompletionDTO request) {
         Bookmark bookmark = bookmarkCommandService.updateIsCompleted(request.bookmarkId(), request.isComplete());
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, BookmarkConverter.toBookmarkResponseByDateRecord(bookmark));

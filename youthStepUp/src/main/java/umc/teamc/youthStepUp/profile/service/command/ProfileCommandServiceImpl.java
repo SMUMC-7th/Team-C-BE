@@ -5,11 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import umc.teamc.youthStepUp.calendar.entity.Bookmark;
 import umc.teamc.youthStepUp.member.entity.Member;
+import umc.teamc.youthStepUp.profile.dto.request.UpdateProfileRequestDTO;
 import umc.teamc.youthStepUp.profile.exception.BookmarkErrorCode;
 import umc.teamc.youthStepUp.profile.exception.BookmarkException;
 import umc.teamc.youthStepUp.profile.exception.ProfileErrorCode;
 import umc.teamc.youthStepUp.profile.exception.ProfileException;
-import umc.teamc.youthStepUp.profile.recode.request.UpdateProfileRequest;
 import umc.teamc.youthStepUp.profile.repository.BookmarkRepository;
 import umc.teamc.youthStepUp.profile.repository.ProfileRepository;
 
@@ -22,7 +22,7 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
     private final BookmarkRepository bookmarkRepository;
 
     @Override
-    public Member updateProfile(Long memberId, UpdateProfileRequest request) {
+    public Member updateProfile(Long memberId, UpdateProfileRequestDTO request) {
         Member profile = profileRepository.findById(memberId).orElseThrow(() ->
                 new ProfileException(ProfileErrorCode.NOT_FOUND));
         //profile.updateProfile(memberId, request); // 프로필 수정 로직을 엔티티에서 수행.

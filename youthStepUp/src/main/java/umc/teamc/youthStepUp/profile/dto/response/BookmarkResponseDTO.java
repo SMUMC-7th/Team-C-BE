@@ -1,9 +1,9 @@
-package umc.teamc.youthStepUp.profile.recode.response;
+package umc.teamc.youthStepUp.profile.dto.response;
 
 import lombok.Builder;
 
 @Builder
-public record BookmarkResponseRecord(
+public record BookmarkResponseDTO(
         Long bookmarkId,
         Long policyId,
         String name

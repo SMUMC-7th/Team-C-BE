@@ -1,4 +1,4 @@
-package umc.teamc.youthStepUp.profile.recode.request;
+package umc.teamc.youthStepUp.profile.dto.request;
 
 
 import umc.teamc.youthStepUp.member.entity.Education;
@@ -8,7 +8,7 @@ import umc.teamc.youthStepUp.member.entity.Region;
 
 import java.util.List;
 
-public record UpdateProfileRequest(
+public record UpdateProfileRequestDTO(
         String nickName,
         Integer age,
         Education education,

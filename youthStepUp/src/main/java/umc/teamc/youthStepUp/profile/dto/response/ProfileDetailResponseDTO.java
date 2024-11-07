@@ -1,4 +1,4 @@
-package umc.teamc.youthStepUp.profile.recode.response;
+package umc.teamc.youthStepUp.profile.dto.response;
 
 import lombok.Builder;
 import umc.teamc.youthStepUp.member.entity.Education;
@@ -9,7 +9,7 @@ import umc.teamc.youthStepUp.member.entity.Region;
 import java.util.List;
 
 @Builder
-public record ProfileDetailResponseRecord(
+public record ProfileDetailResponseDTO(
         String nickName,
         Integer age,
         Education education,

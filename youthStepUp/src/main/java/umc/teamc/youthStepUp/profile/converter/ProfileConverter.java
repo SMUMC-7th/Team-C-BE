@@ -1,22 +1,22 @@
 package umc.teamc.youthStepUp.profile.converter;
 
 import umc.teamc.youthStepUp.member.entity.Member;
-import umc.teamc.youthStepUp.profile.recode.request.UpdateProfileRequest;
-import umc.teamc.youthStepUp.profile.recode.response.ProfileDetailResponseRecord;
-import umc.teamc.youthStepUp.profile.recode.response.ProfileResponseRecord;
+import umc.teamc.youthStepUp.profile.dto.request.UpdateProfileRequestDTO;
+import umc.teamc.youthStepUp.profile.dto.response.ProfileDetailResponseDTO;
+import umc.teamc.youthStepUp.profile.dto.response.ProfileResponseDTO;
 
 public class ProfileConverter {//이미지 추가해야함
 
-    public static ProfileResponseRecord toProfileResponse(Member member) {
-        return ProfileResponseRecord.builder()
+    public static ProfileResponseDTO toProfileResponse(Member member) {
+        return ProfileResponseDTO.builder()
                 .nickName(member.getNickName())
                 .age(member.getAge())
                 .education(member.getEducation())
                 .build();
     }
 
-    public static ProfileDetailResponseRecord toProfileDetailResponse(Member member) {
-        return ProfileDetailResponseRecord.builder()
+    public static ProfileDetailResponseDTO toProfileDetailResponse(Member member) {
+        return ProfileDetailResponseDTO.builder()
                 .nickName(member.getNickName())
                 .age(member.getAge())
                 .education(member.getEducation())
@@ -26,7 +26,7 @@ public class ProfileConverter {//이미지 추가해야함
                 .build();
     }
 
-    public static Member toMember(Long memberId, UpdateProfileRequest request) {
+    public static Member toMember(Long memberId, UpdateProfileRequestDTO request) {
         return Member.builder()
                 .id(memberId)
                 .nickName(request.nickName())

@@ -11,7 +11,7 @@ import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
 import umc.teamc.youthStepUp.member.entity.Member;
 import umc.teamc.youthStepUp.profile.converter.BookmarkConverter;
 import umc.teamc.youthStepUp.profile.converter.ProfileConverter;
-import umc.teamc.youthStepUp.profile.recode.request.UpdateProfileRequest;
+import umc.teamc.youthStepUp.profile.dto.request.UpdateProfileRequestDTO;
 import umc.teamc.youthStepUp.profile.service.command.ProfileCommandService;
 import umc.teamc.youthStepUp.profile.service.query.ProfileQueryService;
 
@@ -59,7 +59,7 @@ public class ProfileController {
      */
     @Operation(summary = "프로필 수정")
     @PatchMapping
-    public CustomResponse<?> updateProfile(@RequestBody UpdateProfileRequest request) {
+    public CustomResponse<?> updateProfile(@RequestBody UpdateProfileRequestDTO request) {
         Long memberId = 0L;
         Member member = profileCommandService.updateProfile(memberId, request);
         return CustomResponse.onSuccess(generalSuccessCode, ProfileConverter.toProfileDetailResponse(member));
