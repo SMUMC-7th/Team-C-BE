@@ -10,16 +10,17 @@ import java.util.List;
 
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CalendarBookmarkQueryServiceImpl implements CalendarBookmarkQueryService {
     private BookmarkRepository bookmarkRepository;
 
+    @Transactional(readOnly = true)
     @Override
     public List<Bookmark> findByPolicyPeriodDate(String date) {
         return bookmarkRepository.findByDateWithinPolicyPeriod(date);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Bookmark> findByPolicyPeriodMonth(String month) {
         return bookmarkRepository.findByDateWithinPolicyPeriod(month);

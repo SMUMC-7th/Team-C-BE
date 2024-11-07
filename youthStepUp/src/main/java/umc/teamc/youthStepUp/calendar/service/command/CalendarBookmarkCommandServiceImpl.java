@@ -8,12 +8,13 @@ import umc.teamc.youthStepUp.calendar.exception.BookmarkErrorCode;
 import umc.teamc.youthStepUp.calendar.exception.BookmarkException;
 import umc.teamc.youthStepUp.calendar.repository.BookmarkRepository;
 
-@Transactional
+
 @Service
 @RequiredArgsConstructor
 public class CalendarBookmarkCommandServiceImpl implements CalendarBookmarkCommandService {
     private BookmarkRepository bookmarkRepository;
 
+    @Transactional
     @Override
     public Bookmark updateIsCompleted(Long bookmarkId, boolean isCompleted) {
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(() ->
