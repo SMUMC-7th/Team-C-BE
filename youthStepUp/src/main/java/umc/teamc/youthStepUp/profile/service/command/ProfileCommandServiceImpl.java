@@ -4,13 +4,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import umc.teamc.youthStepUp.calendar.entity.Bookmark;
+import umc.teamc.youthStepUp.calendar.repository.BookmarkRepository;
 import umc.teamc.youthStepUp.member.entity.Member;
 import umc.teamc.youthStepUp.profile.dto.request.UpdateProfileRequestDTO;
 import umc.teamc.youthStepUp.profile.exception.BookmarkErrorCode;
 import umc.teamc.youthStepUp.profile.exception.BookmarkException;
 import umc.teamc.youthStepUp.profile.exception.ProfileErrorCode;
 import umc.teamc.youthStepUp.profile.exception.ProfileException;
-import umc.teamc.youthStepUp.profile.repository.BookmarkRepository;
 import umc.teamc.youthStepUp.profile.repository.ProfileRepository;
 
 @Transactional
