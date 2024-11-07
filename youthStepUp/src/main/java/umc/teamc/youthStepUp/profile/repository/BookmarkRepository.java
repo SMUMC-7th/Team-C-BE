@@ -3,8 +3,10 @@ package umc.teamc.youthStepUp.profile.repository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import umc.teamc.youthStepUp.calendar.entity.Bookmark;
 
+@Repository
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
     // 커서가 없을 때 처음부터 조회 (최신 순)
