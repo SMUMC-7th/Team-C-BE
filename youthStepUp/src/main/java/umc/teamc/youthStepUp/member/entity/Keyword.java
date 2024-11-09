@@ -1,5 +1,7 @@
 package umc.teamc.youthStepUp.member.entity;
 
+import java.util.List;
+
 public enum Keyword {
     JOBS("023010", "일자리 분야"),
     HOUSING("023020", "주거 분야"),
@@ -21,5 +23,20 @@ public enum Keyword {
 
     public String getDescription() {
         return description;
+    }
+
+    public static List<Keyword> toKeyword(List<String> keywords) {
+        return keywords.stream()
+                .map(Keyword::isEqualTo)
+                .toList();
+    }
+
+    private static Keyword isEqualTo(String keywords) {
+        for (Keyword keyWord : Keyword.values()) {
+            if (keyWord.description.equals(keywords)) {
+                return keyWord;
+            }
+        }
+        return null;
     }
 }

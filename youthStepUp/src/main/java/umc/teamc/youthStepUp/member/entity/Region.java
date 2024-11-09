@@ -1,5 +1,7 @@
 package umc.teamc.youthStepUp.member.entity;
 
+import java.util.List;
+
 public enum Region {
     SEOUL("003002001", "서울"),
     BUSAN("003002002", "부산"),
@@ -33,6 +35,21 @@ public enum Region {
 
     public String getDescription() {
         return description;
+    }
+
+    public static List<Region> toRegion(List<String> regions) {
+        return regions.stream()
+                .map(Region::isEqualTo)
+                .toList();
+    }
+
+    private static Region isEqualTo(String regions) {
+        for (Region region : Region.values()) {
+            if (region.description.equals(regions)) {
+                return region;
+            }
+        }
+        return null;
     }
 
 }

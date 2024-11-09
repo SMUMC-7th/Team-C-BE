@@ -1,4 +1,4 @@
-package umc.teamc.youthStepUp.member.exception;
+package umc.teamc.youthStepUp.member.error.exception;
 
 import lombok.Getter;
 import umc.teamc.youthStepUp.global.error.BaseErrorCode;
