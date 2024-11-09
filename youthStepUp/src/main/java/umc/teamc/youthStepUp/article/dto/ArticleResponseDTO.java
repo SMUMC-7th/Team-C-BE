@@ -1,7 +1,7 @@
 package umc.teamc.youthStepUp.article.dto;
 
 import lombok.*;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 import umc.teamc.youthStepUp.article.entity.Article;
 
 import java.time.LocalDateTime;
@@ -33,7 +33,7 @@ public class ArticleResponseDTO {
     public static class ArticlePreviewDTO {
 
         private Long articleId;
-        private Long articleMemberId;
+        //        private Long articleMemberId;
         private String title;
         private String content;
         private LocalDateTime createdAt;
@@ -42,7 +42,7 @@ public class ArticleResponseDTO {
         public static ArticlePreviewDTO from(Article article) {
             return ArticlePreviewDTO.builder()
                     .articleId(article.getId())
-                    .articleMemberId(article.getMember().getId())
+//                    .articleMemberId(article.getMember().getId())
                     .title(article.getTitle())
                     .content(article.getContent())
                     .createdAt(article.getCreatedAt())
@@ -55,25 +55,27 @@ public class ArticleResponseDTO {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @Builder
-    public static class ArticlePagePreviewListDTO {
+    public static class ArticlePagePreviewListDTO { // 커뮤니티 글 여러 개 보이는
 
         private List<ArticlePreviewDTO> articleList;
-        private int pageSize;
-        private int pageNumber;
-        private long totalPage;
+        private Long nextCursorId;
+//        private Long memberId;
 
-        public static ArticlePagePreviewListDTO from(Page<Article> articles) {
+        public static ArticlePagePreviewListDTO from(Slice<Article> articles) {
 
             List<ArticlePreviewDTO> articleList = articles.getContent()
                     .stream()
                     .map(ArticlePreviewDTO::from)
                     .toList();
 
+            Long nextCursorId = articles.hasNext()
+                    ? articles.getContent()
+                    .get(articles.getNumberOfElements() - 1)
+                    .getId() : null;
+
             return ArticlePagePreviewListDTO.builder()
                     .articleList(articleList)
-                    .pageSize(articles.getSize())
-                    .pageNumber(articles.getNumber() + 1)
-                    .totalPage(articles.getTotalPages())
+                    .nextCursorId(nextCursorId)
                     .build();
         }
     }

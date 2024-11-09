@@ -3,7 +3,8 @@ package umc.teamc.youthStepUp.article.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 import umc.teamc.youthStepUp.article.dto.ArticleRequestDTO;
 import umc.teamc.youthStepUp.article.dto.ArticleResponseDTO;
@@ -17,13 +18,14 @@ import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
 @RequiredArgsConstructor
 @Tag(name = "커뮤니티 API 입니다.")
 @RequestMapping("/articles")
+@Slf4j
 public class ArticleController {
 
     private final ArticleQueryService articleQueryService;
     private final ArticleCommandService articleCommandService;
 
     @PostMapping
-    @Operation(method = "POST",summary = "커뮤니티 글 생성 API")
+    @Operation(method = "POST", summary = "커뮤니티 글 생성 API")
     public CustomResponse<?> createArticle(@RequestBody ArticleRequestDTO.CreateArticleDTO dto) {
 
         Article article = articleCommandService.createArticle(dto);
@@ -33,12 +35,12 @@ public class ArticleController {
 
     @GetMapping
     @Operation(method = "GET", summary = "커뮤니티 글 전체 조회 API")
-    public CustomResponse<?> getArticlesUsingOffset(
-            @RequestParam(defaultValue = "0") int pageNumber,
+    public CustomResponse<?> getArticlesByCursor(
+            @RequestParam(required = false) Long cursorId,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
 
-        Page<Article> articles = articleQueryService.getArticles(pageNumber, pageSize);
+        Slice<Article> articles = articleQueryService.getArticles(cursorId, pageSize);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK,
                 ArticleResponseDTO.ArticlePagePreviewListDTO.from(articles));
@@ -46,7 +48,7 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     @Operation(method = "GET", summary = "커뮤니티 글 상세 조회 API")
-    public CustomResponse<?> getArticleById(@PathVariable Long articleId) {
+    public CustomResponse<?> getArticleById(@PathVariable("articleId") Long articleId) {
 
         Article article = articleQueryService.getArticle(articleId);
 
@@ -68,7 +70,7 @@ public class ArticleController {
 
     @DeleteMapping("/{articleId}")
     @Operation(method = "DELETE", summary = "커뮤니티 글 삭제 API")
-    public CustomResponse<?> deleteArticleById(@PathVariable Long articleId) {
+    public CustomResponse<?> deleteArticleById(@PathVariable("articleId") Long articleId) {
 
         Article article = articleCommandService.deleteArticle(articleId);
 
