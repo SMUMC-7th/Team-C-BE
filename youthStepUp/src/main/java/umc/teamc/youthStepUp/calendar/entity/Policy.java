@@ -24,7 +24,7 @@ public class Policy extends BaseEntity {
     @Column(name = "policy_period")
     private String policyPeriod;
 
-    @OneToMany(mappedBy = "bookmark", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "policy", cascade = CascadeType.ALL)
     private List<Bookmark> bookmark;
 
 
