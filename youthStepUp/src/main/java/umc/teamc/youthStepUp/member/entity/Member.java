@@ -1,17 +1,23 @@
 package umc.teamc.youthStepUp.member.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import umc.teamc.youthStepUp.global.entity.BaseEntity;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -24,14 +30,17 @@ public class Member {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "education")
     Education education;
+    @ElementCollection
     @Enumerated(value = EnumType.STRING)
     @Column(name = "region")
     @Builder.Default
     List<Region> region = new ArrayList<>();
+    @ElementCollection
     @Enumerated(value = EnumType.STRING)
     @Column(name = "major")
     @Builder.Default
     List<Major> major = new ArrayList<>();
+    @ElementCollection
     @Enumerated(value = EnumType.STRING)
     @Column(name = "keyword")
     @Builder.Default
