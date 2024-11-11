@@ -36,9 +36,11 @@ public class CalendarController {
     public CustomResponse<?> getPoliciesByMonth(
             @RequestParam int year,
             @RequestParam int month) {
-        String toMonth = year + "-" + month;
+
+        String toMonth = String.format("%d-%02d", year, month);
         List<Bookmark> bookmarks = bookmarkQueryService.findByPolicyPeriodMonth(toMonth);
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK, BookmarkConverter.toBookmarkResponseByMonthListRecord(bookmarks));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK,
+                BookmarkConverter.toBookmarkResponseByMonthListRecord(bookmarks));
     }
 
     /**
@@ -53,9 +55,10 @@ public class CalendarController {
             @RequestParam int year,
             @RequestParam int month,
             @RequestParam int date) {
-        String toDate = year + "-" + month + "-" + date;
+        String toDate = String.format("%d-%02d-%02d", year, month, date);
         List<Bookmark> bookmarks = bookmarkQueryService.findByPolicyPeriodDate(toDate);
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK, BookmarkConverter.toBookmarkResponseByDateListRecord(bookmarks));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK,
+                BookmarkConverter.toBookmarkResponseByDateListRecord(bookmarks));
     }
 
     /**
@@ -69,6 +72,7 @@ public class CalendarController {
     public CustomResponse<?> updatePolicyCompletionStatus(@RequestBody UpdateBookmarkCompletionDTO request) {
         Bookmark bookmark = bookmarkCommandService.updateIsCompleted(request.bookmarkId(), request.isComplete());
 
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK, BookmarkConverter.toBookmarkResponseByDateRecord(bookmark));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK,
+                BookmarkConverter.toBookmarkResponseByDateRecord(bookmark));
     }
 }
