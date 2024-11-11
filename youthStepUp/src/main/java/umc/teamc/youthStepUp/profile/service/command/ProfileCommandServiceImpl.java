@@ -26,8 +26,7 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
     public Member updateProfile(Long memberId, UpdateProfileRequestDTO request) {
         Member profile = profileRepository.findById(memberId).orElseThrow(() ->
                 new ProfileException(ProfileErrorCode.NOT_FOUND));
-        //profile.updateProfile(memberId, request); // 프로필 수정 로직을 엔티티에서 수행.
-        profileRepository.save(profile);
+        editProfile(request, profile);
         return profile;
     }
 
@@ -59,7 +58,7 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
                 new ProfileException(ProfileErrorCode.NOT_FOUND));
 
         if (profile.getNickName().equals(name)) {
-            //profile.setDeletedTime(LocalDateTime.now());
+            profile.deleteEntity();
         } else {
             throw new ProfileException(ProfileErrorCode.BAD_REQUEST);
         }
@@ -72,6 +71,6 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
         Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(() ->
                 new BookmarkException(BookmarkErrorCode.NOT_FOUND));
 
-        bookmarkRepository.delete(bookmark);
+        bookmark.deleteEntity();
     }
 }
