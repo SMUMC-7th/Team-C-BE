@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import umc.teamc.youthStepUp.calendar.entity.Bookmark;
 import umc.teamc.youthStepUp.calendar.repository.BookmarkRepository;
-import umc.teamc.youthStepUp.member.entity.Member;
+import umc.teamc.youthStepUp.member.entity.*;
 import umc.teamc.youthStepUp.profile.dto.request.UpdateProfileRequestDTO;
 import umc.teamc.youthStepUp.profile.exception.BookmarkErrorCode;
 import umc.teamc.youthStepUp.profile.exception.BookmarkException;
@@ -29,6 +29,27 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
         //profile.updateProfile(memberId, request); // 프로필 수정 로직을 엔티티에서 수행.
         profileRepository.save(profile);
         return profile;
+    }
+
+    private static void editProfile(UpdateProfileRequestDTO request, Member profile) {
+        if (request.age() != null) {
+            profile.editAge(request.age());
+        }
+        if (request.nickName() != null) {
+            profile.editNickName(request.nickName());
+        }
+        if (request.region() != null) {
+            profile.editRegion(Region.toRegion(request.region()));
+        }
+        if (request.major() != null) {
+            profile.editMajor(Major.toMajor(request.major()));
+        }
+        if (request.keyword() != null) {
+            profile.editKeyword(Keyword.toKeyword((request.keyword())));
+        }
+        if (request.major() != null) {
+            profile.editEducation(Education.toEducation(request.education()));
+        }
     }
 
     @Transactional
