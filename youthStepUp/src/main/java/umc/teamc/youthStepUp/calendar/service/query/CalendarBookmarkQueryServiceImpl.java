@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CalendarBookmarkQueryServiceImpl implements CalendarBookmarkQueryService {
-    private BookmarkRepository bookmarkRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -23,6 +23,6 @@ public class CalendarBookmarkQueryServiceImpl implements CalendarBookmarkQuerySe
     @Transactional(readOnly = true)
     @Override
     public List<Bookmark> findByPolicyPeriodMonth(String month) {
-        return bookmarkRepository.findByDateWithinPolicyPeriod(month);
+        return bookmarkRepository.findByMonthWithinPolicyPeriod(month);
     }
 }
