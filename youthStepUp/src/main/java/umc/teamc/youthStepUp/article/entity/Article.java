@@ -2,13 +2,16 @@ package umc.teamc.youthStepUp.article.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import umc.teamc.youthStepUp.global.common.BaseEntity;
+import org.hibernate.annotations.SQLDelete;
+import umc.teamc.youthStepUp.global.entity.BaseEntity;
+import umc.teamc.youthStepUp.member.entity.Member;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
+@SQLDelete(sql = "UPDATE article SET deleted_at = CURRENT_TIME where id = ?")
 public class Article extends BaseEntity {
 
     @Id
@@ -23,9 +26,9 @@ public class Article extends BaseEntity {
     private String content;
 
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     public void updateArticle(String title, String content) {
         this.title = title;

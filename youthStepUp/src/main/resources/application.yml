@@ -20,6 +20,16 @@ spring:
     properties:
       hibernate:
         format_sql: true
+openapi:
+  key: ${OPEN_API_KEY}
+kakao:
+  client_id: ${REST_API_KEY}
+  redirect_uri: http://localhost:8080/auth/kakao-oauth
+Jwt:
+  secret: ${JWT_SECRET_KEY}
+  token:
+    access-expiration-time: 360000 # Milliseconds for 1 hour
+    refresh-expiration-time: 259200000 # Milliseconds for 30 days
 
 ---
 spring:
@@ -35,11 +45,24 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update # 조심조심조심
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
+Jwt:
+  secret: ${JWT_SECRET_KEY}
+  token:
+    access-expiration-time: 360000 # Milliseconds for 1 hour
+    refresh-expiration-time: 259200000 # Milliseconds for 30 days
 
 openapi:
   key: ${OPEN_API_KEY}
+
+kakao:
+  client_id: ${REST_API_KEY}
+  redirect_uri: http://localhost:8080/auth/kakao-oauth
+
+logging:
+  level:
+    org.hibernateSQL: debug

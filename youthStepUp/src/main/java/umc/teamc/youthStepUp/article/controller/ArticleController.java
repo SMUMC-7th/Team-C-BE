@@ -13,6 +13,8 @@ import umc.teamc.youthStepUp.article.service.command.ArticleCommandService;
 import umc.teamc.youthStepUp.article.service.query.ArticleQueryService;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
+import umc.teamc.youthStepUp.member.dto.MemberDTO.MemberDataDTO;
+import umc.teamc.youthStepUp.member.entity.Member;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,15 +31,18 @@ public class ArticleController {
     public CustomResponse<?> createArticle(@RequestBody ArticleRequestDTO.CreateArticleDTO dto) {
 
         Article article = articleCommandService.createArticle(dto);
+        Long memberId = article.getMember().getId();
+        String nickName = article.getMember().getNickName();
+
         return CustomResponse.onSuccess(GeneralSuccessCode.CREATED,
-                ArticleResponseDTO.CreatedArticleResponseDTO.from(article));
+                ArticleResponseDTO.CreatedArticleResponseDTO.from(article, memberId, nickName));
     }
 
     @GetMapping
     @Operation(method = "GET", summary = "커뮤니티 글 전체 조회 API")
     public CustomResponse<?> getArticlesByCursor(
-            @RequestParam(required = false) Long cursorId,
-            @RequestParam(defaultValue = "10") int pageSize
+            @RequestParam(name = "cursorId", required = false) Long cursorId,
+            @RequestParam(name = "pageSize", defaultValue = "10") int pageSize
     ) {
 
         Slice<Article> articles = articleQueryService.getArticles(cursorId, pageSize);
@@ -52,8 +57,11 @@ public class ArticleController {
 
         Article article = articleQueryService.getArticle(articleId);
 
+        Member member = article.getMember();
+        MemberDataDTO dto = new MemberDataDTO(member.getNickName(), member.getId());
+
         return CustomResponse.onSuccess(GeneralSuccessCode.OK,
-                ArticleResponseDTO.ArticlePreviewDTO.from(article));
+                ArticleResponseDTO.ArticlePreviewDTO.from(article, dto));
     }
 
     @PutMapping("/{articleId}")
