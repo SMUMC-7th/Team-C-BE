@@ -7,5 +7,6 @@ public interface ProfileCommandService {
     public Member updateProfile(Long memberId, UpdateProfileRequestDTO request);
 
     public void deleteProfile(Long memberId, String name);
-    
+
+    public void deleteBookmark(Long bookmarkId);
 }
