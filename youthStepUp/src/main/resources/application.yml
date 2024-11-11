@@ -16,7 +16,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -45,7 +45,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update # 조심조심조심
     properties:
       hibernate:
         format_sql: true
@@ -62,3 +62,7 @@ openapi:
 kakao:
   client_id: ${REST_API_KEY}
   redirect_uri: http://localhost:8080/auth/kakao-oauth
+
+logging:
+  level:
+    org.hibernateSQL: debug
