@@ -12,13 +12,13 @@ import java.util.List;
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
     @Query("SELECT b FROM Bookmark b " +
-            "WHERE :date BETWEEN " +
-            "SUBSTRING(b.policyPeriod, 1, 10) AND SUBSTRING(b.policyPeriod, 12, 10)")
+            "WHERE SUBSTRING(b.policyPeriod, 1, 10) = :date " +
+            "OR SUBSTRING(b.policyPeriod, 12, 10) = :date")
     List<Bookmark> findByDateWithinPolicyPeriod(@Param("date") String date);
 
     @Query("SELECT b FROM Bookmark b " +
-            "WHERE :month BETWEEN " +
-            "SUBSTRING(b.policyPeriod, 1, 7) AND SUBSTRING(b.policyPeriod, 12, 7)")
+            "WHERE SUBSTRING(b.policyPeriod, 1, 7) = :month " +
+            "OR SUBSTRING(b.policyPeriod, 12, 7) = :month")
     List<Bookmark> findByMonthWithinPolicyPeriod(@Param("month") String month);
 
     // 커서가 없을 때 처음부터 조회 (최신 순)
