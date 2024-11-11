@@ -23,7 +23,6 @@ public class ProfileController {
 
     private final ProfileQueryService profileQueryService;
     private final ProfileCommandService profileCommandService;
-    private GeneralSuccessCode generalSuccessCode;
 
     /**
      * 프로필 조회
@@ -33,9 +32,9 @@ public class ProfileController {
     @Operation(summary = "프로필 기본 조회")
     @GetMapping
     public CustomResponse<?> getProfile() {
-        Long memberId = 0L;//헤더에서 가져오는 구문, @RequestHeader("Authorization") String token매개변수에 이런식으로 가져옴
+        Long memberId = 1L;//헤더에서 가져오는 구문, @RequestHeader("Authorization") String token매개변수에 이런식으로 가져옴
         Member member = profileQueryService.getProfile(memberId);
-        return CustomResponse.onSuccess(generalSuccessCode, ProfileConverter.toProfileResponse(member));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, ProfileConverter.toProfileResponse(member));
     }
 
     /**
@@ -46,9 +45,9 @@ public class ProfileController {
     @Operation(summary = "프로필 상세 조회")
     @GetMapping("/detail")
     public CustomResponse<?> getProfileDetail() {
-        Long memberId = 0L;//헤더에서 가져오는 구문
+        Long memberId = 1L;//헤더에서 가져오는 구문
         Member member = profileQueryService.getProfile(memberId);
-        return CustomResponse.onSuccess(generalSuccessCode, ProfileConverter.toProfileDetailResponse(member));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, ProfileConverter.toProfileDetailResponse(member));
     }
 
     /**
@@ -60,9 +59,9 @@ public class ProfileController {
     @Operation(summary = "프로필 수정")
     @PatchMapping
     public CustomResponse<?> updateProfile(@RequestBody UpdateProfileRequestDTO request) {
-        Long memberId = 0L;
+        Long memberId = 1L;
         Member member = profileCommandService.updateProfile(memberId, request);
-        return CustomResponse.onSuccess(generalSuccessCode, ProfileConverter.toProfileDetailResponse(member));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, ProfileConverter.toProfileDetailResponse(member));
     }
 
     /**
@@ -73,9 +72,9 @@ public class ProfileController {
     @Operation(summary = "회원 탈퇴")
     @DeleteMapping
     public CustomResponse<?> deleteProfile(@RequestBody String name) {
-        Long memberId = 0L;
+        Long memberId = 1L;
         profileCommandService.deleteProfile(memberId, name);
-        return CustomResponse.onSuccess(generalSuccessCode);
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK);
     }
 
     /**
@@ -87,9 +86,10 @@ public class ProfileController {
     @GetMapping("/bookmarks")
     public CustomResponse<?> getBookmarks(@RequestParam(value = "cursor", defaultValue = "0") Long cursor,
                                           @RequestParam(value = "offset", defaultValue = "10") int offset) {
-        Long memberId = 0L;
+        Long memberId = 1L;
         Slice<Bookmark> bookmarkList = profileQueryService.getBookmarks(cursor, offset, memberId);
-        return CustomResponse.onSuccess(generalSuccessCode, BookmarkConverter.toBookmarkSliceResponseRecord(bookmarkList));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK,
+                BookmarkConverter.toBookmarkSliceResponseRecord(bookmarkList));
     }
 
     /**
@@ -102,6 +102,6 @@ public class ProfileController {
     @DeleteMapping("/bookmarks/{bookmarkId}")
     public CustomResponse<?> deleteBookmark(@PathVariable Long bookmarkId) {
         profileCommandService.deleteBookmark(bookmarkId);
-        return CustomResponse.onSuccess(generalSuccessCode);
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK);
     }
 }
