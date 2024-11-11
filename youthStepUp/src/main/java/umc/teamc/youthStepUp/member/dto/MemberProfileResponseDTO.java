@@ -1,7 +1,8 @@
 package umc.teamc.youthStepUp.member.dto;
 
-import java.util.List;
 import umc.teamc.youthStepUp.member.entity.Member;
+
+import java.util.List;
 
 public record MemberProfileResponseDTO(
         String nickName,

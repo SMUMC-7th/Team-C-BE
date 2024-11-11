@@ -1,19 +1,16 @@
 package umc.teamc.youthStepUp.member.service;
 
 import jakarta.transaction.Transactional;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import umc.teamc.youthStepUp.member.dto.MemberInitProfileRequestDTO;
 import umc.teamc.youthStepUp.member.dto.MemberProfileResponseDTO;
-import umc.teamc.youthStepUp.member.entity.Education;
-import umc.teamc.youthStepUp.member.entity.Keyword;
-import umc.teamc.youthStepUp.member.entity.Major;
-import umc.teamc.youthStepUp.member.entity.Member;
-import umc.teamc.youthStepUp.member.entity.Region;
+import umc.teamc.youthStepUp.member.entity.*;
 import umc.teamc.youthStepUp.member.error.MemberErrorCode;
 import umc.teamc.youthStepUp.member.error.exception.MemberCustomException;
 import umc.teamc.youthStepUp.member.repository.MemberRepository;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
