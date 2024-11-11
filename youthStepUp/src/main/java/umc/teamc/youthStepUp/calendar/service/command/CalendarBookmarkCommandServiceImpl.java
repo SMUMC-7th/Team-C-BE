@@ -12,7 +12,7 @@ import umc.teamc.youthStepUp.calendar.repository.BookmarkRepository;
 @Service
 @RequiredArgsConstructor
 public class CalendarBookmarkCommandServiceImpl implements CalendarBookmarkCommandService {
-    private BookmarkRepository bookmarkRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     @Transactional
     @Override
