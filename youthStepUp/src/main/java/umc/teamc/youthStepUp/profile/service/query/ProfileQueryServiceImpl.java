@@ -32,7 +32,7 @@ public class ProfileQueryServiceImpl implements ProfileQueryService {
     @Override
     public Slice<Bookmark> getBookmarks(Long cursor, int offset, Long memberId) {
         Pageable pageable = PageRequest.of(0, offset);
-        if (cursor == 0) {
+        if (cursor == null || cursor == 0) {
             return bookmarkRepository.findByMemberIdOrderByIdDesc(memberId, pageable);
         }
         return bookmarkRepository.findByMemberIdAndIdLessThanOrderByIdDesc(memberId, cursor, pageable);
