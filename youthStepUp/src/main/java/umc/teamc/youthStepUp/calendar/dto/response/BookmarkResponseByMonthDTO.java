@@ -8,5 +8,6 @@ public record BookmarkResponseByMonthDTO(
         @NotNull Long id,
         @NotNull String name,
         @NotNull String policyPeriod,
-        @NotNull Long policyId) {
+        @NotNull Long policyId
+) {
 }

@@ -1,7 +1,6 @@
 package umc.teamc.youthStepUp.profile.converter;
 
 import umc.teamc.youthStepUp.member.entity.Member;
-import umc.teamc.youthStepUp.profile.dto.request.UpdateProfileRequestDTO;
 import umc.teamc.youthStepUp.profile.dto.response.ProfileDetailResponseDTO;
 import umc.teamc.youthStepUp.profile.dto.response.ProfileResponseDTO;
 
@@ -23,18 +22,6 @@ public class ProfileConverter {//이미지 추가해야함
                 .major(member.getMajor())
                 .region(member.getRegion())
                 .keyword(member.getKeyword())
-                .build();
-    }
-
-    public static Member toMember(Long memberId, UpdateProfileRequestDTO request) {
-        return Member.builder()
-                .id(memberId)
-                .nickName(request.nickName())
-                .age(request.age())
-                .education(request.education())
-                .region(request.region())
-                .keyword(request.keyword())
-                .major(request.major())
                 .build();
     }
 }
