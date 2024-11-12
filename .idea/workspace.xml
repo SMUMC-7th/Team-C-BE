@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="3cc8f1cb-4684-4ee5-8582-d91fe3de65f7" name="Changes" comment="chore: 기타 사항 수정">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/youthStepUp/src/main/java/umc/teamc/youthStepUp/article/repository/ArticleRepositoryCustom.java" beforeDir="false" afterPath="$PROJECT_DIR$/youthStepUp/src/main/java/umc/teamc/youthStepUp/article/repository/ArticleRepositoryCustom.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/youthStepUp/src/main/java/umc/teamc/youthStepUp/article/repository/ArticleRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/youthStepUp/src/main/java/umc/teamc/youthStepUp/article/repository/ArticleRepositoryImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
