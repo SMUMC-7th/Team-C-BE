@@ -11,6 +11,7 @@ import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
 import umc.teamc.youthStepUp.policyInfo.dto.PolicyInfoResponseDTO;
 import umc.teamc.youthStepUp.policyInfo.entity.PolicyInfo;
+import umc.teamc.youthStepUp.policyInfo.exception.PolicyInfoException;
 import umc.teamc.youthStepUp.policyInfo.service.PolicyInfoService;
 
 @RestController
@@ -22,7 +23,7 @@ public class PolicyInfoController {
     @GetMapping("/policy/info")
     @Operation(method = "GET", summary = "정책 용어 소개 조회 API")
     public CustomResponse<?> getPolicyInfoUsingOffset(@RequestParam(defaultValue = "0") int pageNumber,
-                                                      @RequestParam(defaultValue = "1") int pageSize) {
+                                                      @RequestParam(defaultValue = "1") int pageSize) throws PolicyInfoException {
         Page<PolicyInfo> policyInfos = policyInfoService.getPolicyInfo(pageNumber, pageSize);
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, PolicyInfoResponseDTO.PolicyInfoPagePreviewListDTO.from(policyInfos));
     }
