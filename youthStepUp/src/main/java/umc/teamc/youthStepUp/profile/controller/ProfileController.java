@@ -80,13 +80,4 @@ public class ProfileController {
     }
 }
 
-//    @Operation(summary = "북마크 목록 조회")
-//    @GetMapping("/bookmarks")
-//    public CustomResponse<?> getBookmarks(@RequestParam(value = "cursor", defaultValue = "0") Long cursor,
-//                                          @RequestParam(value = "offset", defaultValue = "10") int offset) {
-//        Long memberId = 0L;
-//        Slice<Bookmark> bookmarkList = profileQueryService.getBookmarks(cursor, offset, memberId);
-//        return CustomResponse.onSuccess(GeneralSuccessCode.OK,
-//                BookmarkConverter.toBookmarkSliceResponseRecord(bookmarkList));
-//    }
 
