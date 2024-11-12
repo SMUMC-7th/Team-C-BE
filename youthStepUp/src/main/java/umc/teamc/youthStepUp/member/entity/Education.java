@@ -1,5 +1,8 @@
 package umc.teamc.youthStepUp.member.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum Education {
     HIGH_SCHOOL("고등학교 졸업 이하"),
     UNDERGRADUATE("대학교 재학"),

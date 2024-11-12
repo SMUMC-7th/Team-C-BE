@@ -25,6 +25,7 @@ public class AuthService {
     public void createNewMember(KakaoUserInfoDTO infoDTO) {
         Member member = Member.builder()
                 .nickName(infoDTO.kakaoAccount().profile().nickname())
+                .imgUrl(infoDTO.kakaoAccount().profile().profileImageUrl())
                 .kakaoId(infoDTO.id())
                 .build();
         memberRepository.save(member);

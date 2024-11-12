@@ -26,6 +26,7 @@ public class KakaoAuthController {
     private final AuthService authService;
 
     @GetMapping("/auth/kakao-login")
+    @Operation(summary = "카카오 로그인 백엔드 테스트 용", description = "프론트는 사용 안 해도 됨")
     public CustomResponse<?> login() {
         kakaoAuthService.getCode();
         return CustomResponse.onSuccess(AuthSuccessCode.AUTH_CODE_SUCCESS);

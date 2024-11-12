@@ -30,6 +30,8 @@ public class Member {
     int age;
     @Column(name = "kakao_id")
     Long kakaoId;
+    @Column(name = "profile_img")
+    String imgUrl;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "education")
     Education education;
