@@ -3,11 +3,7 @@ package umc.teamc.youthStepUp.profile.service.command;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import umc.teamc.youthStepUp.member.entity.Education;
-import umc.teamc.youthStepUp.member.entity.Keyword;
-import umc.teamc.youthStepUp.member.entity.Major;
-import umc.teamc.youthStepUp.member.entity.Member;
-import umc.teamc.youthStepUp.member.entity.Region;
+import umc.teamc.youthStepUp.member.entity.*;
 import umc.teamc.youthStepUp.member.error.MemberErrorCode;
 import umc.teamc.youthStepUp.member.error.exception.MemberCustomException;
 import umc.teamc.youthStepUp.profile.dto.request.UpdateProfileRequestDTO;
@@ -57,7 +53,7 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
                 new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         if (profile.getNickName().equals(name)) {
-            //profile.deleteEntity();
+            profile.deleteEntity();
         } else {
             throw new ProfileException(ProfileErrorCode.BAD_REQUEST);
         }
