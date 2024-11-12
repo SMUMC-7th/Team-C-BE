@@ -9,22 +9,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.StringUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import umc.teamc.youthStepUp.auth.constant.TokenConstant;
 import umc.teamc.youthStepUp.auth.jwt.JwtProvider;
-import umc.teamc.youthStepUp.auth.jwt.error.JwtErrorCode;
-import umc.teamc.youthStepUp.auth.jwt.error.exception.JwtException;
 
 @RequiredArgsConstructor
+@Component
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
-    private final String HEADER_PREFIX = "Authorization";
-    private final String HEADER_TYPE = "Bearer ";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String token = resolveToken(request);
+        String header = request.getHeader(TokenConstant.HEADER_PREFIX.getValue());
+        if (header == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        String token = jwtProvider.resolveToken(header);
         if (!jwtProvider.isExpired(token)) {
             setAuthentication(token);
         }
@@ -35,13 +38,5 @@ public class JwtFilter extends OncePerRequestFilter {
         Authentication authentication = jwtProvider.getAuthentication(token);
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(authentication);
-    }
-
-    private String resolveToken(HttpServletRequest request) {
-        String header = request.getHeader(HEADER_PREFIX);
-        if (StringUtils.hasText(header) && header.startsWith(HEADER_TYPE)) {
-            return header.substring(7);
-        }
-        throw new JwtException(JwtErrorCode.TOKEN_INVALID);
     }
 }

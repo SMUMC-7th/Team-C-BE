@@ -6,6 +6,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import java.time.Instant;
 import java.util.Date;
 import javax.crypto.SecretKey;
@@ -15,7 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import umc.teamc.youthStepUp.auth.dto.TokenResponseDTO;
+import org.springframework.util.StringUtils;
+import umc.teamc.youthStepUp.auth.constant.TokenConstant;
 import umc.teamc.youthStepUp.auth.jwt.error.JwtErrorCode;
 import umc.teamc.youthStepUp.auth.jwt.error.exception.JwtException;
 import umc.teamc.youthStepUp.auth.service.CustomUserDetailService;
@@ -40,15 +42,6 @@ public class JwtProvider {
 
     private SecretKey getSigningKey(String secretKey) {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
-    }
-
-    public TokenResponseDTO getToken(Long id) {
-        return new TokenResponseDTO(
-                createAccessToken(id),
-                accessExpiration,
-                createRefreshToken(id),
-                refreshExpiration
-        );
     }
 
     public String createAccessToken(Long id) {
@@ -77,6 +70,13 @@ public class JwtProvider {
                 .compact();
     }
 
+    public String resolveToken(String header) {
+        if (StringUtils.hasText(header) && header.startsWith(TokenConstant.HEADER_TYPE.getValue())) {
+            return header.substring(7);
+        }
+        throw new JwtException(JwtErrorCode.TOKEN_INVALID);
+    }
+
     public Long getExpiredIn(String token) {
         return (Jwts.parser().verifyWith(key).build().parseSignedClaims(token)
                 .getPayload()
@@ -90,9 +90,9 @@ public class JwtProvider {
     }
 
     public String getUserId(String token) {
-        return Jwts.parser().verifyWith(key).build()
+        return String.valueOf(Jwts.parser().verifyWith(key).build()
                 .parseSignedClaims(token)
-                .getPayload().get("id", String.class);
+                .getPayload().get("id"));
     }
 
     public Boolean isExpired(String token) {
@@ -105,5 +105,28 @@ public class JwtProvider {
             throw new JwtException(JwtErrorCode.TOKEN_EXPIRED);
         }
     }
+
+    public Cookie createRefreshCookie(Long id) {
+        String cookieName = "refreshToken";
+        String cookieValue = createRefreshToken(id);
+        Cookie cookie = new Cookie(cookieName, cookieValue);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 24);
+        return cookie;
+    }
+
+    public Cookie createAccessCookie(Long id) {
+        String cookieName = "accessToken";
+        String cookieValue = createAccessToken(id);
+        Cookie cookie = new Cookie(cookieName, cookieValue);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 5);
+        return cookie;
+    }
+
 
 }

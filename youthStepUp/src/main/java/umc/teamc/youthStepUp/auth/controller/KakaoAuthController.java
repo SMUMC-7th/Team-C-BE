@@ -3,14 +3,16 @@ package umc.teamc.youthStepUp.auth.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
 import umc.teamc.youthStepUp.auth.dto.KakaoAccessTokenDTO;
 import umc.teamc.youthStepUp.auth.dto.KakaoUserInfoDTO;
-import umc.teamc.youthStepUp.auth.dto.TokenResponseDTO;
 import umc.teamc.youthStepUp.auth.service.AuthService;
 import umc.teamc.youthStepUp.auth.service.KakaoAuthService;
 import umc.teamc.youthStepUp.auth.success.AuthSuccessCode;
@@ -23,21 +25,23 @@ public class KakaoAuthController {
     private final KakaoAuthService kakaoAuthService;
     private final AuthService authService;
 
-//    @GetMapping("/auth/kakao-login")
-//    public CustomResponse<?> login() {
-//        kakaoAuthService.getCode();
-//        return CustomResponse.onSuccess(AuthSuccessCode.AUTH_CODE_SUCCESS);
-//    }
+    @GetMapping("/auth/kakao-login")
+    @Operation(summary = "카카오 로그인 백엔드 테스트 용", description = "프론트는 사용 안 해도 됨")
+    public CustomResponse<?> login() {
+        kakaoAuthService.getCode();
+        return CustomResponse.onSuccess(AuthSuccessCode.AUTH_CODE_SUCCESS);
+    }
 
     @GetMapping("/auth/kakao-oauth")
     @Operation(summary = "카카오 인가 코드로 로그인", description = "카카오 OAuth 인가 코드를 받아 액세스 토큰을 발급받고 로그인한다.")
     public CustomResponse<?> getKakaoCode(
             @Parameter(description = "카카오 인가코드", required = true)
-            @RequestParam("code") String code) {
+            @RequestParam("code") String code,
+            HttpServletResponse response) {
         KakaoAccessTokenDTO tokenDTO = kakaoAuthService.getKakaoAccessToken(code);
         KakaoUserInfoDTO userInfoDTO = kakaoAuthService.getUserInfo(tokenDTO.accessToken());
-        TokenResponseDTO responseDTO = authService.createNewMember(userInfoDTO);
-        return CustomResponse.onSuccess(AuthSuccessCode.LOGIN_SUCCESS, responseDTO);
+        authService.login(userInfoDTO, response);
+        return CustomResponse.onSuccess(AuthSuccessCode.LOGIN_SUCCESS);
     }
 
     @GetMapping("/auth/kakao-logout")
@@ -50,10 +54,15 @@ public class KakaoAuthController {
     @GetMapping("/auth/reissue-token")
     @Operation(summary = "토큰 재발급", description = "만료된 액세스 토큰을 재발급받는다.")
     public CustomResponse<?> reissueToken(
-            @Parameter(description = "Refresh 토큰을 헤더에 넣어 요청", required = true)
-            @RequestHeader("Refresh") String refreshToken) {
-        return CustomResponse.onSuccess(AuthSuccessCode.ACCESS_TOKEN_REISSUE_SUCCESS,
-                authService.reissueToken(refreshToken));
+            @Parameter(description = "Refresh 토큰을 쿠키에 넣어 요청", required = true)
+            @CookieValue("refreshToken") String refreshToken, HttpServletResponse response) {
+        authService.reissueToken(refreshToken, response);
+        return CustomResponse.onSuccess(AuthSuccessCode.ACCESS_TOKEN_REISSUE_SUCCESS);
+    }
+
+    @PostMapping("/test")
+    public CustomResponse<?> test(@Parameter(hidden = true) @MemberInfo Long id) {
+        return CustomResponse.onSuccess(AuthSuccessCode.LOGIN_SUCCESS, id);
     }
 
 }

@@ -1,8 +1,6 @@
 package umc.teamc.youthStepUp.auth.service;
 
 
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -13,6 +11,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import umc.teamc.youthStepUp.auth.constant.KAKAO_URL;
 import umc.teamc.youthStepUp.auth.dto.KakaoAccessTokenDTO;
 import umc.teamc.youthStepUp.auth.dto.KakaoUserInfoDTO;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
