@@ -1,8 +1,10 @@
 package umc.teamc.youthStepUp.calendar.service.command;
 
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import umc.teamc.youthStepUp.calendar.dto.request.UpdateBookmarkCompletionDTO;
 import umc.teamc.youthStepUp.calendar.entity.Bookmark;
 import umc.teamc.youthStepUp.calendar.exception.BookmarkErrorCode;
 import umc.teamc.youthStepUp.calendar.exception.BookmarkException;
@@ -16,10 +18,13 @@ public class CalendarBookmarkCommandServiceImpl implements CalendarBookmarkComma
 
     @Transactional
     @Override
-    public Bookmark updateIsCompleted(Long bookmarkId, boolean isCompleted) {
-        Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(() ->
+    public Bookmark updateIsCompleted(Long memberId, UpdateBookmarkCompletionDTO request) {
+        Bookmark bookmark = bookmarkRepository.findById(request.bookmarkId()).orElseThrow(() ->
                 new BookmarkException(BookmarkErrorCode.NOT_FOUND));
-        bookmark.updateIsCompleted(isCompleted);
+
+        if (bookmark.getMember().getId().equals(memberId)) {
+            bookmark.updateIsCompleted(request.isCompleted());
+        } else throw new BookmarkException(BookmarkErrorCode.UNAUTHORIZED_ACCESS);
         return bookmark;
     }
 }

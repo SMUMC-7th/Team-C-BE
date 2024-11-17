@@ -6,6 +6,6 @@ import lombok.Builder;
 @Builder
 public record UpdateBookmarkCompletionDTO(
         @NotNull Long bookmarkId,
-        boolean isComplete
+        @NotNull boolean isCompleted
 ) {
 }

@@ -73,8 +73,9 @@ public class CalendarController {
      */
     @Operation(summary = "정책 완료 여부 수정")
     @PatchMapping("/is-complete")
-    public CustomResponse<?> updatePolicyCompletionStatus(@RequestBody UpdateBookmarkCompletionDTO request) {
-        Bookmark bookmark = bookmarkCommandService.updateIsCompleted(request.bookmarkId(), request.isComplete());
+    public CustomResponse<?> updatePolicyCompletionStatus(@Parameter(hidden = true) @MemberInfo Long id,
+                                                          @RequestBody UpdateBookmarkCompletionDTO request) {
+        Bookmark bookmark = bookmarkCommandService.updateIsCompleted(id, request);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK,
                 BookmarkConverter.toBookmarkResponseByDateRecord(bookmark));

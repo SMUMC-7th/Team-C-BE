@@ -10,6 +10,7 @@ import umc.teamc.youthStepUp.global.error.BaseErrorCode;
 public enum BookmarkErrorCode implements BaseErrorCode {
     NOT_FOUND(HttpStatus.NOT_FOUND, "BOOKMARK_NOT_FOUND401", "북마크를 찾을 수 없습니다."),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "BOOKMARK_WRONG_DATE_TYPE401", "잘못된 날짜 형식 입니다."),
+    UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "BOOKMARK_UNAUTHORIZED403", "북마크에 접근할 권한이 없습니다."),
     ;
 
     private final HttpStatus status;
