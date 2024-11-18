@@ -4,13 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
@@ -80,6 +74,7 @@ public class ProfileController {
     /**
      * 회원 탈퇴
      *
+     * @param name 유저에게 입력 받은 본인 이름
      * @return 탈퇴 처리 결과
      */
     @Operation(summary = "회원 탈퇴")
@@ -89,6 +84,8 @@ public class ProfileController {
         profileCommandService.deleteProfile(id, name);
         return CustomResponse.onSuccess(GeneralSuccessCode.OK);
     }
+
+
 }
 
 
