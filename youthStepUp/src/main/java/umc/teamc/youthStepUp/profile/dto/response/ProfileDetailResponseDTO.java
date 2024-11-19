@@ -2,7 +2,7 @@ package umc.teamc.youthStepUp.profile.dto.response;
 
 import java.util.List;
 
-public record ProfileDetailResponseRecord(
+public record ProfileDetailResponseDTO(
         String nickName,
         String profileImg,
         Integer age,
