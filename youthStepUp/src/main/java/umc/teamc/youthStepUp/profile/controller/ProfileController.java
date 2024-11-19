@@ -4,16 +4,21 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
+import umc.teamc.youthStepUp.calendar.entity.Bookmark;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
 import umc.teamc.youthStepUp.member.dto.MemberInitProfileRequestDTO;
 import umc.teamc.youthStepUp.member.entity.Member;
 import umc.teamc.youthStepUp.member.service.MemberService;
+import umc.teamc.youthStepUp.profile.converter.ProfileBookmarkConverter;
 import umc.teamc.youthStepUp.profile.converter.ProfileConverter;
 import umc.teamc.youthStepUp.profile.dto.request.UpdateProfileRequestDTO;
+import umc.teamc.youthStepUp.profile.service.command.ProfileBookmarkCommandService;
 import umc.teamc.youthStepUp.profile.service.command.ProfileCommandService;
+import umc.teamc.youthStepUp.profile.service.query.ProfileBookmarkQueryService;
 import umc.teamc.youthStepUp.profile.service.query.ProfileQueryService;
 
 @Tag(name = "프로필 API")
@@ -24,6 +29,8 @@ public class ProfileController {
 
     private final ProfileQueryService profileQueryService;
     private final ProfileCommandService profileCommandService;
+    private final ProfileBookmarkQueryService profileBookmarkQueryService;
+    private final ProfileBookmarkCommandService profileBookmarkCommandService;
     private final MemberService memberService;
 
     @PostMapping("/init-profile")
@@ -85,6 +92,35 @@ public class ProfileController {
         return CustomResponse.onSuccess(GeneralSuccessCode.OK);
     }
 
+
+    /**
+     * 북마크 목록 조회
+     *
+     * @return 북마크 목록
+     */
+    @Operation(summary = "북마크 목록 조회")
+    @GetMapping("/bookmarks")
+    public CustomResponse<?> getBookmarks(@Parameter(hidden = true) @MemberInfo Long id,
+                                          @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
+                                          @RequestParam(value = "offset", defaultValue = "10") int offset) {
+
+        Slice<Bookmark> bookmarkList = profileBookmarkQueryService.getBookmarks(cursor, offset, id);
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, ProfileBookmarkConverter.toBookmarkSliceResponseDTO(bookmarkList));
+    }
+
+    /**
+     * 특정 북마크 삭제
+     *
+     * @param bookmarkId 삭제할 북마크의 ID
+     * @return 북마크 삭제 결과
+     */
+    @Operation(summary = "특정 북마크 삭제")
+    @DeleteMapping("/bookmarks/{bookmarkId}")
+    public CustomResponse<?> deleteBookmark(@Parameter(hidden = true) @MemberInfo Long id,
+                                            @PathVariable Long bookmarkId) {
+        profileBookmarkCommandService.deleteBookmark(id, bookmarkId);
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK);
+    }
 
 }
 
