@@ -4,13 +4,13 @@ import umc.teamc.youthStepUp.member.entity.Keyword;
 import umc.teamc.youthStepUp.member.entity.Major;
 import umc.teamc.youthStepUp.member.entity.Member;
 import umc.teamc.youthStepUp.member.entity.Region;
-import umc.teamc.youthStepUp.profile.dto.response.ProfileDetailResponseRecord;
-import umc.teamc.youthStepUp.profile.dto.response.ProfileResponseRecord;
+import umc.teamc.youthStepUp.profile.dto.response.ProfileDetailResponseDTO;
+import umc.teamc.youthStepUp.profile.dto.response.ProfileResponseDTO;
 
 public class ProfileConverter {
 
-    public static ProfileResponseRecord toProfileResponse(Member member) {
-        return new ProfileResponseRecord(
+    public static ProfileResponseDTO toProfileResponse(Member member) {
+        return new ProfileResponseDTO(
                 member.getNickName(),
                 member.getAge(),
                 member.getEducation().getDescription(),
@@ -18,9 +18,9 @@ public class ProfileConverter {
         );
     }
 
-    public static ProfileDetailResponseRecord toProfileDetailResponse(Member member) {
+    public static ProfileDetailResponseDTO toProfileDetailResponse(Member member) {
 
-        return new ProfileDetailResponseRecord(
+        return new ProfileDetailResponseDTO(
                 member.getNickName(),
                 member.getImgUrl(),
                 member.getAge(),
