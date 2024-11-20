@@ -1,26 +1,18 @@
 package umc.teamc.youthStepUp.member.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.*;
+import umc.teamc.youthStepUp.global.entity.BaseEntity;
+
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -38,14 +30,17 @@ public class Member {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "region")
     @Builder.Default
+    @ElementCollection
     List<Region> region = new ArrayList<>();
     @Enumerated(value = EnumType.STRING)
     @Column(name = "major")
     @Builder.Default
+    @ElementCollection
     List<Major> major = new ArrayList<>();
     @Enumerated(value = EnumType.STRING)
     @Column(name = "keyword")
     @Builder.Default
+    @ElementCollection
     List<Keyword> keyword = new ArrayList<>();
 
     public void editNickName(String nickName) {
@@ -65,14 +60,14 @@ public class Member {
     }
 
     public void editRegion(List<Region> region) {
-        this.region = region;
+        this.region.addAll(region);
     }
 
     public void editMajor(List<Major> major) {
-        this.major = major;
+        this.major.addAll(major);
     }
 
     public void editKeyword(List<Keyword> keyword) {
-        this.keyword = keyword;
+        this.keyword.addAll(keyword);
     }
 }

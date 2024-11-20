@@ -1,6 +1,6 @@
 package umc.teamc.youthStepUp.profile.dto.response;
 
-public record ProfileResponseRecord(
+public record ProfileResponseDTO(
         String nickName,
         int age,
         String education,
