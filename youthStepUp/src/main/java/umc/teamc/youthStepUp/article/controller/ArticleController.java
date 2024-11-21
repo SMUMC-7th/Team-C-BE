@@ -1,6 +1,7 @@
 package umc.teamc.youthStepUp.article.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import umc.teamc.youthStepUp.article.dto.ArticleResponseDTO;
 import umc.teamc.youthStepUp.article.entity.Article;
 import umc.teamc.youthStepUp.article.service.command.ArticleCommandService;
 import umc.teamc.youthStepUp.article.service.query.ArticleQueryService;
+import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
 import umc.teamc.youthStepUp.member.dto.MemberDTO.MemberDataDTO;
@@ -28,9 +30,11 @@ public class ArticleController {
 
     @PostMapping
     @Operation(method = "POST", summary = "커뮤니티 글 생성 API")
-    public CustomResponse<?> createArticle(@RequestBody ArticleRequestDTO.CreateArticleDTO dto) {
+    public CustomResponse<?> createArticle(
+            @Parameter(hidden = true) @MemberInfo Long id,
+            @RequestBody ArticleRequestDTO.CreateArticleDTO dto) {
 
-        Article article = articleCommandService.createArticle(dto);
+        Article article = articleCommandService.createArticle(id, dto);
         Long memberId = article.getMember().getId();
         String nickName = article.getMember().getNickName();
 
@@ -53,7 +57,8 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     @Operation(method = "GET", summary = "커뮤니티 글 상세 조회 API")
-    public CustomResponse<?> getArticleById(@PathVariable("articleId") Long articleId) {
+    public CustomResponse<?> getArticleById(
+            @PathVariable("articleId") Long articleId) {
 
         Article article = articleQueryService.getArticle(articleId);
 
@@ -67,10 +72,11 @@ public class ArticleController {
     @PutMapping("/{articleId}")
     @Operation(method = "PUT", summary = "커뮤니티 글 수정 API")
     public CustomResponse<?> updateArticleById(
+            @Parameter(hidden = true) @MemberInfo Long id,
             @PathVariable Long articleId,
             @RequestBody ArticleRequestDTO.UpdateArticleDTO dto) {
 
-        Article article = articleCommandService.updateArticle(articleId, dto); // 수정 반영
+        Article article = articleCommandService.updateArticle(id, articleId, dto); // 수정 반영
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK,
                 ArticleResponseDTO.UpdatedArticleDTO.from(article));
@@ -78,9 +84,11 @@ public class ArticleController {
 
     @DeleteMapping("/{articleId}")
     @Operation(method = "DELETE", summary = "커뮤니티 글 삭제 API")
-    public CustomResponse<?> deleteArticleById(@PathVariable("articleId") Long articleId) {
+    public CustomResponse<?> deleteArticleById(
+            @Parameter(hidden = true) @MemberInfo Long id,
+            @PathVariable("articleId") Long articleId) {
 
-        Article article = articleCommandService.deleteArticle(articleId);
+        Article article = articleCommandService.deleteArticle(id, articleId);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK);
     }
