@@ -11,17 +11,12 @@ public class ArticleRequestDTO {
 
         private String title;
         private String content;
-        private String nickname;
-        private Long memberId;
 
-        public Article toEntity() {
+        public Article toEntity(Member member) {
             return Article.builder()
                     .title(this.title)
                     .content(this.content)
-                    .member(Member.builder()
-                            .nickName(this.nickname)
-                            .id(this.memberId)
-                            .build())
+                    .member(member)
                     .build();
         }
     }

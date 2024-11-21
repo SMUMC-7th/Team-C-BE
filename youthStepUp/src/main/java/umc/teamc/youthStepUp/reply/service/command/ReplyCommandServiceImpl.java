@@ -23,12 +23,12 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
     private final ArticleRepository articleRepository;
 
     @Override
-    public Reply createReply(ReplyCreateRequestDTO dto) {
+    public Reply createReply(ReplyCreateRequestDTO dto, Long memberId) {
 
         Article article = articleRepository.findById(dto.articleId()).orElseThrow(
                 () -> new ArticleErrorException(ArticleErrorCode.NOT_FOUND));
 
-        return replyRepository.save(dto.toReply(dto, article));
+        return replyRepository.save(dto.toReply(dto, memberId, article));
     }
 
     @Override

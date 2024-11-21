@@ -1,8 +1,10 @@
 package umc.teamc.youthStepUp.article.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.data.domain.Slice;
 import umc.teamc.youthStepUp.article.entity.Article;
+import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
 import umc.teamc.youthStepUp.member.dto.MemberDTO.MemberDataDTO;
 import umc.teamc.youthStepUp.member.entity.Member;
 
@@ -18,11 +20,12 @@ public class ArticleResponseDTO {
     public static class CreatedArticleResponseDTO { // 게시판 만들고 나서 응답
 
         private Long articleId;
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime createdAt;
         private String nickname;
         private Long memberId;
 
-        public static CreatedArticleResponseDTO from(Article article, Long memberId, String nickName) {
+        public static CreatedArticleResponseDTO from(Article article, @MemberInfo Long memberId, String nickName) {
             return CreatedArticleResponseDTO.builder()
                     .articleId(article.getId())
                     .createdAt(article.getCreatedAt())
@@ -41,7 +44,9 @@ public class ArticleResponseDTO {
         private Long articleId;
         private String title;
         private String content;
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime createdAt;
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime updatedAt;
         private MemberDataDTO memberDataDTO;
 
@@ -101,7 +106,9 @@ public class ArticleResponseDTO {
         private Long articleId;
         private String title;
         private String content;
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime createdAt;
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime updatedAt;
 
         public static ArticlePreviewDTO from(Article article) {

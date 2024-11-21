@@ -6,7 +6,7 @@ import umc.teamc.youthStepUp.reply.entity.Reply;
 
 public interface ReplyCommandService {
 
-    Reply createReply(ReplyCreateRequestDTO dto);
+    Reply createReply(ReplyCreateRequestDTO dto, Long memberId);
 
     Reply updateReply(Long replyId, ReplyUpdateRequestDTO dto);
 

@@ -11,7 +11,7 @@ import umc.teamc.youthStepUp.member.entity.Member;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-@SQLDelete(sql = "UPDATE article SET deleted_at = CURRENT_TIME where id = ?")
+@SQLDelete(sql = "UPDATE article SET deleted_at = CURRENT_TIME where article_id = ?")
 public class Article extends BaseEntity {
 
     @Id

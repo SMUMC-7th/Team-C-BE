@@ -6,10 +6,10 @@ import umc.teamc.youthStepUp.article.entity.Article;
 
 public interface ArticleCommandService {
 
-    Article createArticle(ArticleRequestDTO.CreateArticleDTO dto);
+    Article createArticle(Long memberId, ArticleRequestDTO.CreateArticleDTO dto);
 
-    Article updateArticle(Long articleId, ArticleRequestDTO.UpdateArticleDTO dto);
+    Article updateArticle(Long memberId, Long articleId, ArticleRequestDTO.UpdateArticleDTO dto);
 
-    Article deleteArticle(Long articleId);
+    Article deleteArticle(Long memberId, Long articleId);
 
 }
