@@ -12,10 +12,12 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
 
 //    Slice<Reply> findByIdLessThanOrderByIdDesc(Long cursorId, Pageable pageable);
 
-    @Query("SELECT r FROM Reply r WHERE r.article = :article ORDER BY r.createdAt DESC")
+    @Query("SELECT r" +
+            " FROM Reply r" +
+            " WHERE r.article = :article AND r.member.deletedAt IS NULL" +
+            " ORDER BY r.createdAt DESC")
     Slice<Reply> findRepliesByArticleOrderByCreatedAtDesc(@Param("article") Article article, Pageable pageable);
 
-    boolean existsByArticleId(Long articleId);
 }
 
 
