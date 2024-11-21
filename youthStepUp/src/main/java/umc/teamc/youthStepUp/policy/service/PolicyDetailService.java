@@ -19,7 +19,6 @@ public class PolicyDetailService {
 
     private final AuthenticationService authenticationService;
     private final RestTemplate restTemplate;
-
     private static final String SERVER_URL = "https://www.youthcenter.go.kr/opi/youthPlcyList.do";
 
     public PolicyDetailRequest callAPI(String srchPolicyId, String query, String bizTycdSel, String srchPolyBizSecd, String keyword) throws JAXBException {
@@ -58,13 +57,15 @@ public class PolicyDetailService {
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.exchange(
-                SERVER_URL +stringBuilder,
+                SERVER_URL + stringBuilder,
                 HttpMethod.GET,
                 entity,
                 String.class,
                 params
         );
         System.out.println(response.getBody());
+
+
         return PolicyDetailRequest.unmarshal(response.getBody());
     }
 }
