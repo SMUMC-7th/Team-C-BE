@@ -7,14 +7,13 @@ import umc.teamc.youthStepUp.reply.entity.Reply;
 public record ReplyCreateRequestDTO(
         Long articleId,
         String content,
-        String nickname,
-        Long memberId
+        String nickName
 ) {
-    public Reply toReply(ReplyCreateRequestDTO dto, Article article) {
+    public Reply toReply(ReplyCreateRequestDTO dto, Long memberId, Article article) {
         return Reply.builder()
                 .article(article)
                 .content(dto.content())
-                .member(Member.builder().nickName(this.nickname).id(this.memberId()).build())
+                .member(Member.builder().nickName(this.nickName).id(memberId).build())
                 .build();
     }
 

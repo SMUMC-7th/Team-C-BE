@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
+import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
 import umc.teamc.youthStepUp.reply.dto.replyRequestDTO.ReplyCreateRequestDTO;
@@ -29,9 +30,11 @@ public class ReplyController {
 
     @PostMapping("/articles")
     @Operation(method = "POST", summary = "댓글 생성 API")
-    public CustomResponse<?> createReply(@RequestBody ReplyCreateRequestDTO dto) {
+    public CustomResponse<?> createReply(
+            @RequestBody ReplyCreateRequestDTO dto,
+            @MemberInfo Long memberId) {
 
-        Reply reply = replyCommandService.createReply(dto);
+        Reply reply = replyCommandService.createReply(dto, memberId);
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, new ReplyResponseDTO(reply));
     }
 
