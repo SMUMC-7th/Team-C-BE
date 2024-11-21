@@ -21,9 +21,13 @@ public class PolicyDetailRequest {
     private Emp emp; //각 emp 객체 리스트
 
     @XmlElement(name = "youthPolicy")
-    public Emp getEmp() { return emp; }
+    public Emp getEmp() {
+        return emp;
+    }
 
-    public void setEmp(Emp emp) { this.emp = emp; }
+    public void setEmp(Emp emp) {
+        this.emp = emp;
+    }
 
     @Data
     @ToString
@@ -34,7 +38,7 @@ public class PolicyDetailRequest {
         private String polyBizTy; // 기관 및 지자체 구분
         private String polyBizSjnm; // 정책명
         private String polyItcnCn; // 정책소개
-        private String plcyTpNm; // 정책 유형
+        private String lcyTpNm; // 정책 유형
         private String sporScvl; // 지원 규모
         private String sporCn; // 지원 내용
         private String ageInfo; // 연령 정보

@@ -8,11 +8,12 @@ import umc.teamc.youthStepUp.policy.entity.Policy;
 public class PolicyBookmarkRequestDTO {
 
     @Getter
-    public static class CreateBookmarkDTO{
+    public static class CreateBookmarkDTO {
         public BookMarkPolicy toEntity(Member member, Policy policy) {
             return BookMarkPolicy.builder()
                     .member(member)
                     .policy(policy)
+                    .isCompleted(false)
                     .build();
         }
     }
@@ -20,9 +21,10 @@ public class PolicyBookmarkRequestDTO {
     @Getter
     public static class CreatePolicyDTO {
 
-        public Policy toEntity(String srchPolicyId) {
+        public Policy toEntity(String srchPolicyId, String deadline) {
             return Policy.builder()
                     .srchPolicyId(srchPolicyId)
+                    .deadline(deadline)
                     .build();
         }
     }

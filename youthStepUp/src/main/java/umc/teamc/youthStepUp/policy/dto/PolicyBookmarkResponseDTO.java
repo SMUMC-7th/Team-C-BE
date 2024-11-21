@@ -12,14 +12,14 @@ public class PolicyBookmarkResponseDTO {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class CreateBookmarkResponseDTO {
-        private Long id;
+        private Long policyId;
         private String srchPolicyId;
         private Long memberId;
         private LocalDateTime createdAt;
 
         public static CreateBookmarkResponseDTO from(BookMarkPolicy bookMarkPolicy) {
             return CreateBookmarkResponseDTO.builder()
-                    .id(bookMarkPolicy.getId())
+                    .policyId(bookMarkPolicy.getId())
                     .srchPolicyId(bookMarkPolicy.getPolicy().getSrchPolicyId())
                     .memberId(bookMarkPolicy.getMember().getId())
                     .createdAt(bookMarkPolicy.getCreatedAt())

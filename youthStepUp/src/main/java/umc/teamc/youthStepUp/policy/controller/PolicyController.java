@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
-import umc.teamc.youthStepUp.policy.dto.PolicyBookmarkRequestDTO;
+import umc.teamc.youthStepUp.policy.dto.PolicyBookmarkResponseDTO;
 import umc.teamc.youthStepUp.policy.dto.PolicyDetailRequest;
 import umc.teamc.youthStepUp.policy.dto.PolicyRandomRequest;
 import umc.teamc.youthStepUp.policy.entity.BookMarkPolicy;
@@ -29,8 +29,7 @@ public class PolicyController {
 
     @GetMapping("/policy/recommend/{srchPolicyId}")
     @Operation(summary = "정책 id로 정책 상세 조회", description = "정책 id를 통해서 해당 정책 상세 조회 API")
-    public CustomResponse<?> getPolicyDetail(@PathVariable("srchPolicyId") String srchPolicyId) throws JAXBException
-    {
+    public CustomResponse<?> getPolicyDetail(@PathVariable("srchPolicyId") String srchPolicyId) throws JAXBException {
         PolicyDetailRequest policyDetailRequest = policyDetailService.callAPI(srchPolicyId, null, null, null, null);
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, policyDetailRequest);
     }
@@ -43,21 +42,24 @@ public class PolicyController {
             @RequestParam(required = false) String bizTycdSel,
             @RequestParam(required = false) String srchPolyBizSecd,
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false,defaultValue = "10") String display,
-            @RequestParam(required = false,defaultValue = "1") String pageIndex
+            @RequestParam(required = false, defaultValue = "10") String display,
+            @RequestParam(required = false, defaultValue = "1") String pageIndex
     ) throws JAXBException {
-        PolicyRandomRequest policyRandomRequest =  policyRandomService.callAPI(srchPolicyId,query,bizTycdSel, srchPolyBizSecd, keyword, display, pageIndex);
+        PolicyRandomRequest policyRandomRequest = policyRandomService.callAPI(srchPolicyId, query, bizTycdSel, srchPolyBizSecd, keyword, display, pageIndex);
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, policyRandomRequest);
     }
 
-    @PostMapping("/policy/bookmark/{srchPolicyId}")
+    @PostMapping("/policy/bookmark/request")
     @Operation(summary = "정책 북마크 요청", description = "정책 상세 페이지에서 북마크 요청을 보내는 API")
     public CustomResponse<?> bookmarkRequest(@Parameter(hidden = true) @MemberInfo Long id,
-                                             @PathVariable("srchPolicyId") String srchPolicyId) {
+                                             @RequestParam String srchPolicyId,
+                                             @RequestParam String deadline) {
+        Policy newPolicy = policyService.createPolicy(id, srchPolicyId, deadline);
+        Long policyId = newPolicy.getId();
+        BookMarkPolicy bookMarkPolicy = policyService.createBookmark(id, policyId);
 
-        Policy policy = policyService.createPolicy(srchPolicyId);
-        BookMarkPolicy bookMarkPolicy = policyService.createBookmark(id, srchPolicyId);
-
-        return CustomResponse.onSuccess(GeneralSuccessCode.CREATED, bookMarkPolicy);
+        return CustomResponse.onSuccess(GeneralSuccessCode.CREATED, PolicyBookmarkResponseDTO.CreateBookmarkResponseDTO.from(bookMarkPolicy));
     }
+
+
 }

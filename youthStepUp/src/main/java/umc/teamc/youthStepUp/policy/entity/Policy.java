@@ -3,7 +3,6 @@ package umc.teamc.youthStepUp.policy.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import umc.teamc.youthStepUp.global.common.BaseEntity;
-import umc.teamc.youthStepUp.member.entity.Member;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,7 +22,4 @@ public class Policy extends BaseEntity {
     @Column(name = "deadline")
     String deadline;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
 }
