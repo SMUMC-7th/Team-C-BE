@@ -11,7 +11,7 @@ import umc.teamc.youthStepUp.policy.entity.BookMarkPolicy;
 import umc.teamc.youthStepUp.policy.entity.Policy;
 import umc.teamc.youthStepUp.policy.exception.PolicyErrorCode;
 import umc.teamc.youthStepUp.policy.exception.PolicyException;
-import umc.teamc.youthStepUp.policy.repository.BookmarkRepository;
+import umc.teamc.youthStepUp.policy.repository.BookmarkPolicyRepository;
 import umc.teamc.youthStepUp.policy.repository.PolicyRepository;
 
 @Service
@@ -20,7 +20,7 @@ public class PolicyServiceImpl implements PolicyService {
 
     private final PolicyRepository policyRepository;
     private final MemberRepository memberRepository;
-    private final BookmarkRepository bookmarkRepository;
+    private final BookmarkPolicyRepository bookmarkPolicyRepository;
 
     @Override
     public Policy createPolicy(Long memberId, String srchPolicyId, String rqutPrdCn) {
@@ -29,7 +29,6 @@ public class PolicyServiceImpl implements PolicyService {
         if (existingPolicy != null) {
             return existingPolicy;
         }
-
 
         //이미 존재하지 않는 Policy라면 저장한 Policy를 리턴
         PolicyBookmarkRequestDTO.CreatePolicyDTO dto = new PolicyBookmarkRequestDTO.CreatePolicyDTO();
@@ -48,9 +47,9 @@ public class PolicyServiceImpl implements PolicyService {
         Policy policy = policyRepository.findById(policyId).orElseThrow(() ->
                 new PolicyException(PolicyErrorCode.POLICY_NOT_FOUND));
 
-
         //이미 존재하는 북마크인지 확인 -> 존재하면 이미 존재한다는 예외처리 / 존재하지 않는다면 북마크 객체 생성 후 저장
-        BookMarkPolicy existingBookmark = bookmarkRepository.findBookMarkPolicyByMemberIdAndPolicyId(memberId, policyId);
+        BookMarkPolicy existingBookmark = bookmarkPolicyRepository.findBookMarkPolicyByMemberIdAndPolicyId(memberId,
+                policyId);
         if (existingBookmark != null) {
             return existingBookmark;
         }
@@ -60,6 +59,6 @@ public class PolicyServiceImpl implements PolicyService {
         BookMarkPolicy bookmark = dto.toEntity(member, policy);
 
         //DB에 저장
-        return bookmarkRepository.save(bookmark);
+        return bookmarkPolicyRepository.save(bookmark);
     }
 }
