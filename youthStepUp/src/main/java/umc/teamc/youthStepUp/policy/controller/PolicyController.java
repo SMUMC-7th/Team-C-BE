@@ -39,7 +39,7 @@ public class PolicyController {
     @GetMapping("/policy/recommend")
     @Operation(summary = "정책 맞춤 추천 조회", description = "정책을 회원 정보에 맞춰 추천받아 조회하는 API")
     public CustomResponse<?> callOpenApi(
-            @MemberInfo Long id,
+            @Parameter(hidden = true) @MemberInfo Long id,
             @RequestParam(required = false, defaultValue = "10") String display,
             @RequestParam(required = false, defaultValue = "1") String pageIndex
     ) throws JAXBException {

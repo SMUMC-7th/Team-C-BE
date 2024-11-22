@@ -16,8 +16,8 @@ import umc.teamc.youthStepUp.policy.dto.PolicyRandomRequest;
 @Service
 @RequiredArgsConstructor
 public class PolicyRecommendedService {
-    private AuthenticationService authenticationService;
-    private RestTemplate restTemplate;
+    private final AuthenticationService authenticationService;
+    private final RestTemplate restTemplate;
     private static final String SERVER_URL = "https://www.youthcenter.go.kr/opi/youthPlcyList.do";
 
     public PolicyRandomRequest callRecommendAPI(List<String> bizTycdSel,

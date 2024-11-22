@@ -30,11 +30,11 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (JwtException exception) {
             BaseErrorCode code = exception.getCode();
-            if (code.getCode().equals(JwtErrorCode.TOKEN_EXPIRED.getCode())) {
-                if (getRefreshTokenAndReissue(request, response)) {
-                    return;
-                }
-            }
+//            if (code.getCode().equals(JwtErrorCode.TOKEN_EXPIRED.getCode())) {
+//                if (getRefreshTokenAndReissue(request, response)) {
+//                    return;
+//                }
+//            }
             setResponse(response, code);
         }
     }
