@@ -2,6 +2,7 @@ package umc.teamc.youthStepUp.policy.service;
 
 import jakarta.xml.bind.JAXBException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -14,14 +15,14 @@ import umc.teamc.youthStepUp.policy.dto.PolicyRandomRequest;
 
 @Service
 @RequiredArgsConstructor
-public class PolicyRandomService {
-    private final AuthenticationService authenticationService;
-    private final RestTemplate restTemplate;
-
+public class PolicyRecommendedService {
+    private AuthenticationService authenticationService;
+    private RestTemplate restTemplate;
     private static final String SERVER_URL = "https://www.youthcenter.go.kr/opi/youthPlcyList.do";
 
-    public PolicyRandomRequest callAPI(String srchPolicyId, String query, String bizTycdSel, String srchPolyBizSecd,
-                                       String keyword, String display, String pageIndex) throws JAXBException {
+    public PolicyRandomRequest callRecommendAPI(List<String> bizTycdSel,
+                                                List<String> srchPolyBizSecd, String display, String pageIndex)
+            throws JAXBException {
         String token = authenticationService.getAuthToken();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
@@ -34,25 +35,15 @@ public class PolicyRandomService {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("?openApiVlak={openApiVlak}&display={display}&pageIndex={pageIndex}");
 
-        if (srchPolicyId != null && !srchPolicyId.isEmpty()) {
-            params.put("srchPolicyId", srchPolicyId);
-            stringBuilder.append("&srchPolicyId={srchPolicyId}");
-        }
-        if (query != null && !query.isEmpty()) {
-            params.put("query", query);
-            stringBuilder.append("&query={query}");
-        }
         if (bizTycdSel != null && !bizTycdSel.isEmpty()) {
-            params.put("bizTycdSel", bizTycdSel);
-            stringBuilder.append("&bizTycdSel={bizTycdSel}");
+            String formattedBizTycdSel = formatCodeList(bizTycdSel);
+            params.put("bizTycdSel", formattedBizTycdSel);
+            stringBuilder.append("&bizTycdSel=").append(formattedBizTycdSel);
         }
         if (srchPolyBizSecd != null && !srchPolyBizSecd.isEmpty()) {
-            params.put("srchPolyBizSecd", srchPolyBizSecd);
-            stringBuilder.append("&srchPolyBizSecd={srchPolyBizSecd}");
-        }
-        if (keyword != null && !keyword.isEmpty()) {
-            params.put("keyword", keyword);
-            stringBuilder.append("&keyword={keyword}");
+            String formattedCode = formatCodeList(srchPolyBizSecd);
+            params.put("srchPolyBizSecd", formattedCode);
+            stringBuilder.append("&srchPolyBizSecd=").append(formattedCode);
         }
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -66,4 +57,15 @@ public class PolicyRandomService {
         System.out.println(response.getBody());
         return PolicyRandomRequest.unmarshal(response.getBody());
     }
+
+    private static String formatCodeList(List<String> bizTycdSel) {
+        if (bizTycdSel == null || bizTycdSel.isEmpty()) {
+            return "";
+        }
+        if (bizTycdSel.size() == 1) {
+            return "{" + bizTycdSel.get(0) + "}";
+        }
+        return String.join(",", bizTycdSel);
+    }
+
 }

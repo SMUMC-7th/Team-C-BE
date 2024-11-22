@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import umc.teamc.youthStepUp.member.dto.MemberInitProfileRequestDTO;
+import umc.teamc.youthStepUp.member.dto.MemberKeyWordDTO;
 import umc.teamc.youthStepUp.member.dto.MemberProfileResponseDTO;
 import umc.teamc.youthStepUp.member.entity.Education;
 import umc.teamc.youthStepUp.member.entity.Keyword;
@@ -36,21 +37,33 @@ public class MemberService {
     }
 
     private static void initProfile(Member member, Education education, List<Region> regions, List<Major> majors,
-                                    List<Keyword> keywords, String age) {
+                                    List<Keyword> keywords, int age) {
         member.editEducation(education);
         member.editRegion(regions);
         member.editKeyword(keywords);
         member.editMajor(majors);
-        member.editAge(Integer.parseInt(age));
+        member.editAge(age);
     }
 
     private static void validateInitprofileIsNull(Education education, List<Region> regions, List<Major> majors,
                                                   List<Keyword> keywords,
-                                                  String age) {
-        if (education == null || regions.contains(null) || majors.contains(null) || keywords.contains(null) ||
-                age == null) {
+                                                  int age) {
+        if (education == null || regions.contains(null) || majors.contains(null) || keywords.contains(null)) {
             throw new MemberCustomException(MemberErrorCode.INPUT_ENTER_REQURIED_INFORMATION);
         }
+    }
+
+    public MemberKeyWordDTO getKeywords(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(
+                () -> new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND)
+        );
+        List<String> keywords = member.getKeyword().stream()
+                .map(Keyword::getCode)
+                .toList();
+        List<String> regions = member.getRegion().stream()
+                .map(Region::getCode)
+                .toList();
+        return new MemberKeyWordDTO(keywords, regions);
     }
 
 }
