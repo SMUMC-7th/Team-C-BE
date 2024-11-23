@@ -1,6 +1,8 @@
 package umc.teamc.youthStepUp.policy.service;
 
 import jakarta.xml.bind.JAXBException;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -10,9 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import umc.teamc.youthStepUp.policy.dto.PolicyDetailRequest;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Service
 @RequiredArgsConstructor
 public class PolicyDetailService {
@@ -21,7 +20,8 @@ public class PolicyDetailService {
     private final RestTemplate restTemplate;
     private static final String SERVER_URL = "https://www.youthcenter.go.kr/opi/youthPlcyList.do";
 
-    public PolicyDetailRequest callAPI(String srchPolicyId, String query, String bizTycdSel, String srchPolyBizSecd, String keyword) throws JAXBException {
+    public PolicyDetailRequest callAPI(String srchPolicyId, String query, String bizTycdSel, String srchPolyBizSecd,
+                                       String keyword) throws JAXBException {
         String token = authenticationService.getAuthToken();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
@@ -63,9 +63,6 @@ public class PolicyDetailService {
                 String.class,
                 params
         );
-        System.out.println(response.getBody());
-
-
         return PolicyDetailRequest.unmarshal(response.getBody());
     }
 }

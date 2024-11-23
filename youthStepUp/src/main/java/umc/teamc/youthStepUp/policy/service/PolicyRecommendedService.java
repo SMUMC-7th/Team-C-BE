@@ -54,7 +54,6 @@ public class PolicyRecommendedService {
                 String.class,
                 params
         );
-        System.out.println(response.getBody());
         return PolicyRandomRequest.unmarshal(response.getBody());
     }
 
