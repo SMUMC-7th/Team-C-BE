@@ -4,8 +4,8 @@ import umc.teamc.youthStepUp.member.entity.Member;
 import umc.teamc.youthStepUp.profile.dto.request.UpdateProfileRequestDTO;
 
 public interface ProfileCommandService {
-    public Member updateProfile(Long memberId, UpdateProfileRequestDTO request);
+    Member updateProfile(Member member, UpdateProfileRequestDTO request);
 
-    public void deleteProfile(Long memberId, String name);
-    
+    void deleteProfile(Member member, String name);
+
 }

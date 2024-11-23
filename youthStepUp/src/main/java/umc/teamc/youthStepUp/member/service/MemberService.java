@@ -15,6 +15,7 @@ import umc.teamc.youthStepUp.member.entity.Region;
 import umc.teamc.youthStepUp.member.error.MemberErrorCode;
 import umc.teamc.youthStepUp.member.error.exception.MemberCustomException;
 import umc.teamc.youthStepUp.member.repository.MemberRepository;
+import umc.teamc.youthStepUp.profile.dto.request.DuplicateCheckRequestDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +23,10 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public MemberProfileResponseDTO initProfile(Long id, MemberInitProfileRequestDTO dto) {
-        Member member = memberRepository.findById(id).orElseThrow(
-                () -> new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND)
-        );
+    public MemberProfileResponseDTO initProfile(Member member, MemberInitProfileRequestDTO dto) {
+//        Member member = memberRepository.findById(id).orElseThrow(
+//                () -> new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND)
+//        );
         Education education = Education.toEducation(dto.educations());
         List<Region> regions = Region.toRegion(dto.regions());
         List<Major> majors = Major.toMajor(dto.majors());
@@ -64,6 +65,10 @@ public class MemberService {
                 .map(Region::getCode)
                 .toList();
         return new MemberKeyWordDTO(keywords, regions);
+    }
+
+    public boolean checkDuplicateNickName(Member member, DuplicateCheckRequestDTO dto) {
+        return memberRepository.existsByNickName(dto.nickName());
     }
 
 }

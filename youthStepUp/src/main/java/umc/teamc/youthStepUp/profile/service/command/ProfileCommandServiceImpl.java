@@ -1,6 +1,7 @@
 package umc.teamc.youthStepUp.profile.service.command;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import umc.teamc.youthStepUp.member.entity.Education;
@@ -8,26 +9,19 @@ import umc.teamc.youthStepUp.member.entity.Keyword;
 import umc.teamc.youthStepUp.member.entity.Major;
 import umc.teamc.youthStepUp.member.entity.Member;
 import umc.teamc.youthStepUp.member.entity.Region;
-import umc.teamc.youthStepUp.member.error.MemberErrorCode;
-import umc.teamc.youthStepUp.member.error.exception.MemberCustomException;
 import umc.teamc.youthStepUp.profile.dto.request.UpdateProfileRequestDTO;
 import umc.teamc.youthStepUp.profile.exception.ProfileErrorCode;
 import umc.teamc.youthStepUp.profile.exception.ProfileException;
-import umc.teamc.youthStepUp.profile.repository.ProfileRepository;
 
 @Service
 @RequiredArgsConstructor
 public class ProfileCommandServiceImpl implements ProfileCommandService {
 
-    private final ProfileRepository profileRepository;
-
     @Override
     @Transactional
-    public Member updateProfile(Long memberId, UpdateProfileRequestDTO request) {
-        Member profile = profileRepository.findById(memberId).orElseThrow(() ->
-                new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND));
-        editProfile(request, profile);
-        return profile;
+    public Member updateProfile(Member member, UpdateProfileRequestDTO request) {
+        editProfile(request, member);
+        return member;
     }
 
     private static void editProfile(UpdateProfileRequestDTO request, Member profile) {
@@ -37,17 +31,45 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
         if (!checkEmpty(request.nickName())) {
             profile.editNickName(request.nickName());
         }
-        if (request.region() != null && !request.region().isEmpty()) {
-            profile.editRegion(Region.toRegion(request.region()));
+        checkNullAndUpdateRegion(request.region(), profile);
+        checkNullAndUpdateMajor(request.major(), profile);
+        checkNullAndUpdateKeyWords(request.keywords(), profile);
+        checkNullAndUpdateEducation(request.education(), profile);
+    }
+
+    private static void checkNullAndUpdateEducation(String educationDes, Member profile) {
+        if (!checkEmpty(educationDes)) {
+            Education education = Education.toEducation(educationDes);
+            if (education != null) {
+                profile.editEducation(education);
+            }
         }
-        if (request.major() != null && !request.major().isEmpty()) {
-            profile.editMajor(Major.toMajor(request.major()));
+    }
+
+    private static void checkNullAndUpdateKeyWords(List<String> keyword, Member profile) {
+        if (keyword != null && !keyword.isEmpty()) {
+            List<Keyword> keywords = Keyword.toKeyword(keyword);
+            if (!keywords.contains(null)) {
+                profile.editKeyword(keywords);
+            }
         }
-        if (request.keywords() != null && !request.keywords().isEmpty()) {
-            profile.editKeyword(Keyword.toKeyword((request.keywords())));
+    }
+
+    private static void checkNullAndUpdateMajor(List<String> major, Member profile) {
+        if (major != null && !major.isEmpty()) {
+            List<Major> majors = Major.toMajor(major);
+            if (!majors.contains(null)) {
+                profile.editMajor(majors);
+            }
         }
-        if (!checkEmpty(request.education())) {
-            profile.editEducation(Education.toEducation(request.education()));
+    }
+
+    private static void checkNullAndUpdateRegion(List<String> region, Member profile) {
+        if (region != null && !region.isEmpty()) {
+            List<Region> regions = Region.toRegion(region);
+            if (!regions.contains(null)) {
+                profile.editRegion(regions);
+            }
         }
     }
 
@@ -56,10 +78,8 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
     }
 
     @Override
-    public void deleteProfile(Long memberId, String name) {
-        Member profile = profileRepository.findById(memberId).orElseThrow(() ->
-                new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND));
-
+    @Transactional
+    public void deleteProfile(Member profile, String name) {
         if (profile.getNickName().equals(name)) {
             profile.deleteEntity();
         } else {

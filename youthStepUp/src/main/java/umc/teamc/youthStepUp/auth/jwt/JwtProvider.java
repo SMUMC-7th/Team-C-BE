@@ -16,11 +16,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import umc.teamc.youthStepUp.auth.constant.TokenConstant;
 import umc.teamc.youthStepUp.auth.jwt.error.JwtErrorCode;
 import umc.teamc.youthStepUp.auth.jwt.error.exception.JwtException;
 import umc.teamc.youthStepUp.auth.service.CustomUserDetailService;
+import umc.teamc.youthStepUp.global.error.exception.CustomException;
 
 @Slf4j
 @Component
@@ -70,11 +70,18 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String resolveToken(String header) {
-        if (StringUtils.hasText(header) && header.startsWith(TokenConstant.HEADER_TYPE.getValue())) {
-            return header.substring(7);
+    //    public String resolveToken(String header) {
+//        if (StringUtils.hasText(header) && header.startsWith(TokenConstant.HEADER_TYPE.getValue())) {
+//            return header.substring(7);
+//        }
+//        throw new JwtException(JwtErrorCode.TOKEN_INVALID);
+//    }
+    public String resolveToken(Cookie cookie) {
+        String token = null;
+        if (TokenConstant.ACCESS_TOKEN.getValue().equals(cookie.getName())) {
+            token = cookie.getValue();
         }
-        throw new JwtException(JwtErrorCode.TOKEN_INVALID);
+        return token;
     }
 
     public Long getExpiredIn(String token) {
@@ -103,6 +110,23 @@ public class JwtProvider {
             throw new JwtException(JwtErrorCode.TOKEN_INVALID);
         } catch (ExpiredJwtException e) {
             throw new JwtException(JwtErrorCode.TOKEN_EXPIRED);
+        }
+    }
+
+    public Cookie findCookie(Cookie[] cookies, String type) {
+        Cookie findCookie = null;
+        try {
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (type.equals(cookie.getName())) {
+                        findCookie = cookie;
+                        break;
+                    }
+                }
+            }
+            return findCookie;
+        } catch (Exception e) {
+            throw new CustomException(JwtErrorCode.HEADER_NO_TOKEN);
         }
     }
 

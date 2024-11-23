@@ -1,15 +1,18 @@
 package umc.teamc.youthStepUp.article.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-import org.springframework.data.domain.Slice;
-import umc.teamc.youthStepUp.article.entity.Article;
-import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
-import umc.teamc.youthStepUp.member.dto.MemberDTO.MemberDataDTO;
-import umc.teamc.youthStepUp.member.entity.Member;
-
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Slice;
+import umc.teamc.youthStepUp.article.entity.Article;
+import umc.teamc.youthStepUp.auth.annotation.MemberIdInfo;
+import umc.teamc.youthStepUp.member.dto.MemberDTO.MemberDataDTO;
+import umc.teamc.youthStepUp.member.entity.Member;
 
 public class ArticleResponseDTO {
 
@@ -25,7 +28,7 @@ public class ArticleResponseDTO {
         private String nickname;
         private Long memberId;
 
-        public static CreatedArticleResponseDTO from(Article article, @MemberInfo Long memberId, String nickName) {
+        public static CreatedArticleResponseDTO from(Article article, @MemberIdInfo Long memberId, String nickName) {
             return CreatedArticleResponseDTO.builder()
                     .articleId(article.getId())
                     .createdAt(article.getCreatedAt())

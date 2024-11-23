@@ -63,7 +63,6 @@ public class PolicyRandomService {
                 String.class,
                 params
         );
-        System.out.println(response.getBody());
         return PolicyListRequest.unmarshal(response.getBody());
     }
 }

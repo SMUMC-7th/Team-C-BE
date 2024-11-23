@@ -72,14 +72,17 @@ public class Member extends BaseEntity {
     }
 
     public void editRegion(List<Region> region) {
+        this.region.clear();
         this.region.addAll(region);
     }
 
     public void editMajor(List<Major> major) {
+        this.major.clear();
         this.major.addAll(major);
     }
 
     public void editKeyword(List<Keyword> keyword) {
+        this.keyword.clear();
         this.keyword.addAll(keyword);
     }
 }

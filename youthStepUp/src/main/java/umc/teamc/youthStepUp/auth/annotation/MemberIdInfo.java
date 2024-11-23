@@ -9,5 +9,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 @Parameter(hidden = true)
-public @interface MemberInfo {
+public @interface MemberIdInfo {
 }

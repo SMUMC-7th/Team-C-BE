@@ -2,6 +2,7 @@ package umc.teamc.youthStepUp.auth.jwt.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import umc.teamc.youthStepUp.auth.constant.TokenConstant;
 import umc.teamc.youthStepUp.auth.jwt.JwtProvider;
+import umc.teamc.youthStepUp.auth.jwt.error.JwtErrorCode;
+import umc.teamc.youthStepUp.auth.jwt.error.exception.JwtException;
 
 @RequiredArgsConstructor
 @Component
@@ -22,12 +25,15 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String header = request.getHeader(TokenConstant.HEADER_PREFIX.getValue());
-        if (header == null) {
+        Cookie cookie = jwtProvider.findCookie(request.getCookies(), TokenConstant.ACCESS_TOKEN.getValue());
+        if (cookie == null) {
             filterChain.doFilter(request, response);
             return;
+        } //비회원일때
+        String token = jwtProvider.resolveToken(cookie);
+        if (token == null || token.isBlank() || token.isEmpty()) {
+            throw new JwtException(JwtErrorCode.TOKEN_INVALID);
         }
-        String token = jwtProvider.resolveToken(header);
         if (!jwtProvider.isExpired(token)) {
             setAuthentication(token);
         }

@@ -1,6 +1,11 @@
 package umc.teamc.youthStepUp.auth.service;
 
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -9,11 +14,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import umc.teamc.youthStepUp.auth.constant.KAKAO_URL;
+import umc.teamc.youthStepUp.auth.constant.TokenConstant;
 import umc.teamc.youthStepUp.auth.dto.KakaoAccessTokenDTO;
 import umc.teamc.youthStepUp.auth.dto.KakaoUserInfoDTO;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
+import umc.teamc.youthStepUp.auth.jwt.JwtProvider;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +28,7 @@ public class KakaoAuthService {
     private String redirect_uri;
     private final String grant_type = "authorization_code";
     private final String response_type = "code";
+    private final JwtProvider jwtProvider;
 
     public void getCode() {
         ;
@@ -65,10 +70,22 @@ public class KakaoAuthService {
         return formData;
     }
 
-    public void logout() {
+    public void logout(HttpServletResponse response, HttpServletRequest request) {
+        Cookie accessToken = jwtProvider.findCookie(request.getCookies(), TokenConstant.ACCESS_TOKEN.getValue());
+        Cookie refreshToken = jwtProvider.findCookie(request.getCookies(), TokenConstant.REFRESH_TOKEN.getValue());
+        setCookieClean(accessToken);
+        setCookieClean(refreshToken);
         WebClient.create()
                 .get()
                 .uri(getLogoutUrl());
+        response.addCookie(accessToken);
+        response.addCookie(refreshToken);
+    }
+
+    private static void setCookieClean(Cookie cookie) {
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
     }
 
     private String getLogoutUrl() {

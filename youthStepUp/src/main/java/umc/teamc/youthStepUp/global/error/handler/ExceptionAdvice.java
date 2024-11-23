@@ -1,8 +1,11 @@
 package umc.teamc.youthStepUp.global.error.handler;
 
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,7 +13,6 @@ import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.error.BaseErrorCode;
 import umc.teamc.youthStepUp.global.error.GeneralErrorCode;
 import umc.teamc.youthStepUp.global.error.exception.CustomException;
-import umc.teamc.youthStepUp.member.error.MemberErrorCode;
 
 @Slf4j
 @RestControllerAdvice
@@ -31,9 +33,12 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handle(MethodArgumentNotValidException e) {
-        CustomResponse response = CustomResponse.fail(
-                MemberErrorCode.PROFILE_VALIDATION_ERROR
-        );
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        Map<String, String> errors = new HashMap<>();
+        e.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return ResponseEntity.badRequest().body(errors);
     }
 }

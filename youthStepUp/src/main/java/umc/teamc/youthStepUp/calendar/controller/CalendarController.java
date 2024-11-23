@@ -4,9 +4,15 @@ package umc.teamc.youthStepUp.calendar.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import umc.teamc.youthStepUp.auth.annotation.MemberIdInfo;
 import umc.teamc.youthStepUp.calendar.converter.BookmarkConverter;
 import umc.teamc.youthStepUp.calendar.dto.request.UpdateBookmarkCompletionDTO;
 import umc.teamc.youthStepUp.calendar.entity.Bookmark;
@@ -14,8 +20,6 @@ import umc.teamc.youthStepUp.calendar.service.command.CalendarBookmarkCommandSer
 import umc.teamc.youthStepUp.calendar.service.query.CalendarBookmarkQueryService;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
-
-import java.util.List;
 
 @Tag(name = "캘린더 API")
 @RestController
@@ -36,7 +40,7 @@ public class CalendarController {
     @Operation(summary = "월 기준 정책 검색")
     @GetMapping("/month")
     public CustomResponse<?> getPoliciesByMonth(
-            @Parameter(hidden = true) @MemberInfo Long id,
+            @Parameter(hidden = true) @MemberIdInfo Long id,
             @RequestParam int year,
             @RequestParam int month) {
 
@@ -55,7 +59,7 @@ public class CalendarController {
     @Operation(summary = "일 기준 정책 검색")
     @GetMapping("/date")
     public CustomResponse<?> getBookmarksByDate(
-            @Parameter(hidden = true) @MemberInfo Long id,
+            @Parameter(hidden = true) @MemberIdInfo Long id,
             @RequestParam int year,
             @RequestParam int month,
             @RequestParam int date) {
@@ -73,7 +77,7 @@ public class CalendarController {
      */
     @Operation(summary = "정책 완료 여부 수정")
     @PatchMapping("/is-complete")
-    public CustomResponse<?> updatePolicyCompletionStatus(@Parameter(hidden = true) @MemberInfo Long id,
+    public CustomResponse<?> updatePolicyCompletionStatus(@Parameter(hidden = true) @MemberIdInfo Long id,
                                                           @RequestBody UpdateBookmarkCompletionDTO request) {
         Bookmark bookmark = bookmarkCommandService.updateIsCompleted(id, request);
 

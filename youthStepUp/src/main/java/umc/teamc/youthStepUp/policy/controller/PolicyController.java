@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
+import umc.teamc.youthStepUp.auth.annotation.MemberIdInfo;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
 import umc.teamc.youthStepUp.member.dto.MemberKeyWordDTO;
@@ -39,7 +39,7 @@ public class PolicyController {
     @GetMapping("/policy/recommend")
     @Operation(summary = "정책 맞춤 추천 조회", description = "정책을 회원 정보에 맞춰 추천받아 조회하는 API")
     public CustomResponse<?> callOpenApi(
-            @Parameter(hidden = true) @MemberInfo Long id,
+            @Parameter(hidden = true) @MemberIdInfo Long id,
             @RequestParam(required = false, defaultValue = "10") String display,
             @RequestParam(required = false, defaultValue = "1") String pageIndex
     ) throws JAXBException {
@@ -75,7 +75,7 @@ public class PolicyController {
 
     @PostMapping("/policy/bookmark/request")
     @Operation(summary = "정책 북마크 요청", description = "정책 상세 페이지에서 북마크 요청을 보내는 API")
-    public CustomResponse<?> bookmarkRequest(@Parameter(hidden = true) @MemberInfo Long id,
+    public CustomResponse<?> bookmarkRequest(@Parameter(hidden = true) @MemberIdInfo Long id,
                                              @RequestParam String srchPolicyId,
                                              @RequestParam String deadline) {
         Policy newPolicy = policyService.createPolicy(id, srchPolicyId, deadline);
