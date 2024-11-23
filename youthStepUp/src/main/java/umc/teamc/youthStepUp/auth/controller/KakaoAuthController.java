@@ -7,10 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
 import umc.teamc.youthStepUp.auth.dto.KakaoAccessTokenDTO;
 import umc.teamc.youthStepUp.auth.dto.KakaoUserInfoDTO;
 import umc.teamc.youthStepUp.auth.service.AuthService;
@@ -58,11 +56,6 @@ public class KakaoAuthController {
             @CookieValue("refreshToken") String refreshToken, HttpServletResponse response) {
         authService.reissueToken(refreshToken, response);
         return CustomResponse.onSuccess(AuthSuccessCode.ACCESS_TOKEN_REISSUE_SUCCESS);
-    }
-
-    @PostMapping("/test")
-    public CustomResponse<?> test(@Parameter(hidden = true) @MemberInfo Long id) {
-        return CustomResponse.onSuccess(AuthSuccessCode.LOGIN_SUCCESS, id);
     }
 
 }

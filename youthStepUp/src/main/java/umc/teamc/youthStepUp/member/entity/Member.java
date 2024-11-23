@@ -1,15 +1,27 @@
 package umc.teamc.youthStepUp.member.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import umc.teamc.youthStepUp.global.entity.BaseEntity;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
+import umc.teamc.youthStepUp.global.entity.BaseEntity;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Where(clause = "deleted_at IS NULL")
 @Builder
 @Getter
 public class Member extends BaseEntity {

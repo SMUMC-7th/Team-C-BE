@@ -3,7 +3,11 @@ package umc.teamc.youthStepUp.profile.service.command;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import umc.teamc.youthStepUp.member.entity.*;
+import umc.teamc.youthStepUp.member.entity.Education;
+import umc.teamc.youthStepUp.member.entity.Keyword;
+import umc.teamc.youthStepUp.member.entity.Major;
+import umc.teamc.youthStepUp.member.entity.Member;
+import umc.teamc.youthStepUp.member.entity.Region;
 import umc.teamc.youthStepUp.member.error.MemberErrorCode;
 import umc.teamc.youthStepUp.member.error.exception.MemberCustomException;
 import umc.teamc.youthStepUp.profile.dto.request.UpdateProfileRequestDTO;
@@ -30,21 +34,25 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
         if (request.age() != null) {
             profile.editAge(request.age());
         }
-        if (request.nickName() != null) {
+        if (!checkEmpty(request.nickName())) {
             profile.editNickName(request.nickName());
         }
-        if (request.region() != null) {
+        if (request.region() != null && !request.region().isEmpty()) {
             profile.editRegion(Region.toRegion(request.region()));
         }
-        if (request.major() != null) {
+        if (request.major() != null && !request.major().isEmpty()) {
             profile.editMajor(Major.toMajor(request.major()));
         }
-        if (request.keywords() != null) {
+        if (request.keywords() != null && !request.keywords().isEmpty()) {
             profile.editKeyword(Keyword.toKeyword((request.keywords())));
         }
-        if (request.major() != null) {
+        if (!checkEmpty(request.education())) {
             profile.editEducation(Education.toEducation(request.education()));
         }
+    }
+
+    private static boolean checkEmpty(String str) {
+        return str == null || str.isEmpty();
     }
 
     @Override
