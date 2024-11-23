@@ -5,18 +5,19 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import java.io.StringReader;
 import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.io.StringReader;
 
 @Getter
 @ToString
 @XmlRootElement(name = "youthPolicyList")
 public class PolicyDetailRequest {
 
+    @XmlElement(name = "pageIndex")
     private int pageIndex; //조회 페이지 기본 값 1
+    @XmlElement(name = "totalCnt")
     private int totalCnt; //총 건수
     private Emp emp; //각 emp 객체 리스트
 

@@ -10,7 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import umc.teamc.youthStepUp.policy.dto.PolicyRandomRequest;
+import umc.teamc.youthStepUp.policy.dto.PolicyListRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +20,8 @@ public class PolicyRandomService {
 
     private static final String SERVER_URL = "https://www.youthcenter.go.kr/opi/youthPlcyList.do";
 
-    public PolicyRandomRequest callAPI(String srchPolicyId, String query, String bizTycdSel, String srchPolyBizSecd,
-                                       String keyword, String display, String pageIndex) throws JAXBException {
+    public PolicyListRequest callAPI(String srchPolicyId, String query, String bizTycdSel, String srchPolyBizSecd,
+                                     String keyword, String display, String pageIndex) throws JAXBException {
         String token = authenticationService.getAuthToken();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
@@ -63,6 +63,7 @@ public class PolicyRandomService {
                 String.class,
                 params
         );
-        return PolicyRandomRequest.unmarshal(response.getBody());
+        System.out.println(response.getBody());
+        return PolicyListRequest.unmarshal(response.getBody());
     }
 }

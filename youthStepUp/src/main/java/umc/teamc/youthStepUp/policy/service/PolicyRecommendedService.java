@@ -11,7 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import umc.teamc.youthStepUp.policy.dto.PolicyRandomRequest;
+import umc.teamc.youthStepUp.policy.dto.PolicyListRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +20,8 @@ public class PolicyRecommendedService {
     private final RestTemplate restTemplate;
     private static final String SERVER_URL = "https://www.youthcenter.go.kr/opi/youthPlcyList.do";
 
-    public PolicyRandomRequest callRecommendAPI(List<String> bizTycdSel,
-                                                List<String> srchPolyBizSecd, String display, String pageIndex)
+    public PolicyListRequest callRecommendAPI(List<String> bizTycdSel,
+                                              List<String> srchPolyBizSecd, String display, String pageIndex)
             throws JAXBException {
         String token = authenticationService.getAuthToken();
         HttpHeaders headers = new HttpHeaders();
@@ -54,7 +54,7 @@ public class PolicyRecommendedService {
                 String.class,
                 params
         );
-        return PolicyRandomRequest.unmarshal(response.getBody());
+        return PolicyListRequest.unmarshal(response.getBody());
     }
 
     private static String formatCodeList(List<String> bizTycdSel) {

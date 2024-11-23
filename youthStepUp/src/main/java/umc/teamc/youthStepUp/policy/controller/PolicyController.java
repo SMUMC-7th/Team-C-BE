@@ -17,7 +17,7 @@ import umc.teamc.youthStepUp.member.dto.MemberKeyWordDTO;
 import umc.teamc.youthStepUp.member.service.MemberService;
 import umc.teamc.youthStepUp.policy.dto.PolicyBookmarkResponseDTO;
 import umc.teamc.youthStepUp.policy.dto.PolicyDetailRequest;
-import umc.teamc.youthStepUp.policy.dto.PolicyRandomRequest;
+import umc.teamc.youthStepUp.policy.dto.PolicyListRequest;
 import umc.teamc.youthStepUp.policy.entity.BookMarkPolicy;
 import umc.teamc.youthStepUp.policy.entity.Policy;
 import umc.teamc.youthStepUp.policy.service.PolicyDetailService;
@@ -44,10 +44,10 @@ public class PolicyController {
             @RequestParam(required = false, defaultValue = "1") String pageIndex
     ) throws JAXBException {
         MemberKeyWordDTO dto = memberService.getKeywords(id);
-        PolicyRandomRequest policyRandomRequest = recommendedService.callRecommendAPI(dto.keywords(),
+        PolicyListRequest policyListRequest = recommendedService.callRecommendAPI(dto.keywords(),
                 dto.regions(),
                 display, pageIndex);
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK, policyRandomRequest);
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, policyListRequest);
     }
 
     @GetMapping("/policy/recommend/{srchPolicyId}")
@@ -68,9 +68,9 @@ public class PolicyController {
             @RequestParam(required = false, defaultValue = "10") String display,
             @RequestParam(required = false, defaultValue = "1") String pageIndex
     ) throws JAXBException {
-        PolicyRandomRequest policyRandomRequest = policyRandomService.callAPI(srchPolicyId, query, bizTycdSel,
+        PolicyListRequest policyListRequest = policyRandomService.callAPI(srchPolicyId, query, bizTycdSel,
                 srchPolyBizSecd, keyword, display, pageIndex);
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK, policyRandomRequest);
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, policyListRequest);
     }
 
     @PostMapping("/policy/bookmark/request")
