@@ -30,6 +30,6 @@ public class ReplyQueryServiceImpl implements ReplyQueryService {
 
         Pageable pageable = PageRequest.of(0, pageSize);
 
-        return replyRepository.findRepliesByArticleOrderByCreatedAtDesc(article, pageable);
+        return replyRepository.findRepliesByArticleOrderByCreatedAtAsc(articleId, cursorId, pageable);
     }
 }

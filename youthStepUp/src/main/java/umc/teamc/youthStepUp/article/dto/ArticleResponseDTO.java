@@ -85,7 +85,7 @@ public class ArticleResponseDTO {
             Long nextCursorId = articles.hasNext()
                     ? articles.getContent()
                     .get(articles.getNumberOfElements() - 1)
-                    .getId() : null;
+                    .getId() : 0;
 
             return ArticlePagePreviewListDTO.builder()
                     .articleList(articleList)

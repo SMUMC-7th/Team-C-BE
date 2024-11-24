@@ -14,9 +14,13 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
 
     @Query("SELECT r" +
             " FROM Reply r" +
-            " WHERE r.article = :article AND r.member.deletedAt IS NULL" +
-            " ORDER BY r.createdAt DESC")
-    Slice<Reply> findRepliesByArticleOrderByCreatedAtDesc(@Param("article") Article article, Pageable pageable);
+            " WHERE r.article.id = :articleId" +
+            " AND r.member.deletedAt IS NULL" +
+            " AND (:cursorId IS NULL OR r.id > :cursorId)" +
+            " ORDER BY r.createdAt ASC")
+    Slice<Reply> findRepliesByArticleOrderByCreatedAtAsc(@Param("articleId") Long articleId,
+                                                         @Param("cursorId") Long cursorId,
+                                                         Pageable pageable);
 
 }
 

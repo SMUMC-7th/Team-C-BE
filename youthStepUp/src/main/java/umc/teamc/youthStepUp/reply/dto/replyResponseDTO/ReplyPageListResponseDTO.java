@@ -8,7 +8,7 @@ import java.util.List;
 public record ReplyPageListResponseDTO(
         Boolean hasNext,
         List<ReplyResponseDTO> replyList,
-        Long cursorId
+        Long nextCursorId
 ) {
     public static ReplyPageListResponseDTO from(Slice<Reply> replies) {
 
@@ -20,7 +20,7 @@ public record ReplyPageListResponseDTO(
         Long nextCursorId = replies.hasNext()
                 ? replies.getContent()
                 .get(replies.getNumberOfElements() - 1)
-                .getId() : null;
+                .getId() : 0;
 
         return new ReplyPageListResponseDTO(replies.hasNext(), replyList, nextCursorId);
     }
