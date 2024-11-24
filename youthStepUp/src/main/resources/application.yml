@@ -28,8 +28,8 @@ kakao:
 Jwt:
   secret: ${JWT_SECRET_KEY}
   token:
-    access-expiration-time: 360000 # Milliseconds for 1 hour
-    refresh-expiration-time: 259200000 # Milliseconds for 30 days
+    access-expiration-time: 1800000 #30분 60
+    refresh-expiration-time: 259200000 #1일
 
 ---
 spring:
@@ -53,8 +53,8 @@ spring:
 Jwt:
   secret: ${JWT_SECRET_KEY}
   token:
-    access-expiration-time: 360000 # Milliseconds for 1 hour
-    refresh-expiration-time: 259200000 # Milliseconds for 30 days
+    access-expiration-time: 1800000 # Milliseconds for 1 hour
+    refresh-expiration-time: 86400000  # Milliseconds for 30 days
 
 openapi:
   key: ${OPEN_API_KEY}
@@ -62,3 +62,8 @@ openapi:
 kakao:
   client_id: ${REST_API_KEY}
   redirect_uri: ${REDIRECT_URL}
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
