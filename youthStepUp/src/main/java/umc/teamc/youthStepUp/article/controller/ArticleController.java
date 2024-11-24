@@ -53,6 +53,7 @@ public class ArticleController {
     @GetMapping
     @Operation(method = "GET", summary = "커뮤니티 글 전체 조회 API")
     public CustomResponse<?> getArticlesByCursor(
+            @Parameter(hidden = true) @MemberIdInfo Long id,
             @RequestParam(name = "cursorId", required = false) Long cursorId,
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize
     ) {
@@ -66,6 +67,7 @@ public class ArticleController {
     @GetMapping("/{articleId}")
     @Operation(method = "GET", summary = "커뮤니티 글 상세 조회 API")
     public CustomResponse<?> getArticleById(
+            @Parameter(hidden = true) @MemberIdInfo Long id,
             @PathVariable("articleId") Long articleId) {
 
         Article article = articleQueryService.getArticle(articleId);
