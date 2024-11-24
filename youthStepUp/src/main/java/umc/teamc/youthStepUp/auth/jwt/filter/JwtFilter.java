@@ -7,42 +7,41 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import umc.teamc.youthStepUp.auth.constant.TokenConstant;
+import umc.teamc.youthStepUp.auth.constant.URLConstant;
 import umc.teamc.youthStepUp.auth.jwt.JwtProvider;
-import umc.teamc.youthStepUp.auth.jwt.error.JwtErrorCode;
-import umc.teamc.youthStepUp.auth.jwt.error.exception.JwtException;
+import umc.teamc.youthStepUp.auth.service.AuthService;
 
 @RequiredArgsConstructor
 @Component
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
+    private final AuthService authService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        Cookie cookie = jwtProvider.findCookie(request.getCookies(), TokenConstant.ACCESS_TOKEN.getValue());
-        if (cookie == null) {
+        Cookie[] cookies = request.getCookies();
+        Cookie cookie = jwtProvider.findCookie(cookies, TokenConstant.ACCESS_TOKEN.getValue());
+        if (cookie == null) {//비회원일때
             filterChain.doFilter(request, response);
             return;
-        } //비회원일때
+        }
         String token = jwtProvider.resolveToken(cookie);
+        Cookie RCookie = jwtProvider.findCookie(cookies, TokenConstant.REFRESH_TOKEN.getValue());
         if (token == null || token.isBlank() || token.isEmpty()) {
-            throw new JwtException(JwtErrorCode.TOKEN_INVALID);
+            if (RCookie == null || RCookie.getValue().isEmpty()) {
+                response.sendRedirect(URLConstant.LOGIN_URL.getValue());
+                return;
+            }
         }
-        if (!jwtProvider.isExpired(token)) {
-            setAuthentication(token);
+        if (jwtProvider.isExpired(token)) {
+            authService.reissueToken(RCookie.getValue(), response);
+            return;
         }
+        authService.setAuthentication(token);
         filterChain.doFilter(request, response);
-    }
-
-    private void setAuthentication(String token) {
-        Authentication authentication = jwtProvider.getAuthentication(token);
-        SecurityContext context = SecurityContextHolder.getContext();
-        context.setAuthentication(authentication);
     }
 }

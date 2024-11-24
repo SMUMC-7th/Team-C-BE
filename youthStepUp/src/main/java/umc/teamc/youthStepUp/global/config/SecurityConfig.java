@@ -29,7 +29,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtFilter jwtFilter() {
-        return new JwtFilter(jwtProvider);
+        return new JwtFilter(jwtProvider, authService);
     }
 
     @Bean

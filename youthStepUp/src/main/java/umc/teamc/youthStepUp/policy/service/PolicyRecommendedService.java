@@ -62,7 +62,7 @@ public class PolicyRecommendedService {
             return "";
         }
         if (bizTycdSel.size() == 1) {
-            return "{" + bizTycdSel.get(0) + "}";
+            return bizTycdSel.get(0);
         }
         return String.join(",", bizTycdSel);
     }

@@ -12,6 +12,7 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -70,12 +71,6 @@ public class JwtProvider {
                 .compact();
     }
 
-    //    public String resolveToken(String header) {
-//        if (StringUtils.hasText(header) && header.startsWith(TokenConstant.HEADER_TYPE.getValue())) {
-//            return header.substring(7);
-//        }
-//        throw new JwtException(JwtErrorCode.TOKEN_INVALID);
-//    }
     public String resolveToken(Cookie cookie) {
         String token = null;
         if (TokenConstant.ACCESS_TOKEN.getValue().equals(cookie.getName())) {
@@ -130,27 +125,38 @@ public class JwtProvider {
         }
     }
 
-    public Cookie createRefreshCookie(Long id) {
-        String cookieName = "refreshToken";
-        String cookieValue = createRefreshToken(id);
-        Cookie cookie = new Cookie(cookieName, cookieValue);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(60 * 60 * 24);
-        return cookie;
+    public ResponseCookie createRefreshCookie(Long id) {
+        String name = "refreshToken";
+        String value = createRefreshToken(id);
+//        Cookie cookie = new Cookie(cookieName, cookieValue);
+//        cookie.setHttpOnly(true);
+//        cookie.setSecure(true);
+//        cookie.setPath("/");
+//        cookie.setMaxAge(60 * 60 * 24);
+        return ResponseCookie.from(name, value)
+                .path("/")
+                .sameSite("None")
+                .httpOnly(true)
+                .secure(true)
+                .maxAge(refreshExpiration)
+                .build();
     }
 
-    public Cookie createAccessCookie(Long id) {
-        String cookieName = "accessToken";
-        String cookieValue = createAccessToken(id);
-        Cookie cookie = new Cookie(cookieName, cookieValue);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(60 * 5);
-        return cookie;
+    public ResponseCookie createAccessCookie(Long id) {
+        String name = "accessToken";
+        String value = createAccessToken(id);
+        return ResponseCookie.from(name, value)
+                .path("/")
+                .sameSite("None")
+                .httpOnly(true)
+                .secure(true)
+                .maxAge(accessExpiration)
+                .build();
+        //        Cookie cookie = new Cookie(cookieName, cookieValue);
+//        cookie.setHttpOnly(true);
+//        cookie.setSecure(true);
+//        cookie.setPath("/");
+//        cookie.setMaxAge(60 * 5);
     }
-
 
 }

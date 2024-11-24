@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,7 +36,7 @@ public class KakaoAuthController {
     public CustomResponse<?> getKakaoCode(
             @Parameter(description = "카카오 인가코드", required = true)
             @RequestParam("code") String code,
-            HttpServletResponse response) {
+            HttpServletResponse response) throws IOException {
         KakaoAccessTokenDTO tokenDTO = kakaoAuthService.getKakaoAccessToken(code);
         KakaoUserInfoDTO userInfoDTO = kakaoAuthService.getUserInfo(tokenDTO.accessToken());
         authService.login(userInfoDTO, response);
