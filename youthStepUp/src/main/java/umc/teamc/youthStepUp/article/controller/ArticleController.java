@@ -1,7 +1,6 @@
 package umc.teamc.youthStepUp.article.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +20,7 @@ import umc.teamc.youthStepUp.article.entity.Article;
 import umc.teamc.youthStepUp.article.service.command.ArticleCommandService;
 import umc.teamc.youthStepUp.article.service.query.ArticleQueryService;
 import umc.teamc.youthStepUp.auth.annotation.MemberIdInfo;
+import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
 import umc.teamc.youthStepUp.member.dto.MemberDTO.MemberDataDTO;
@@ -39,7 +39,7 @@ public class ArticleController {
     @PostMapping
     @Operation(method = "POST", summary = "커뮤니티 글 생성 API")
     public CustomResponse<?> createArticle(
-            @Parameter(hidden = true) @MemberIdInfo Long id,
+            @MemberIdInfo Long id,
             @RequestBody ArticleRequestDTO.CreateArticleDTO dto) {
 
         Article article = articleCommandService.createArticle(id, dto);
@@ -53,7 +53,7 @@ public class ArticleController {
     @GetMapping
     @Operation(method = "GET", summary = "커뮤니티 글 전체 조회 API")
     public CustomResponse<?> getArticlesByCursor(
-            @Parameter(hidden = true) @MemberIdInfo Long id,
+            @MemberInfo Member member,
             @RequestParam(name = "cursorId", required = false) Long cursorId,
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize
     ) {
@@ -67,12 +67,11 @@ public class ArticleController {
     @GetMapping("/{articleId}")
     @Operation(method = "GET", summary = "커뮤니티 글 상세 조회 API")
     public CustomResponse<?> getArticleById(
-            @Parameter(hidden = true) @MemberIdInfo Long id,
+            @MemberInfo Member member,
             @PathVariable("articleId") Long articleId) {
 
         Article article = articleQueryService.getArticle(articleId);
 
-        Member member = article.getMember();
         MemberDataDTO dto = new MemberDataDTO(member.getNickName(), member.getId());
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK,
@@ -82,7 +81,7 @@ public class ArticleController {
     @PutMapping("/{articleId}")
     @Operation(method = "PUT", summary = "커뮤니티 글 수정 API")
     public CustomResponse<?> updateArticleById(
-            @Parameter(hidden = true) @MemberIdInfo Long id,
+            @MemberIdInfo Long id,
             @PathVariable Long articleId,
             @RequestBody ArticleRequestDTO.UpdateArticleDTO dto) {
 
@@ -95,7 +94,7 @@ public class ArticleController {
     @DeleteMapping("/{articleId}")
     @Operation(method = "DELETE", summary = "커뮤니티 글 삭제 API")
     public CustomResponse<?> deleteArticleById(
-            @Parameter(hidden = true) @MemberIdInfo Long id,
+            @MemberIdInfo Long id,
             @PathVariable("articleId") Long articleId) {
 
         Article article = articleCommandService.deleteArticle(id, articleId);

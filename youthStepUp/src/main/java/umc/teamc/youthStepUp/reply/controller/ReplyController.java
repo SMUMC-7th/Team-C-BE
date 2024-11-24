@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import umc.teamc.youthStepUp.auth.annotation.MemberIdInfo;
+import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
+import umc.teamc.youthStepUp.member.entity.Member;
 import umc.teamc.youthStepUp.reply.dto.replyRequestDTO.ReplyCreateRequestDTO;
 import umc.teamc.youthStepUp.reply.dto.replyRequestDTO.ReplyUpdateRequestDTO;
 import umc.teamc.youthStepUp.reply.dto.replyResponseDTO.ReplyPageListResponseDTO;
@@ -40,8 +41,9 @@ public class ReplyController {
     @Operation(method = "POST", summary = "댓글 생성 API")
     public CustomResponse<?> createReply(
             @RequestBody ReplyCreateRequestDTO dto,
-            @MemberIdInfo Long memberId) {
+            @MemberInfo Member member) {
 
+        Long memberId = member.getId();
         Reply reply = replyCommandService.createReply(dto, memberId);
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, new ReplyResponseDTO(reply));
     }
@@ -51,7 +53,8 @@ public class ReplyController {
     public CustomResponse<?> getRepliesByArticleId(
             @RequestParam(name = "cursorId", required = false) Long cursorId,
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
-            @PathVariable(name = "articleId") Long articleId
+            @PathVariable(name = "articleId") Long articleId,
+            @MemberInfo Member member
     ) {
         Slice<Reply> replies = replyQueryService.getRepliesByArticleId(articleId, cursorId, pageSize);
         ReplyPageListResponseDTO replyPageListResponseDTO = ReplyPageListResponseDTO.from(replies);
@@ -61,7 +64,9 @@ public class ReplyController {
 
     @DeleteMapping("/{replyId}")
     @Operation(method = "DELETE", summary = "댓글 삭제 API")
-    public CustomResponse<?> deleteReply(@PathVariable("replyId") Long replyId) {
+    public CustomResponse<?> deleteReply(
+            @MemberInfo Member member,
+            @PathVariable("replyId") Long replyId) {
         replyCommandService.deleteReply(replyId);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, replyId);
@@ -69,8 +74,10 @@ public class ReplyController {
 
     @PutMapping("{replyId}")
     @Operation(method = "PUT", summary = "댓글 수정 API")
-    public CustomResponse<?> updateReply(@PathVariable("replyId") Long replyId,
-                                         @RequestBody ReplyUpdateRequestDTO dto) {
+    public CustomResponse<?> updateReply(
+            @MemberInfo Member member,
+            @PathVariable("replyId") Long replyId,
+            @RequestBody ReplyUpdateRequestDTO dto) {
         Reply reply = replyCommandService.updateReply(replyId, dto);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, new ReplyResponseUpdateDTO(reply));
