@@ -3,11 +3,11 @@ package umc.teamc.youthStepUp.member.entity;
 import java.util.List;
 
 public enum Keyword {
-    JOBS("023010", "일자리 분야"),
-    HOUSING("023020", "주거 분야"),
-    EDUCATION("023030", "교육 분야"),
-    WELFARE_CULTURE("023040", "복지.문화 분야"),
-    PARTICIPATION_RIGHTS("023050", "참여.권리 분야");
+    JOBS("023010", "일자리"),
+    HOUSING("023020", "주거"),
+    EDUCATION("023030", "교육"),
+    WELFARE_CULTURE("023040", "복지/문화"),
+    PARTICIPATION_RIGHTS("023050", "참여/권리");
 
     private final String code;
     private final String description;

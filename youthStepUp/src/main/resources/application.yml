@@ -24,7 +24,8 @@ openapi:
   key: ${OPEN_API_KEY}
 kakao:
   client_id: ${REST_API_KEY}
-  redirect_uri: http://localhost:8080/auth/kakao-oauth
+  redirect_uri: ${REDIRECT_URL}
+  local_redirect_uri: ${LOCAL_REDIRECT_URL}
 Jwt:
   secret: ${JWT_SECRET_KEY}
   token:
@@ -53,8 +54,8 @@ spring:
 Jwt:
   secret: ${JWT_SECRET_KEY}
   token:
-    access-expiration-time: 1800000 # Milliseconds for 1 hour
-    refresh-expiration-time: 86400000  # Milliseconds for 30 days
+    access-expiration-time: 1800000000
+    refresh-expiration-time: 25920000000
 
 openapi:
   key: ${OPEN_API_KEY}
@@ -62,8 +63,8 @@ openapi:
 kakao:
   client_id: ${REST_API_KEY}
   redirect_uri: ${REDIRECT_URL}
+  local_redirect_uri: ${LOCAL_REDIRECT_URL}
 
 logging:
   level:
-    org.springframework.web: DEBUG
-    org.springframework.security: DEBUG
+    root: debug

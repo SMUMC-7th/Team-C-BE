@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import umc.teamc.youthStepUp.auth.jwt.JwtProvider;
@@ -21,6 +22,7 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
     private final AuthService authService;
     private final JwtProvider jwtProvider;
+    private final CorsConfig corsConfig;
 
     @Bean
     public JwtExceptionFilter jwtExceptionFilter() {
@@ -35,18 +37,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(new CorsConfig().corsConfigurationSource()))
+                .cors(corsCustomizer -> corsCustomizer.configurationSource(corsConfig.corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
+                .sessionManagement((session) -> session //세션을 항상 stateless 상태: 비활성화
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/swagger-ui/index.html", "/auth/kakao-login", "/auth/kakao-oauth")
+                        .requestMatchers(
+                                "/", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/webjars/**",
+                                "/auth/kakao-login", "/auth/kakao-oauth")
                         .permitAll()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtExceptionFilter(), JwtFilter.class);
         return http.build();
-
     }
 
 }

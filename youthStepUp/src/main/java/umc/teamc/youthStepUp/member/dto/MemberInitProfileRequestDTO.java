@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record MemberInitProfileRequestDTO(
+        String nickname,
         @NotNull(message = "나이를 입력해주세요")
         int age,
         @NotNull(message = "지역을 입력해주세요")

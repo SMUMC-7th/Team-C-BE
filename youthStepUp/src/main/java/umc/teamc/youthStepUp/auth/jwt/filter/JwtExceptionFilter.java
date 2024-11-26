@@ -30,7 +30,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (JwtException exception) {
             BaseErrorCode code = exception.getCode();
-//            if (code.getCode().equals(JwtErrorCode.TOKEN_EXPIRED.getCode())) {
+//            if (code.getCode().equals(KakaoAuthErrorCode.TOKEN_EXPIRED.getCode())) {
 //                if (getRefreshTokenAndReissue(request, response)) {
 //                    return;
 //                }

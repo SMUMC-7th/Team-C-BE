@@ -8,8 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import umc.teamc.youthStepUp.auth.constant.URLConstant;
 import umc.teamc.youthStepUp.auth.dto.KakaoUserInfoDTO;
+import umc.teamc.youthStepUp.auth.dto.NewMemberResponseDTO;
 import umc.teamc.youthStepUp.auth.jwt.JwtProvider;
 import umc.teamc.youthStepUp.auth.jwt.error.JwtErrorCode;
 import umc.teamc.youthStepUp.auth.jwt.error.exception.JwtException;
@@ -24,30 +24,38 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
 
-    public void createNewMember(KakaoUserInfoDTO infoDTO) {
+    public Member createNewMember(KakaoUserInfoDTO infoDTO) {
         Member member = Member.builder()
-                .nickName(infoDTO.kakaoAccount().profile().nickname())
                 .imgUrl(infoDTO.kakaoAccount().profile().profileImageUrl())
                 .kakaoId(infoDTO.id())
                 .build();
         memberRepository.save(member);
+        return member;
     }
 
-    public void login(KakaoUserInfoDTO infoDTO, HttpServletResponse response) throws IOException {
+    public NewMemberResponseDTO login(KakaoUserInfoDTO infoDTO, HttpServletResponse response) throws IOException {
         boolean isExistMember = memberRepository.existsByKakaoId(infoDTO.id());
+        Member member = null;
         if (!isExistMember) {
-            createNewMember(infoDTO);
+            member = createNewMember(infoDTO);
+            Long id = member.getId();
+            ResponseCookie refreshCookie = jwtProvider.createRefreshCookie(id); //리프레쉬 토큰 쿠키에 담는다.
+            ResponseCookie accessCookie = jwtProvider.createAccessCookie(id);
+            setResponse(response, refreshCookie, accessCookie);
+        } else {
+            member = memberRepository.findByKakaoId(infoDTO.id()).orElseThrow(
+                    () -> new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND)
+            );
+            Long id = member.getId();
+            ResponseCookie refreshCookie = jwtProvider.createRefreshCookie(id); //리프레쉬 토큰 쿠키에 담는다.
+            ResponseCookie accessCookie = jwtProvider.createAccessCookie(id); //리프레쉬 토큰 쿠키에 담는다.
+            setResponse(response, refreshCookie, accessCookie);
         }
-        Long userId = memberRepository.findByKakaoId(infoDTO.id()).orElseThrow(
-                () -> new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND)
-        ).getId();
-        ResponseCookie refreshCookie = jwtProvider.createRefreshCookie(userId); //리프레쉬 토큰 쿠키에 담는다.
-        ResponseCookie accessCookie = jwtProvider.createAccessCookie(userId); //리프레쉬 토큰 쿠키에 담는다.
-        setResponse(response, refreshCookie, accessCookie);
+        return new NewMemberResponseDTO(member.getId(), member.getImgUrl());
     }
 
 
-    public void reissueToken(String refreshToken, HttpServletResponse response) throws IOException {
+    public void reissueToken(String refreshToken, HttpServletResponse response) {
         validateRefreshToken(refreshToken);
         Long id = Long.parseLong(jwtProvider.getUserId(refreshToken));
         String accessToken = jwtProvider.createAccessToken(id);
@@ -55,7 +63,6 @@ public class AuthService {
         ResponseCookie accessCookie = jwtProvider.createAccessCookie(id); //리프레쉬 토큰 쿠키에 담는다.
         setAuthentication(accessToken);
         setResponse(response, refreshCookie, accessCookie);
-        response.sendRedirect(URLConstant.HOME_URL.getValue());
     }
 
     private static void setResponse(HttpServletResponse response, ResponseCookie refreshCookie,

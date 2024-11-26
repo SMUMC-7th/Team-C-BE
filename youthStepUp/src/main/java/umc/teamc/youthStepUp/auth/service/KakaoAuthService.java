@@ -26,12 +26,13 @@ public class KakaoAuthService {
     private String client_id;
     @Value("${kakao.redirect_uri}")
     private String redirect_uri;
+    @Value("${kakao.local_redirect_uri}")
+    private String local_redirect_uri;
     private final String grant_type = "authorization_code";
     private final String response_type = "code";
     private final JwtProvider jwtProvider;
 
     public void getCode() {
-        ;
         WebClient.create()
                 .get()
                 .uri(getAuthUrl());
@@ -45,7 +46,7 @@ public class KakaoAuthService {
                 + "&redirect_uri=" + redirect_uri;
     }
 
-    public KakaoAccessTokenDTO getKakaoAccessToken(String code) {
+    public KakaoAccessTokenDTO getKakaoAccessToken(String code, boolean isLocalhost) {
         WebClient webClient = WebClient.create();
         return webClient
                 .post()
@@ -54,18 +55,22 @@ public class KakaoAuthService {
                     header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                     header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
                 })
-                .bodyValue(tokenRequest(code))
+                .bodyValue(tokenRequest(code, isLocalhost))
                 .retrieve()
                 .bodyToMono(KakaoAccessTokenDTO.class)
                 .block();
     }
 
-    private MultiValueMap<String, String> tokenRequest(String code) {
+    private MultiValueMap<String, String> tokenRequest(String code, boolean isLocalhost) {
+        String redirectURL = redirect_uri;
+        if (isLocalhost) {
+            redirectURL = local_redirect_uri;
+        }
         MultiValueMap<String, String> formData
                 = new LinkedMultiValueMap<>();
         formData.add("code", code);
         formData.add("grant_type", grant_type);
-        formData.add("redirect_uri", redirect_uri);
+        formData.add("redirect_uri", redirectURL);
         formData.add("client_id", client_id);
         return formData;
     }

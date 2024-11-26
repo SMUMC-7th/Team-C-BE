@@ -24,26 +24,24 @@ public class MemberService {
 
     @Transactional
     public MemberProfileResponseDTO initProfile(Member member, MemberInitProfileRequestDTO dto) {
-//        Member member = memberRepository.findById(id).orElseThrow(
-//                () -> new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND)
-//        );
         Education education = Education.toEducation(dto.educations());
         List<Region> regions = Region.toRegion(dto.regions());
         List<Major> majors = Major.toMajor(dto.majors());
         List<Keyword> keywords = Keyword.toKeyword(dto.keyword());
         validateInitprofileIsNull(education, regions, majors, keywords, dto.age());
-        initProfile(member, education, regions, majors, keywords, dto.age());
+        initProfile(member, education, regions, majors, keywords, dto.age(), dto.nickname());
         memberRepository.save(member);
         return MemberProfileResponseDTO.of(member, dto);
     }
 
     private static void initProfile(Member member, Education education, List<Region> regions, List<Major> majors,
-                                    List<Keyword> keywords, int age) {
+                                    List<Keyword> keywords, int age, String nickName) {
         member.editEducation(education);
         member.editRegion(regions);
         member.editKeyword(keywords);
         member.editMajor(majors);
         member.editAge(age);
+        member.editNickName(nickName);
     }
 
     private static void validateInitprofileIsNull(Education education, List<Region> regions, List<Major> majors,

@@ -43,7 +43,7 @@ public class ProfileController {
     private final MemberService memberService;
 
     @PostMapping("/init-profile")
-    @Operation(summary = "프로필 초기 설정", description = "나이, 교육, 키워드, 지역, 전공을 받아 초기 프로필을 설정한다.")
+    @Operation(summary = "프로필 초기 설정", description = "닉네임, 나이, 교육, 키워드, 지역, 전공을 받아 초기 프로필을 설정한다.")
     public CustomResponse<?> initProfile(@MemberInfo Member member,
                                          @Valid @RequestBody MemberInitProfileRequestDTO dto) {
         return CustomResponse.onSuccess(GeneralSuccessCode.CREATED, memberService.initProfile(member, dto));

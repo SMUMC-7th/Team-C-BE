@@ -138,6 +138,7 @@ public class JwtProvider {
                 .sameSite("None")
                 .httpOnly(true)
                 .secure(true)
+                .domain(".youthstepup.site")
                 .maxAge(refreshExpiration)
                 .build();
     }
@@ -150,6 +151,7 @@ public class JwtProvider {
                 .sameSite("None")
                 .httpOnly(true)
                 .secure(true)
+                .domain(".youthstepup.site")
                 .maxAge(accessExpiration)
                 .build();
         //        Cookie cookie = new Cookie(cookieName, cookieValue);
