@@ -1,5 +1,6 @@
 package umc.teamc.youthStepUp.policy.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import umc.teamc.youthStepUp.policy.entity.BookMarkPolicy;
 
@@ -15,6 +16,7 @@ public class PolicyBookmarkResponseDTO {
         private Long policyId;
         private String srchPolicyId;
         private Long memberId;
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime createdAt;
 
         public static CreateBookmarkResponseDTO from(BookMarkPolicy bookMarkPolicy) {

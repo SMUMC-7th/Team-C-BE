@@ -18,6 +18,7 @@ public class PolicyInfoResponseDTO {
         private Long policyInfoId;
         private String infoTitle;
         private String infoContent;
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime createdAt;
 
         public static PolicyInfoPreviewDTO from(PolicyInfo policyInfo) {
