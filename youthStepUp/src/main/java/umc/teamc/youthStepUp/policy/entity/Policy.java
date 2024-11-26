@@ -11,7 +11,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.aspectj.lang.annotation.RequiredTypes;
 import umc.teamc.youthStepUp.global.entity.BaseEntity;
+
+import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,10 +28,16 @@ public class Policy extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Column(name = "polyBizSjnm")
+    String polyBizSjnm;
+
     @Column(name = "srchPolicyId")
     String srchPolicyId;
 
+    @Column(name = "startDate")
+    LocalDate startDate;
+
     @Column(name = "deadline")
-    String deadline;
+    LocalDate deadline;
 
 }
