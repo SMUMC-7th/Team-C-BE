@@ -5,16 +5,13 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.xml.bind.JAXBException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import umc.teamc.youthStepUp.auth.annotation.MemberIdInfo;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
 import umc.teamc.youthStepUp.member.dto.MemberKeyWordDTO;
 import umc.teamc.youthStepUp.member.service.MemberService;
+import umc.teamc.youthStepUp.policy.dto.PolicyBookmarkRequestDTO;
 import umc.teamc.youthStepUp.policy.dto.PolicyBookmarkResponseDTO;
 import umc.teamc.youthStepUp.policy.dto.PolicyDetailRequest;
 import umc.teamc.youthStepUp.policy.dto.PolicyListRequest;
@@ -76,9 +73,8 @@ public class PolicyController {
     @PostMapping("/policy/bookmark/request")
     @Operation(summary = "정책 북마크 요청", description = "정책 상세 페이지에서 북마크 요청을 보내는 API")
     public CustomResponse<?> bookmarkRequest(@Parameter(hidden = true) @MemberIdInfo Long id,
-                                             @RequestParam String srchPolicyId,
-                                             @RequestParam String deadline) {
-        Policy newPolicy = policyService.createPolicy(id, srchPolicyId, deadline);
+                                             @RequestBody PolicyBookmarkRequestDTO.BookmarkRequestDTO requestDTO) {
+        Policy newPolicy = policyService.createPolicy(requestDTO);
         Long policyId = newPolicy.getId();
         BookMarkPolicy bookMarkPolicy = policyService.createBookmark(id, policyId);
 

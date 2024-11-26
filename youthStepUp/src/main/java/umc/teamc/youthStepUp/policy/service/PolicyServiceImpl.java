@@ -14,6 +14,8 @@ import umc.teamc.youthStepUp.policy.exception.PolicyException;
 import umc.teamc.youthStepUp.policy.repository.BookmarkPolicyRepository;
 import umc.teamc.youthStepUp.policy.repository.PolicyRepository;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 public class PolicyServiceImpl implements PolicyService {
@@ -23,16 +25,16 @@ public class PolicyServiceImpl implements PolicyService {
     private final BookmarkPolicyRepository bookmarkPolicyRepository;
 
     @Override
-    public Policy createPolicy(Long memberId, String srchPolicyId, String rqutPrdCn) {
+    public Policy createPolicy(PolicyBookmarkRequestDTO.BookmarkRequestDTO requestDTO) {
         //이미 존재하는 policy인지 확인해야함. 존재하는 Policy라면 그것을 return하고 아니면 저장하고 저장한 Policy를 리턴
-        Policy existingPolicy = policyRepository.findBySrchPolicyId(srchPolicyId);
+        Policy existingPolicy = policyRepository.findBySrchPolicyId(requestDTO.getSrchPolicyId());
         if (existingPolicy != null) {
             return existingPolicy;
         }
 
         //이미 존재하지 않는 Policy라면 저장한 Policy를 리턴
         PolicyBookmarkRequestDTO.CreatePolicyDTO dto = new PolicyBookmarkRequestDTO.CreatePolicyDTO();
-        Policy policy = dto.toEntity(srchPolicyId, rqutPrdCn);
+        Policy policy = dto.toEntity(requestDTO);
         return policyRepository.save(policy);
     }
 
