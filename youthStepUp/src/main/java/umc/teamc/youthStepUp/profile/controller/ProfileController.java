@@ -5,18 +5,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import umc.teamc.youthStepUp.auth.annotation.MemberIdInfo;
 import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
-import umc.teamc.youthStepUp.calendar.entity.Bookmark;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
 import umc.teamc.youthStepUp.member.dto.MemberInitProfileRequestDTO;
@@ -27,6 +18,7 @@ import umc.teamc.youthStepUp.profile.converter.ProfileConverter;
 import umc.teamc.youthStepUp.profile.dto.request.DeleteMemberRequestDTO;
 import umc.teamc.youthStepUp.profile.dto.request.DuplicateCheckRequestDTO;
 import umc.teamc.youthStepUp.profile.dto.request.UpdateProfileRequestDTO;
+import umc.teamc.youthStepUp.profile.dto.response.BookmarkResponseDTO;
 import umc.teamc.youthStepUp.profile.dto.response.DuplicateCheckResponseDTO;
 import umc.teamc.youthStepUp.profile.service.command.ProfileBookmarkCommandService;
 import umc.teamc.youthStepUp.profile.service.command.ProfileCommandService;
@@ -120,9 +112,8 @@ public class ProfileController {
                                           @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
                                           @RequestParam(value = "offset", defaultValue = "10") int offset) {
 
-        Slice<Bookmark> bookmarkList = profileBookmarkQueryService.getBookmarks(cursor, offset, id);
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK,
-                ProfileBookmarkConverter.toBookmarkSliceResponseDTO(bookmarkList));
+        Slice<BookmarkResponseDTO> bookmarkList = profileBookmarkQueryService.getBookmarks(cursor, offset, id);
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, ProfileBookmarkConverter.toBookmarkSliceResponseDTO(bookmarkList));
     }
 
     /**

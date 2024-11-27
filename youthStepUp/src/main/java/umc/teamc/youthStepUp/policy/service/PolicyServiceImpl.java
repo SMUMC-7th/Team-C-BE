@@ -2,6 +2,7 @@ package umc.teamc.youthStepUp.policy.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import umc.teamc.youthStepUp.calendar.repository.BookmarkPolicyRepository;
 import umc.teamc.youthStepUp.member.entity.Member;
 import umc.teamc.youthStepUp.member.error.MemberErrorCode;
 import umc.teamc.youthStepUp.member.error.exception.MemberCustomException;
@@ -11,10 +12,7 @@ import umc.teamc.youthStepUp.policy.entity.BookMarkPolicy;
 import umc.teamc.youthStepUp.policy.entity.Policy;
 import umc.teamc.youthStepUp.policy.exception.PolicyErrorCode;
 import umc.teamc.youthStepUp.policy.exception.PolicyException;
-import umc.teamc.youthStepUp.policy.repository.BookmarkPolicyRepository;
 import umc.teamc.youthStepUp.policy.repository.PolicyRepository;
-
-import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
