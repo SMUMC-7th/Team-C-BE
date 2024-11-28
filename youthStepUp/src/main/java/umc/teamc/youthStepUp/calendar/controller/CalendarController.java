@@ -4,22 +4,21 @@ package umc.teamc.youthStepUp.calendar.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import umc.teamc.youthStepUp.auth.annotation.MemberIdInfo;
 import umc.teamc.youthStepUp.calendar.converter.BookmarkConverter;
 import umc.teamc.youthStepUp.calendar.dto.request.UpdateBookmarkCompletionDTO;
-import umc.teamc.youthStepUp.calendar.entity.Bookmark;
+import umc.teamc.youthStepUp.calendar.dto.response.BookmarkResponseByDateDTO;
+import umc.teamc.youthStepUp.calendar.dto.response.BookmarkResponseByMonthDTO;
 import umc.teamc.youthStepUp.calendar.service.command.CalendarBookmarkCommandService;
 import umc.teamc.youthStepUp.calendar.service.query.CalendarBookmarkQueryService;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
+import umc.teamc.youthStepUp.policy.entity.BookMarkPolicy;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Tag(name = "캘린더 API")
 @RestController
@@ -44,10 +43,11 @@ public class CalendarController {
             @RequestParam int year,
             @RequestParam int month) {
 
-        String toMonth = String.format("%d-%02d", year, month);
-        List<Bookmark> bookmarks = bookmarkQueryService.findByPolicyPeriodMonth(id, toMonth);
+        LocalDate targetMonth = LocalDate.of(year, month, 1);
+
+        List<BookmarkResponseByMonthDTO> bookmarkPolicies = bookmarkQueryService.findByPolicyPeriodMonth(id, targetMonth);
         return CustomResponse.onSuccess(GeneralSuccessCode.OK,
-                BookmarkConverter.toBookmarkResponseByMonthListRecord(bookmarks));
+                BookmarkConverter.toBookmarkResponseByMonthListRecord(bookmarkPolicies));
     }
 
     /**
@@ -63,10 +63,11 @@ public class CalendarController {
             @RequestParam int year,
             @RequestParam int month,
             @RequestParam int date) {
-        String toDate = String.format("%d-%02d-%02d", year, month, date);
-        List<Bookmark> bookmarks = bookmarkQueryService.findByPolicyPeriodDate(id, toDate);
+
+        LocalDate targetDate = LocalDate.of(year, month, date);
+        List<BookmarkResponseByDateDTO> bookmarkPolicies = bookmarkQueryService.findByPolicyPeriodDate(id, targetDate);
         return CustomResponse.onSuccess(GeneralSuccessCode.OK,
-                BookmarkConverter.toBookmarkResponseByDateListRecord(bookmarks));
+                BookmarkConverter.toBookmarkResponseByDateListRecord(bookmarkPolicies));
     }
 
     /**
@@ -79,9 +80,9 @@ public class CalendarController {
     @PatchMapping("/is-complete")
     public CustomResponse<?> updatePolicyCompletionStatus(@Parameter(hidden = true) @MemberIdInfo Long id,
                                                           @RequestBody UpdateBookmarkCompletionDTO request) {
-        Bookmark bookmark = bookmarkCommandService.updateIsCompleted(id, request);
+        BookMarkPolicy bookmarkPolicy = bookmarkCommandService.updateIsCompleted(id, request);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK,
-                BookmarkConverter.toBookmarkResponseByDateRecord(bookmark));
+                BookmarkConverter.toUpdatedBookmarkIsCompletedRecord(bookmarkPolicy));
     }
 }

@@ -7,23 +7,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import umc.teamc.youthStepUp.calendar.entity.Bookmark;
-import umc.teamc.youthStepUp.calendar.repository.BookmarkRepository;
+import umc.teamc.youthStepUp.calendar.repository.BookmarkPolicyRepository;
+import umc.teamc.youthStepUp.profile.dto.response.BookmarkResponseDTO;
 
 
 @Service
 @AllArgsConstructor
 public class ProfileBookmarkQueryServiceImpl implements ProfileBookmarkQueryService {
 
-    private final BookmarkRepository bookmarkRepository;
+    private final BookmarkPolicyRepository bookmarkPolicyRepository;
 
     @Transactional(readOnly = true)
     @Override
-    public Slice<Bookmark> getBookmarks(Long cursor, int offset, Long memberId) {
+    public Slice<BookmarkResponseDTO> getBookmarks(Long cursor, int offset, Long memberId) {
         Pageable pageable = PageRequest.of(0, offset);
         if (cursor == 0) {
-            return bookmarkRepository.findByMemberIdOrderByIdDesc(memberId, pageable);
+            return bookmarkPolicyRepository.findByMemberIdAndDeletedAtIsNullOrderByIdDesc(memberId, pageable);
         }
-        return bookmarkRepository.findByMemberIdAndIdLessThanOrderByIdDesc(memberId, cursor, pageable);
+        return bookmarkPolicyRepository.findByMemberIdAndDeletedAtIsNullAndIdLessThanOrderByIdDesc(memberId, cursor, pageable);
     }
 }

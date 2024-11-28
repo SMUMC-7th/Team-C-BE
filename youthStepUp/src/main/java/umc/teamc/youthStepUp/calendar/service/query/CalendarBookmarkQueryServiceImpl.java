@@ -3,26 +3,28 @@ package umc.teamc.youthStepUp.calendar.service.query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import umc.teamc.youthStepUp.calendar.entity.Bookmark;
-import umc.teamc.youthStepUp.calendar.repository.BookmarkRepository;
+import umc.teamc.youthStepUp.calendar.dto.response.BookmarkResponseByDateDTO;
+import umc.teamc.youthStepUp.calendar.dto.response.BookmarkResponseByMonthDTO;
+import umc.teamc.youthStepUp.calendar.repository.BookmarkPolicyRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
 @Service
 @RequiredArgsConstructor
 public class CalendarBookmarkQueryServiceImpl implements CalendarBookmarkQueryService {
-    private final BookmarkRepository bookmarkRepository;
+    private final BookmarkPolicyRepository bookmarkPolicyRepository;
 
     @Transactional(readOnly = true)
     @Override
-    public List<Bookmark> findByPolicyPeriodDate(Long memberId, String date) {
-        return bookmarkRepository.findByMemberIdAndDateWithinPolicyPeriod(memberId, date);
+    public List<BookmarkResponseByDateDTO> findByPolicyPeriodDate(Long memberId, LocalDate date) {
+        return bookmarkPolicyRepository.findByMemberIdAndDateWithinPolicyPeriod(memberId, date);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<Bookmark> findByPolicyPeriodMonth(Long memberId, String month) {
-        return bookmarkRepository.findByMemberIdAndMonthWithinPolicyPeriod(memberId, month);
+    public List<BookmarkResponseByMonthDTO> findByPolicyPeriodMonth(Long memberId, LocalDate month) {
+        return bookmarkPolicyRepository.findByMemberIdAndMonthWithinPolicyPeriod(memberId, month);
     }
 }
