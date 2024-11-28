@@ -40,7 +40,8 @@ public class KakaoAuthController {
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
         boolean isLocalhost = false;
-        if (request.getRequestURI().contains("localhost")) {
+        String referer = request.getHeader("Referer");
+        if (referer != null && referer.contains("localhost")) {
             isLocalhost = true;
         }
         KakaoAccessTokenDTO tokenDTO = kakaoAuthService.getKakaoAccessToken(code, isLocalhost);
