@@ -1,7 +1,6 @@
 package umc.teamc.youthStepUp.auth.service;
 
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
@@ -24,7 +23,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
 
-    public NewMemberResponseDTO login(KakaoUserInfoDTO infoDTO, HttpServletResponse response) throws IOException {
+    public NewMemberResponseDTO login(KakaoUserInfoDTO infoDTO, HttpServletResponse response) {
         boolean isExistMember = memberRepository.existsByKakaoId(infoDTO.id());
         Member member = null;
         if (!isExistMember) {
@@ -57,6 +56,7 @@ public class AuthService {
         Long id = member.getId();
         ResponseCookie refreshCookie = jwtProvider.createRefreshCookie(id);
         ResponseCookie accessCookie = jwtProvider.createAccessCookie(id);
+        setAuthentication(accessCookie.getValue());
         setResponse(response, refreshCookie, accessCookie);
     }
 

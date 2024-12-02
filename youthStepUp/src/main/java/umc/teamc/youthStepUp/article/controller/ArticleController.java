@@ -53,7 +53,6 @@ public class ArticleController {
     @GetMapping
     @Operation(method = "GET", summary = "커뮤니티 글 전체 조회 API")
     public CustomResponse<?> getArticlesByCursor(
-            @MemberInfo Member member,
             @RequestParam(name = "cursorId", required = false) Long cursorId,
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize
     ) {
