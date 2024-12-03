@@ -6,7 +6,12 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.xml.bind.JAXBException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import umc.teamc.youthStepUp.auth.annotation.MemberIdInfo;
 import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
@@ -61,7 +66,7 @@ public class PolicyController {
     @Operation(summary = "정책 랜덤 추천 조회", description = "정책을 랜덤으로 추천받아 조회하는 API")
     @Parameters({
             @Parameter(name = "display", description = "한 페이지에 보이게 될 정책 개수를 입력해주시면 됩니다."),
-            @Parameter(name = "page" , description = "조회하고싶은 페이지 번호(1 이상)를 입력해주시면 됩니다. "),
+            @Parameter(name = "page", description = "조회하고싶은 페이지 번호(1 이상)를 입력해주시면 됩니다. "),
     })
     public CustomResponse<?> callOpenApi(
 //            @RequestParam(required = false) String srchPolicyId,
@@ -94,14 +99,14 @@ public class PolicyController {
                 PolicyBookmarkResponseDTO.CreateBookmarkResponseDTO.from(bookMarkPolicy));
     }
 
-    @GetMapping("/policy/bookmark/exist-check/{policyId}")
+    @GetMapping("/policy/bookmark/exist-check/{srchPolicyId}")
     @Operation(summary = "북마크에 존재하는지 확인 요청", description = "북마크에 특정 정책이 존재하는지 확인하는 요청을 보내는 API")
     @Parameters({
-            @Parameter(name = "policyId", description = "정책Id(policyId)를 입력하면 됩니다. srchPolicyId가 아니라 북마크를 저장한 후 반환받은 policyId값임을 유의해주세요!"),
+            @Parameter(name = "srchPolicyId", description = "정책의 srchPolicyId를 입력해주세요"),
     })
     public CustomResponse<?> bookmarkExistCheck(@Parameter(hidden = true) @MemberInfo Member member,
-                                                @PathVariable("policyId") Long policyId ) {
-        Boolean result = policyService.isExistBookmark(member.getId(), policyId);
+                                                @PathVariable("srchPolicyId") String srchPolicyId) {
+        Boolean result = policyService.isExistBookmark(member.getId(), srchPolicyId);
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, result);
     }
 

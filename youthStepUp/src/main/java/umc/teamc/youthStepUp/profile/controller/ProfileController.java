@@ -5,7 +5,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import umc.teamc.youthStepUp.auth.annotation.MemberIdInfo;
 import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
@@ -113,7 +121,8 @@ public class ProfileController {
                                           @RequestParam(value = "offset", defaultValue = "10") int offset) {
 
         Slice<BookmarkResponseDTO> bookmarkList = profileBookmarkQueryService.getBookmarks(cursor, offset, id);
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK, ProfileBookmarkConverter.toBookmarkSliceResponseDTO(bookmarkList));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK,
+                ProfileBookmarkConverter.toBookmarkSliceResponseDTO(bookmarkList));
     }
 
     /**
@@ -123,10 +132,10 @@ public class ProfileController {
      * @return 북마크 삭제 결과
      */
     @Operation(summary = "특정 북마크 삭제")
-    @DeleteMapping("/bookmarks/{bookmarkId}")
+    @DeleteMapping("/bookmarks/{srchPolicyId}")
     public CustomResponse<?> deleteBookmark(@MemberIdInfo Long id,
-                                            @PathVariable Long bookmarkId) {
-        profileBookmarkCommandService.deleteBookmark(id, bookmarkId);
+                                            @PathVariable String srchPolicyId) {
+        profileBookmarkCommandService.deleteBookmark(id, srchPolicyId);
         return CustomResponse.onSuccess(GeneralSuccessCode.DELETED);
     }
 
