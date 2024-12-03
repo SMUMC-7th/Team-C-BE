@@ -44,7 +44,9 @@ public class SecurityConfig {
                 .sessionManagement((session) -> session //세션을 항상 stateless 상태: 비활성화
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/articles", "/policy/recommend/random").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/articles", "/policy/recommend/random",
+                                "/policy/recommend/{srchPolicyId}")
+                        .permitAll()
                         .requestMatchers(
                                 "/", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/webjars/**",
                                 "/auth/kakao-login", "/auth/kakao-oauth")
