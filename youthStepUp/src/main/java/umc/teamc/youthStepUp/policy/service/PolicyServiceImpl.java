@@ -2,6 +2,7 @@ package umc.teamc.youthStepUp.policy.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
 import umc.teamc.youthStepUp.calendar.repository.BookmarkPolicyRepository;
 import umc.teamc.youthStepUp.member.entity.Member;
 import umc.teamc.youthStepUp.member.error.MemberErrorCode;
@@ -60,5 +61,10 @@ public class PolicyServiceImpl implements PolicyService {
 
         //DB에 저장
         return bookmarkPolicyRepository.save(bookmark);
+    }
+
+    @Override
+    public Boolean isExistBookmark(Long memberId, Long policyId) {
+        return bookmarkPolicyRepository.existsByPolicyIdAndMemberId(policyId, memberId);
     }
 }

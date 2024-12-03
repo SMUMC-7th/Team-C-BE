@@ -7,4 +7,5 @@ public interface PolicyRepository extends JpaRepository<Policy, Long> {
 
     Policy findBySrchPolicyId(String getSrchPolicyId);
 
+
 }
