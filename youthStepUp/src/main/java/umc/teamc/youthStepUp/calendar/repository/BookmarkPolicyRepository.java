@@ -53,4 +53,5 @@ public interface BookmarkPolicyRepository extends JpaRepository<BookMarkPolicy, 
             "ORDER BY b.id DESC")
     Slice<BookmarkResponseDTO> findByMemberIdAndDeletedAtIsNullAndIdLessThanOrderByIdDesc(@Param("memberId") Long memberId, @Param("cursorId") Long cursorId, Pageable pageable);
 
+    Boolean existsByPolicyIdAndMemberId(Long policyId, Long memberId);
 }
