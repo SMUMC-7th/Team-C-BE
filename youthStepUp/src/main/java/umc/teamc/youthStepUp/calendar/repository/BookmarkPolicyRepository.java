@@ -2,6 +2,7 @@ package umc.teamc.youthStepUp.calendar.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -61,4 +62,6 @@ public interface BookmarkPolicyRepository extends JpaRepository<BookMarkPolicy, 
             @Param("memberId") Long memberId, @Param("cursorId") Long cursorId, Pageable pageable);
 
     Boolean existsByPolicyIdAndMemberId(Long policyId, Long memberId);
+
+    Optional<BookMarkPolicy> findByPolicyId(Long policyId);
 }

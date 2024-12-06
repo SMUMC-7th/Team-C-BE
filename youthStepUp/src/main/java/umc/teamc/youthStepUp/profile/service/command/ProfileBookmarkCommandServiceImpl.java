@@ -25,7 +25,7 @@ public class ProfileBookmarkCommandServiceImpl implements ProfileBookmarkCommand
         if (policy == null) {
             throw new BookmarkException(BookmarkErrorCode.NOT_FOUND);
         }
-        BookMarkPolicy bookmarkPolicy = bookmarkPolicyRepository.findById(policy.getId()).orElseThrow(() ->
+        BookMarkPolicy bookmarkPolicy = bookmarkPolicyRepository.findByPolicyId(policy.getId()).orElseThrow(() ->
                 new BookmarkException(BookmarkErrorCode.NOT_FOUND));
         if (!(bookmarkPolicy.getMember().getId() == memberId)) {
             throw new ProfileException(ProfileErrorCode.FORBIDDEN);
