@@ -128,15 +128,10 @@ public class JwtProvider {
     public ResponseCookie createRefreshCookie(Long id) {
         String name = "refreshToken";
         String value = createRefreshToken(id);
-//        Cookie cookie = new Cookie(cookieName, cookieValue);
-//        cookie.setHttpOnly(true);
-//        cookie.setSecure(true);
-//        cookie.setPath("/");
-//        cookie.setMaxAge(60 * 60 * 24);
         return ResponseCookie.from(name, value)
                 .path("/")
                 .sameSite("None")
-                .httpOnly(true)
+                .httpOnly(false)
                 .secure(true)
                 .domain(".youthstepup.site")
                 .maxAge(refreshExpiration)
@@ -149,16 +144,11 @@ public class JwtProvider {
         return ResponseCookie.from(name, value)
                 .path("/")
                 .sameSite("None")
-                .httpOnly(true)
+                .httpOnly(false)
                 .secure(true)
                 .domain(".youthstepup.site")
                 .maxAge(accessExpiration)
                 .build();
-        //        Cookie cookie = new Cookie(cookieName, cookieValue);
-//        cookie.setHttpOnly(true);
-//        cookie.setSecure(true);
-//        cookie.setPath("/");
-//        cookie.setMaxAge(60 * 5);
     }
 
 }
