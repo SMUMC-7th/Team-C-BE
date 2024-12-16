@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import umc.teamc.youthStepUp.auth.constant.TokenConstant;
 import umc.teamc.youthStepUp.auth.dto.NewMemberResponseDTO;
 import umc.teamc.youthStepUp.auth.dto.UserTokenDTO;
@@ -160,11 +161,17 @@ public class AuthService {
         cookie.setPath("/");
     }
 
+    @Transactional
     public void getDeviceToken(Long id, UserTokenDTO dto) {
         Member member = memberRepository.findById(id).orElseThrow(
                 () -> new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND)
         );
-        member.editSocialId(dto.deviceToken());
+        String token = dto.deviceToken();
+        if (token == null) {
+            throw new MemberCustomException(MemberErrorCode.MEMBER_DEVICE_TOKEN);
+        }
+        member.setDeviceToken(token);
+        memberRepository.save(member);
     }
 
 }

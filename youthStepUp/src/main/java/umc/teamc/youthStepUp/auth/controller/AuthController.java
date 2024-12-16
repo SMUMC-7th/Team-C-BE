@@ -19,7 +19,7 @@ import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Auth", description = "카카오 소셜 로그인 관련 API")
+@Tag(name = "Auth", description = "인증 관련 API")
 public class AuthController {
     private final AuthService authService;
 
@@ -40,10 +40,10 @@ public class AuthController {
     }
 
     @PostMapping("/auth/device-token")
-    @Operation(summary = "디바이스 토큰 발급", description = "로그아웃을 수행한다.")
+    @Operation(summary = "디바이스 토큰 지정", description = "디바이스 토큰을 지정한다.")
     public CustomResponse<?> getDeviceToken(@MemberIdInfo Long id, @RequestBody UserTokenDTO dto) {
         authService.getDeviceToken(id, dto);
-        return CustomResponse.onSuccess(AuthSuccessCode.LOGOUT_SUCCESS);
+        return CustomResponse.onSuccess(AuthSuccessCode.DEVICE_SUCCESS);
     }
 
 }

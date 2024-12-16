@@ -85,6 +85,10 @@ public class Member extends BaseEntity {
         this.keyword.addAll(keyword);
     }
 
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
+    }
+
     public void editSocialId(String socialId) {
         this.socialId = socialId;
     }
