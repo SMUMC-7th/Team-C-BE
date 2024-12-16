@@ -47,6 +47,7 @@ public class ArticleResponseDTO {
         private Long articleId;
         private String title;
         private String content;
+        private Long count;
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime createdAt;
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
@@ -60,6 +61,7 @@ public class ArticleResponseDTO {
                     .title(article.getTitle())
                     .memberDataDTO(memberDataDTO)
                     .content(article.getContent())
+                    .count(article.getCount())
                     .createdAt(article.getCreatedAt())
                     .updatedAt(article.getUpdatedAt())
                     .build();

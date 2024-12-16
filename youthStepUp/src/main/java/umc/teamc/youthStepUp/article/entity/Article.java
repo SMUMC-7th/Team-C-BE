@@ -25,6 +25,8 @@ public class Article extends BaseEntity {
     @Column(name = "content", nullable = false)
     private String content;
 
+    @Column(name = "count", nullable = false)
+    private Long count;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -33,5 +35,15 @@ public class Article extends BaseEntity {
     public void updateArticle(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void incrementReplyCount() {
+        this.count += 1;
+    }
+
+    public void decrementReplyCount() {
+        if (this.count > 0) {
+            this.count -= 1;
+        }
     }
 }
