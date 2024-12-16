@@ -8,17 +8,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import umc.teamc.youthStepUp.auth.annotation.MemberIdInfo;
+import umc.teamc.youthStepUp.auth.dto.UserTokenDTO;
 import umc.teamc.youthStepUp.auth.service.AuthService;
-import umc.teamc.youthStepUp.auth.service.KakaoAuthService;
 import umc.teamc.youthStepUp.auth.success.AuthSuccessCode;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "KakaoAuth", description = "카카오 소셜 로그인 관련 API")
+@Tag(name = "Auth", description = "카카오 소셜 로그인 관련 API")
 public class AuthController {
-    private final KakaoAuthService kakaoAuthService;
     private final AuthService authService;
 
     @GetMapping("/auth/logout")
@@ -35,6 +37,13 @@ public class AuthController {
             @CookieValue("refreshToken") String refreshToken, HttpServletResponse response) {
         authService.reissueToken(refreshToken, response);
         return CustomResponse.onSuccess(AuthSuccessCode.ACCESS_TOKEN_REISSUE_SUCCESS);
+    }
+
+    @PostMapping("/auth/device-token")
+    @Operation(summary = "디바이스 토큰 발급", description = "로그아웃을 수행한다.")
+    public CustomResponse<?> getDeviceToken(@MemberIdInfo Long id, @RequestBody UserTokenDTO dto) {
+        authService.getDeviceToken(id, dto);
+        return CustomResponse.onSuccess(AuthSuccessCode.LOGOUT_SUCCESS);
     }
 
 }

@@ -37,6 +37,14 @@ fcm:
   google_api: https://www.googleapis.com/auth/cloud-platform
   project_id: ${PROJECT_ID}
 
+google:
+  client_id: ${GOOGLE_CLIENT_ID}
+  client_secret: ${GOOGLE_CLIENT_SECRET}
+  api_key: ${GOOGLE_API_KEY}
+  redirect_uri: ${GOOGLE_REDIRECT_URL}
+  local_redirect_uri: ${LOCAL_GOOGLE_REDIRECT_URL}
+
+
 Jwt:
   secret: ${JWT_SECRET_KEY}
   token:
@@ -80,11 +88,19 @@ naver:
   naver_client_id: ${NAVER_CLIENT_ID}
   naver_client_secret: ${NAVER_CLIENT_SECRET}
   naver_local_redirect_uri: ${NAVER_LOCAL_REDIRECT}
+
 fcm:
   file_path: ${FCM_FILE_PATH}
   url: https://fcm.googleapis.com/v1/projects/${PROJECT_ID}/messages:send
   google_api: https://www.googleapis.com/auth/cloud-platform
   project_id: ${PROJECT_ID}
+
+google:
+  client_id: ${GOOGLE_CLIENT_ID}
+  client_secret: ${GOOGLE_CLIENT_SECRET}
+  api_key: ${GOOGLE_API_KEY}
+  redirect_uri: ${GOOGLE_REDIRECT_URL}
+  local_redirect_uri: ${LOCAL_GOOGLE_REDIRECT_URL}
 
 logging:
   level:

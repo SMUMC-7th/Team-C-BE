@@ -21,7 +21,7 @@ public record MessagePushServiceRequest(
 
     public static MessagePushServiceRequest of(ReplyPostDTO dto) {
         return MessagePushServiceRequest.builder()
-                .targetToken(dto.article().getMember().getDeviceId())
+                .targetToken(dto.article().getMember().getDeviceToken())
                 .title(FCMMessage.REPLY_TITLE.getValue())
                 .body(FCMMessage.REPLY_COMMENT.format(dto.reply().getMember().getNickName(), dto.reply().getContent()))
                 .build();

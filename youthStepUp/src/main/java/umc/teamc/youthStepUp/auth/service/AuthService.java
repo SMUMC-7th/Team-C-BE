@@ -11,6 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import umc.teamc.youthStepUp.auth.constant.TokenConstant;
 import umc.teamc.youthStepUp.auth.dto.NewMemberResponseDTO;
+import umc.teamc.youthStepUp.auth.dto.UserTokenDTO;
+import umc.teamc.youthStepUp.auth.dto.google.GoogleUserInfoDTO;
 import umc.teamc.youthStepUp.auth.dto.kakao.KakaoUserInfoDTO;
 import umc.teamc.youthStepUp.auth.dto.naver.NaverUserInfoDTO;
 import umc.teamc.youthStepUp.auth.jwt.JwtProvider;
@@ -60,6 +62,22 @@ public class AuthService {
         Member member = null;
         if (!isExistMember) {
             member = createNewMember(infoDTO.response().name(), infoDTO.response().profile_image(),
+                    socialId);
+            getResponse(member, response);
+        } else {
+            member = memberRepository.findBySocialId(socialId).orElseThrow(
+                    () -> new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND));
+            getResponse(member, response);
+        }
+        return new NewMemberResponseDTO(isExistMember, member.getId(), member.getNickName(), member.getImgUrl());
+    }
+
+    public NewMemberResponseDTO login(GoogleUserInfoDTO infoDTO, HttpServletResponse response) {
+        String socialId = infoDTO.id();
+        boolean isExistMember = memberRepository.existsBySocialId(socialId);
+        Member member = null;
+        if (!isExistMember) {
+            member = createNewMember(infoDTO.name(), infoDTO.picture(),
                     socialId);
             getResponse(member, response);
         } else {
@@ -140,6 +158,13 @@ public class AuthService {
         cookie.setPath("/");
         cookie.setMaxAge(0);
         cookie.setPath("/");
+    }
+
+    public void getDeviceToken(Long id, UserTokenDTO dto) {
+        Member member = memberRepository.findById(id).orElseThrow(
+                () -> new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND)
+        );
+        member.editSocialId(dto.deviceToken());
     }
 
 }

@@ -137,7 +137,7 @@ public class JwtProvider {
                 .sameSite("None")
                 .httpOnly(false)
                 .secure(true)
-                .domain(".youthstepup.site")
+//                .domain(".youthstepup.site")
                 .maxAge(refreshExpiration)
                 .build();
     }

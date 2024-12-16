@@ -36,8 +36,8 @@ public class Member extends BaseEntity {
     String socialId;
     @Column(name = "profile_img")
     String imgUrl;
-    @Column(name = "device_id")
-    String deviceId;
+    @Column(name = "device_token")
+    String deviceToken;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "education")
     Education education;
@@ -83,5 +83,9 @@ public class Member extends BaseEntity {
     public void editKeyword(List<Keyword> keyword) {
         this.keyword.clear();
         this.keyword.addAll(keyword);
+    }
+
+    public void editSocialId(String socialId) {
+        this.socialId = socialId;
     }
 }
