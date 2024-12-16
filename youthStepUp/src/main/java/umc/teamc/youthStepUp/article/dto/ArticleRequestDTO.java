@@ -17,6 +17,7 @@ public class ArticleRequestDTO {
                     .title(this.title)
                     .content(this.content)
                     .member(member)
+                    .count(0L)
                     .build();
         }
     }
