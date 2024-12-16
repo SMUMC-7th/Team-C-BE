@@ -10,6 +10,7 @@ import umc.teamc.youthStepUp.article.entity.Article;
 import umc.teamc.youthStepUp.article.exception.ArticleErrorCode;
 import umc.teamc.youthStepUp.article.exception.ArticleErrorException;
 import umc.teamc.youthStepUp.article.repository.ArticleRepository;
+import umc.teamc.youthStepUp.reply.dto.replyResponseDTO.ReplyPageListResponseDTO;
 import umc.teamc.youthStepUp.reply.entity.Reply;
 import umc.teamc.youthStepUp.reply.repository.ReplyRepository;
 
@@ -22,7 +23,7 @@ public class ReplyQueryServiceImpl implements ReplyQueryService {
     private final ArticleRepository articleRepository;
 
     @Override
-    public Slice<Reply> getRepliesByArticleId(Long articleId, Long cursorId, int pageSize) {
+    public ReplyPageListResponseDTO getRepliesByArticleId(Long articleId, Long cursorId, int pageSize) {
 
         Article article = articleRepository.findById(articleId).orElseThrow(
                 () -> new ArticleErrorException(ArticleErrorCode.NOT_FOUND)
@@ -30,6 +31,7 @@ public class ReplyQueryServiceImpl implements ReplyQueryService {
 
         Pageable pageable = PageRequest.of(0, pageSize);
 
-        return replyRepository.findRepliesByArticleOrderByCreatedAtAsc(articleId, cursorId, pageable);
+        Slice<Reply> replySlice = replyRepository.findRepliesByArticleOrderByCreatedAtAsc(articleId, cursorId, pageable);
+        return ReplyPageListResponseDTO.from(replySlice);
     }
 }

@@ -1,9 +1,9 @@
 package umc.teamc.youthStepUp.reply.service.query;
 
-import org.springframework.data.domain.Slice;
-import umc.teamc.youthStepUp.reply.entity.Reply;
+import umc.teamc.youthStepUp.reply.dto.replyResponseDTO.ReplyPageListResponseDTO;
+
 
 public interface ReplyQueryService {
 
-    Slice<Reply> getRepliesByArticleId(Long articleId, Long cursorId, int pageSize);
+    ReplyPageListResponseDTO getRepliesByArticleId(Long articleId, Long cursorId, int pageSize);
 }
