@@ -96,7 +96,7 @@ public class ArticleResponseDTO {
 
 
     public static MemberDataDTO createMemberDTO(Member member) {
-        return new MemberDataDTO(member.getNickName(), member.getId());
+        return new MemberDataDTO(member);
     }
 
 
@@ -113,6 +113,7 @@ public class ArticleResponseDTO {
         private LocalDateTime createdAt;
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime updatedAt;
+        private String imgUrl;
 
         public static ArticlePreviewDTO from(Article article) {
             return ArticlePreviewDTO.builder()
