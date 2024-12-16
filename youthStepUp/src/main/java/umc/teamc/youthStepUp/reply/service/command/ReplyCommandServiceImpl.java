@@ -7,6 +7,10 @@ import umc.teamc.youthStepUp.article.entity.Article;
 import umc.teamc.youthStepUp.article.exception.ArticleErrorCode;
 import umc.teamc.youthStepUp.article.exception.ArticleErrorException;
 import umc.teamc.youthStepUp.article.repository.ArticleRepository;
+import umc.teamc.youthStepUp.firebase.domain.FCMMessage;
+import umc.teamc.youthStepUp.firebase.dto.MessagePushServiceRequest;
+import umc.teamc.youthStepUp.firebase.service.FCMService;
+import umc.teamc.youthStepUp.member.entity.Member;
 import umc.teamc.youthStepUp.reply.dto.replyRequestDTO.ReplyCreateRequestDTO;
 import umc.teamc.youthStepUp.reply.dto.replyRequestDTO.ReplyUpdateRequestDTO;
 import umc.teamc.youthStepUp.reply.dto.replyResponseDTO.ReplyPostDTO;
@@ -22,9 +26,10 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
 
     private final ReplyRepository replyRepository;
     private final ArticleRepository articleRepository;
+    private final FCMService fcmService;
 
     @Override
-    public ReplyPostDTO createReply(ReplyCreateRequestDTO dto, Long memberId) {
+    public ReplyPostDTO createReplyDTO(ReplyCreateRequestDTO dto, Member member) {
 
         Article article = articleRepository.findById(dto.articleId()).orElseThrow(
                 () -> new ArticleErrorException(ArticleErrorCode.NOT_FOUND));
@@ -34,8 +39,28 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
                 replyRepository.findById(dto.parentId()).orElseThrow(
                         () -> new ReplyErrorException(ReplyErrorCode.NOT_FOUND)
                 ) : null;
-        Reply reply = replyRepository.save(dto.toReply(dto, memberId, article, parnetReply));
-        return new ReplyPostDTO(reply, article);
+
+        Reply reply = replyRepository.save(dto.toReply(dto, member.getId(), article, parnetReply));
+
+        article.incrementReplyCount();
+
+        ReplyPostDTO replyDTO = new ReplyPostDTO(reply, article);
+        if (reply.getParentReply() == null) {
+            fcmService.pushMessage(replyDTO.article().getMember(), MessagePushServiceRequest.of(replyDTO));
+        } else {
+            fcmService.pushMessage(
+                    replyDTO.reply().getParentReply().getMember(),
+                    MessagePushServiceRequest.of(replyDTO.reply().getParentReply().getMember().getDeviceId(),
+                                FCMMessage.REPLY_TITLE.getValue(),
+                                FCMMessage.REPLY_COMMENT.format(
+                                        reply.getMember().getNickName(),
+                                        reply.getContent()
+                            )
+                    )
+            );
+        }
+
+        return replyDTO;
     }
 
     @Override
@@ -52,6 +77,9 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
 
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new ReplyErrorException(ReplyErrorCode.NOT_FOUND));
+
+        reply.getArticle().decrementReplyCount();
+
         reply.delete();
     }
 }

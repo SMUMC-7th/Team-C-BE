@@ -32,6 +32,7 @@ public class ReplyQueryServiceImpl implements ReplyQueryService {
         Pageable pageable = PageRequest.of(0, pageSize);
 
         Slice<Reply> replySlice = replyRepository.findRepliesByArticleOrderByCreatedAtAsc(articleId, cursorId, pageable);
-        return ReplyPageListResponseDTO.from(replySlice);
+        ReplyPageListResponseDTO from = ReplyPageListResponseDTO.from(replySlice);
+        return from;
     }
 }

@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,9 +45,9 @@ public class ReplyController {
     public CustomResponse<?> createReply(
             @RequestBody ReplyCreateRequestDTO dto,
             @MemberInfo Member member) {
-        Long memberId = member.getId();
-        ReplyPostDTO replyDTO = replyCommandService.createReply(dto, memberId);
-        fcmService.pushMessage(replyDTO.article().getMember(), MessagePushServiceRequest.of(replyDTO));
+
+        ReplyPostDTO replyDTO = replyCommandService.createReplyDTO(dto, member);
+
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, new ReplyResponseDTO(replyDTO.reply()));
     }
 
