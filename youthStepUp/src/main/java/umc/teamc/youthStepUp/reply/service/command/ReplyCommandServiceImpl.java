@@ -51,10 +51,10 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
             fcmService.pushMessage(
                     replyDTO.reply().getParentReply().getMember(),
                     MessagePushServiceRequest.of(replyDTO.reply().getParentReply().getMember().getDeviceToken(),
-                                FCMMessage.REPLY_TITLE.getValue(),
-                                FCMMessage.REPLY_COMMENT.format(
-                                        reply.getMember().getNickName(),
-                                        reply.getContent()
+                            FCMMessage.REPLY_TITLE.getValue(),
+                            FCMMessage.REPLY_COMMENT.format(
+                                    reply.getMember().getNickName(),
+                                    reply.getContent()
                             )
                     )
             );
