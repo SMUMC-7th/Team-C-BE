@@ -14,9 +14,12 @@ public class DayCheckValidator implements ConstraintValidator<CheckDay, Integer>
     public boolean isValid(Integer day, ConstraintValidatorContext context) {
         if (day < 1 || day > 31) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(ValidateErrorCode.UNVALID_DAY.toString()).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(ValidateErrorCode.UNVALID_MONTH.getMessage())
+                    .addConstraintViolation();
             return false;
         }
         return true;
     }
+
+
 }

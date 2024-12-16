@@ -48,8 +48,8 @@ public class CalendarController {
     })
     public CustomResponse<?> getPoliciesByMonth(
             @Parameter(hidden = true) @MemberIdInfo Long id,
-            @CheckYear @RequestParam int year,
-            @CheckMonth @RequestParam int month) {
+            @RequestParam int year,
+            @RequestParam int month) {
 
         LocalDate targetMonth = LocalDate.of(year, month, 1);
 
@@ -73,9 +73,9 @@ public class CalendarController {
     })
     public CustomResponse<?> getBookmarksByDate(
             @Parameter(hidden = true) @MemberIdInfo Long id,
-            @CheckYear @RequestParam int year,
-            @CheckMonth @RequestParam int month,
-            @CheckDay @RequestParam int date) {
+            @CheckYear Integer year,
+            @CheckMonth Integer month,
+            @CheckDay Integer date) {
 
         LocalDate targetDate = LocalDate.of(year, month, date);
         List<BookmarkResponseByDateDTO> bookmarkPolicies = bookmarkQueryService.findByPolicyPeriodDate(id, targetDate);
