@@ -36,6 +36,8 @@ public class Member extends BaseEntity {
     String socialId;
     @Column(name = "profile_img")
     String imgUrl;
+    @Column(name = "device_id")
+    String deviceId;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "education")
     Education education;

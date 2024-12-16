@@ -10,6 +10,7 @@ public record MemberProfileResponseDTO(
         List<String> regions,
         List<String> keywords,
         List<String> majors,
+        String profileImg,
         String education
 ) {
     public static MemberProfileResponseDTO of(Member member, MemberInitProfileRequestDTO dto) {
@@ -20,6 +21,7 @@ public record MemberProfileResponseDTO(
                 dto.regions(),
                 dto.keyword(),
                 dto.majors(),
+                dto.profileImg(),
                 dto.educations());
     }
 }

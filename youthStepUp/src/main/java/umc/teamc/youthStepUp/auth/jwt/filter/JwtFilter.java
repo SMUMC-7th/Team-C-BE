@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import umc.teamc.youthStepUp.auth.constant.TokenConstant;
-import umc.teamc.youthStepUp.auth.constant.URLConstant;
 import umc.teamc.youthStepUp.auth.jwt.JwtProvider;
 import umc.teamc.youthStepUp.auth.service.AuthService;
 
@@ -30,17 +29,8 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
         String token = jwtProvider.resolveToken(cookie);
-        Cookie RCookie = jwtProvider.findCookie(cookies, TokenConstant.REFRESH_TOKEN.getValue());
-        if (token == null || token.isBlank() || token.isEmpty()) {
-            if (RCookie == null || RCookie.getValue().isEmpty()) {
-                response.sendRedirect(URLConstant.LOGIN_URL.getValue());
-                return;
-            }
-        }
-        if (jwtProvider.isExpired(token)) {
-            authService.reissueToken(RCookie.getValue(), response);
-            return;
-        }
+        Cookie RCookie = jwtProvider.findCookie(cookies, TokenConstant.REFRESH_TOKEN.getValue()); //refreshToken
+        jwtProvider.isExpired(token);
         authService.setAuthentication(token);
         filterChain.doFilter(request, response);
     }

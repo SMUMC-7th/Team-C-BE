@@ -13,6 +13,8 @@ public record MemberInitProfileRequestDTO(
         List<String> keyword,
         @NotNull(message = "전공을 입력해주세요")
         List<String> majors,
+        @NotNull(message = "프로필 이미지를 입력해주세요")
+        String profileImg,
         @NotNull(message = "학력을 입력해주세요")
         String educations) {
 }

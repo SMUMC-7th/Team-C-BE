@@ -24,7 +24,7 @@ public class AuthController {
     @GetMapping("/auth/logout")
     @Operation(summary = "로그아웃", description = "로그아웃을 수행한다.")
     public CustomResponse<?> logout(HttpServletResponse response, HttpServletRequest request) {
-        kakaoAuthService.logout(response, request);
+        authService.logout(response, request);
         return CustomResponse.onSuccess(AuthSuccessCode.LOGOUT_SUCCESS);
     }
 

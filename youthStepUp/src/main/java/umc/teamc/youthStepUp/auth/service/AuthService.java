@@ -1,5 +1,6 @@
 package umc.teamc.youthStepUp.auth.service;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import umc.teamc.youthStepUp.auth.constant.TokenConstant;
 import umc.teamc.youthStepUp.auth.dto.NewMemberResponseDTO;
 import umc.teamc.youthStepUp.auth.dto.kakao.KakaoUserInfoDTO;
 import umc.teamc.youthStepUp.auth.dto.naver.NaverUserInfoDTO;
@@ -125,5 +127,19 @@ public class AuthService {
         }
     }
 
+    public void logout(HttpServletResponse response, HttpServletRequest request) {
+        Cookie accessToken = jwtProvider.findCookie(request.getCookies(), TokenConstant.ACCESS_TOKEN.getValue());
+        Cookie refreshToken = jwtProvider.findCookie(request.getCookies(), TokenConstant.REFRESH_TOKEN.getValue());
+        setCookieClean(accessToken);
+        setCookieClean(refreshToken);
+        response.addCookie(accessToken);
+        response.addCookie(refreshToken);
+    }
+
+    private static void setCookieClean(Cookie cookie) {
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+    }
 
 }

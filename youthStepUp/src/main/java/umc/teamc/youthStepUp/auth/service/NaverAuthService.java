@@ -29,11 +29,11 @@ public class NaverAuthService {
     private String naver_client_secret;
     private final String grant_type = "authorization_code";
 
-    public void getCode() throws UnsupportedEncodingException {
+    public String getCode() throws UnsupportedEncodingException {
         WebClient.create()
                 .get()
                 .uri(getNaverCode());
-        System.out.println(getNaverCode());
+        return getNaverCode();
     }
 
     private String getNaverCode() throws UnsupportedEncodingException {

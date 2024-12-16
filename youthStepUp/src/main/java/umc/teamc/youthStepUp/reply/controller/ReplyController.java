@@ -15,12 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
+import umc.teamc.youthStepUp.firebase.dto.MessagePushServiceRequest;
+import umc.teamc.youthStepUp.firebase.service.FCMService;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
 import umc.teamc.youthStepUp.member.entity.Member;
 import umc.teamc.youthStepUp.reply.dto.replyRequestDTO.ReplyCreateRequestDTO;
 import umc.teamc.youthStepUp.reply.dto.replyRequestDTO.ReplyUpdateRequestDTO;
 import umc.teamc.youthStepUp.reply.dto.replyResponseDTO.ReplyPageListResponseDTO;
+import umc.teamc.youthStepUp.reply.dto.replyResponseDTO.ReplyPostDTO;
 import umc.teamc.youthStepUp.reply.dto.replyResponseDTO.ReplyResponseDTO;
 import umc.teamc.youthStepUp.reply.dto.replyResponseDTO.ReplyResponseUpdateDTO;
 import umc.teamc.youthStepUp.reply.entity.Reply;
@@ -36,16 +39,17 @@ public class ReplyController {
 
     private final ReplyCommandService replyCommandService;
     private final ReplyQueryService replyQueryService;
+    private final FCMService fcmService;
 
     @PostMapping("/articles")
     @Operation(method = "POST", summary = "댓글 생성 API")
     public CustomResponse<?> createReply(
             @RequestBody ReplyCreateRequestDTO dto,
             @MemberInfo Member member) {
-
         Long memberId = member.getId();
-        Reply reply = replyCommandService.createReply(dto, memberId);
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK, new ReplyResponseDTO(reply));
+        ReplyPostDTO replyDTO = replyCommandService.createReply(dto, memberId);
+        fcmService.pushMessage(replyDTO.article().getMember(), MessagePushServiceRequest.of(replyDTO));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, new ReplyResponseDTO(replyDTO.reply()));
     }
 
     @GetMapping("/articles/{articleId}")

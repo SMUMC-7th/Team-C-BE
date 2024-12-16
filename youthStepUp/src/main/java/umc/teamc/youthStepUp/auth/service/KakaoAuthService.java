@@ -1,9 +1,6 @@
 package umc.teamc.youthStepUp.auth.service;
 
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +11,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import umc.teamc.youthStepUp.auth.constant.OAUTH_URL;
-import umc.teamc.youthStepUp.auth.constant.TokenConstant;
 import umc.teamc.youthStepUp.auth.dto.kakao.KakaoAccessTokenDTO;
 import umc.teamc.youthStepUp.auth.dto.kakao.KakaoUserInfoDTO;
 import umc.teamc.youthStepUp.auth.jwt.JwtProvider;
@@ -32,11 +28,11 @@ public class KakaoAuthService {
     private final String response_type = "code";
     private final JwtProvider jwtProvider;
 
-    public void getCode() {
+    public String getCode() {
         WebClient.create()
                 .get()
                 .uri(getAuthUrl());
-        System.out.println(getAuthUrl());
+        return getAuthUrl();
     }
 
     private String getAuthUrl() {
@@ -73,30 +69,6 @@ public class KakaoAuthService {
         formData.add("redirect_uri", redirectURL);
         formData.add("client_id", client_id);
         return formData;
-    }
-
-    public void logout(HttpServletResponse response, HttpServletRequest request) {
-        Cookie accessToken = jwtProvider.findCookie(request.getCookies(), TokenConstant.ACCESS_TOKEN.getValue());
-        Cookie refreshToken = jwtProvider.findCookie(request.getCookies(), TokenConstant.REFRESH_TOKEN.getValue());
-        setCookieClean(accessToken);
-        setCookieClean(refreshToken);
-        WebClient.create()
-                .get()
-                .uri(getLogoutUrl());
-        response.addCookie(accessToken);
-        response.addCookie(refreshToken);
-    }
-
-    private static void setCookieClean(Cookie cookie) {
-        cookie.setPath("/");
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-    }
-
-    private String getLogoutUrl() {
-        return OAUTH_URL.KAKAO_LOGOUT_URL.getUrl()
-                + "?client_id=" + client_id
-                + "&logout_redirect_uri=" + "/";
     }
 
     public KakaoUserInfoDTO getUserInfo(String token) {

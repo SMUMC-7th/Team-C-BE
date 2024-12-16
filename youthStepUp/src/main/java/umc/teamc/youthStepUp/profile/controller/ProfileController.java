@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import umc.teamc.youthStepUp.auth.annotation.MemberIdInfo;
 import umc.teamc.youthStepUp.auth.annotation.MemberInfo;
+import umc.teamc.youthStepUp.firebase.service.FCMService;
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
 import umc.teamc.youthStepUp.member.dto.MemberInitProfileRequestDTO;
@@ -41,6 +42,7 @@ public class ProfileController {
     private final ProfileBookmarkQueryService profileBookmarkQueryService;
     private final ProfileBookmarkCommandService profileBookmarkCommandService;
     private final MemberService memberService;
+    private final FCMService fcmService;
 
     @PostMapping("/init-profile")
     @Operation(summary = "프로필 초기 설정", description = "닉네임, 나이, 교육, 키워드, 지역, 전공을 받아 초기 프로필을 설정한다.")
@@ -55,6 +57,17 @@ public class ProfileController {
                                            @Valid @RequestBody DuplicateCheckRequestDTO dto) {
         return CustomResponse.onSuccess(GeneralSuccessCode.OK,
                 new DuplicateCheckResponseDTO(memberService.checkDuplicateNickName(member, dto)));
+    }
+
+    /**
+     * 알림 조회
+     */
+    @Operation(summary = "알림 조회")
+    @GetMapping("/alarm")
+    public CustomResponse<?> getProfile(@MemberIdInfo Long memberId,
+                                        @RequestParam(value = "cursor", defaultValue = "2") Long cursorId,
+                                        @RequestParam(value = "offset", defaultValue = "10") int offset) {
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, fcmService.getMyAlarm(memberId, cursorId, offset));
     }
 
     /**

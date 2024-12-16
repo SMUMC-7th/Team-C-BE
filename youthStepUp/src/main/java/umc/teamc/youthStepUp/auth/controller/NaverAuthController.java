@@ -25,10 +25,10 @@ public class NaverAuthController {
     private final AuthService authService;
 
     @GetMapping("/auth/naver-login")
-    @Operation(summary = "네이버 로그인", description = "네이버 소셜 로그인 인가 코드 발급을 수행한다.")
+    @Operation(summary = "네이버 로그인 백엔드 테스트용", description = "네이버 소셜 로그인 인가 코드 발급을 수행한다.")
     public CustomResponse<?> getNaverCode() throws UnsupportedEncodingException {
         naverAuthService.getCode();
-        return CustomResponse.onSuccess(GeneralSuccessCode.CREATED);
+        return CustomResponse.onSuccess(GeneralSuccessCode.CREATED, naverAuthService.getCode());
     }
 
     @GetMapping("/auth/naver-oauth")

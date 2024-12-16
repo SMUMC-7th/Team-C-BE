@@ -9,6 +9,7 @@ import umc.teamc.youthStepUp.article.exception.ArticleErrorException;
 import umc.teamc.youthStepUp.article.repository.ArticleRepository;
 import umc.teamc.youthStepUp.reply.dto.replyRequestDTO.ReplyCreateRequestDTO;
 import umc.teamc.youthStepUp.reply.dto.replyRequestDTO.ReplyUpdateRequestDTO;
+import umc.teamc.youthStepUp.reply.dto.replyResponseDTO.ReplyPostDTO;
 import umc.teamc.youthStepUp.reply.entity.Reply;
 import umc.teamc.youthStepUp.reply.error.exceptiion.ReplyErrorCode;
 import umc.teamc.youthStepUp.reply.error.exceptiion.ReplyErrorException;
@@ -23,7 +24,7 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
     private final ArticleRepository articleRepository;
 
     @Override
-    public Reply createReply(ReplyCreateRequestDTO dto, Long memberId) {
+    public ReplyPostDTO createReply(ReplyCreateRequestDTO dto, Long memberId) {
 
         Article article = articleRepository.findById(dto.articleId()).orElseThrow(
                 () -> new ArticleErrorException(ArticleErrorCode.NOT_FOUND));
@@ -33,8 +34,8 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
                 replyRepository.findById(dto.parentId()).orElseThrow(
                         () -> new ReplyErrorException(ReplyErrorCode.NOT_FOUND)
                 ) : null;
-
-        return replyRepository.save(dto.toReply(dto, memberId, article, parnetReply));
+        Reply reply = replyRepository.save(dto.toReply(dto, memberId, article, parnetReply));
+        return new ReplyPostDTO(reply, article);
     }
 
     @Override
@@ -43,14 +44,14 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
         Reply reply = replyRepository.findById(replyId).orElseThrow(
                 () -> new ReplyErrorException((ReplyErrorCode.NOT_FOUND)));
         reply.updateReply(dto.content());
-
         return reply;
     }
 
     @Override
     public void deleteReply(Long replyId) {
 
-        Reply reply = replyRepository.findById(replyId).orElseThrow(() -> new ReplyErrorException(ReplyErrorCode.NOT_FOUND));
+        Reply reply = replyRepository.findById(replyId)
+                .orElseThrow(() -> new ReplyErrorException(ReplyErrorCode.NOT_FOUND));
         reply.delete();
     }
 }
