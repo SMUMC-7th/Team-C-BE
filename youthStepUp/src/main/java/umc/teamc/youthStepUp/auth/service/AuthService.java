@@ -1,5 +1,6 @@
 package umc.teamc.youthStepUp.auth.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
@@ -7,8 +8,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import umc.teamc.youthStepUp.auth.dto.KakaoUserInfoDTO;
 import umc.teamc.youthStepUp.auth.dto.NewMemberResponseDTO;
+import umc.teamc.youthStepUp.auth.dto.kakao.KakaoUserInfoDTO;
+import umc.teamc.youthStepUp.auth.dto.naver.NaverUserInfoDTO;
 import umc.teamc.youthStepUp.auth.jwt.JwtProvider;
 import umc.teamc.youthStepUp.auth.jwt.error.JwtErrorCode;
 import umc.teamc.youthStepUp.auth.jwt.error.exception.JwtException;
@@ -23,14 +25,43 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
 
+    public boolean isLocalhost(HttpServletRequest request) {
+        boolean isLocalhost = false;
+        String referer = request.getHeader("Referer");
+        if (referer != null && referer.contains("localhost")) {
+            isLocalhost = true;
+        }
+        return isLocalhost;
+    }
+
+    //kakao
     public NewMemberResponseDTO login(KakaoUserInfoDTO infoDTO, HttpServletResponse response) {
-        boolean isExistMember = memberRepository.existsByKakaoId(infoDTO.id());
+        String socialId = String.valueOf(infoDTO.id());
+        boolean isExistMember = memberRepository.existsBySocialId(socialId);
         Member member = null;
         if (!isExistMember) {
-            member = createNewMember(infoDTO);
+            member = createNewMember(infoDTO.kakaoAccount().profile().nickname(),
+                    infoDTO.kakaoAccount().profile().profileImageUrl(), socialId);
             getResponse(member, response);
         } else {
-            member = memberRepository.findByKakaoId(infoDTO.id()).orElseThrow(
+            member = memberRepository.findBySocialId(socialId).orElseThrow(
+                    () -> new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND));
+            getResponse(member, response);
+        }
+        return new NewMemberResponseDTO(isExistMember, member.getId(), member.getNickName(), member.getImgUrl());
+    }
+
+    //naver
+    public NewMemberResponseDTO login(NaverUserInfoDTO infoDTO, HttpServletResponse response) {
+        String socialId = infoDTO.response().id();
+        boolean isExistMember = memberRepository.existsBySocialId(socialId);
+        Member member = null;
+        if (!isExistMember) {
+            member = createNewMember(infoDTO.response().name(), infoDTO.response().profile_image(),
+                    socialId);
+            getResponse(member, response);
+        } else {
+            member = memberRepository.findBySocialId(socialId).orElseThrow(
                     () -> new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND));
             getResponse(member, response);
         }
@@ -42,11 +73,11 @@ public class AuthService {
         return originName + "의청춘" + randomNumber;
     }
 
-    private Member createNewMember(KakaoUserInfoDTO infoDTO) {
+    private Member createNewMember(String name, String profileImgUrl, String socialId) {
         Member member = Member.builder()
-                .nickName(newRandomNickName(infoDTO.kakaoAccount().profile().nickname()))
-                .imgUrl(infoDTO.kakaoAccount().profile().profileImageUrl())
-                .kakaoId(infoDTO.id())
+                .nickName(newRandomNickName(name))
+                .imgUrl(profileImgUrl)
+                .socialId(socialId)
                 .build();
         memberRepository.save(member);
         return member;
@@ -54,8 +85,8 @@ public class AuthService {
 
     private void getResponse(Member member, HttpServletResponse response) {
         Long id = member.getId();
-        ResponseCookie refreshCookie = jwtProvider.createRefreshCookie(id);
-        ResponseCookie accessCookie = jwtProvider.createAccessCookie(id);
+        ResponseCookie refreshCookie = jwtProvider.createCookie("refreshToken", id);
+        ResponseCookie accessCookie = jwtProvider.createCookie("accessToken", id);
         setAuthentication(accessCookie.getValue());
         setResponse(response, refreshCookie, accessCookie);
     }
@@ -64,8 +95,8 @@ public class AuthService {
         validateRefreshToken(refreshToken);
         Long id = Long.parseLong(jwtProvider.getUserId(refreshToken));
         String accessToken = jwtProvider.createAccessToken(id);
-        ResponseCookie refreshCookie = jwtProvider.createRefreshCookie(id); //리프레쉬 토큰 쿠키에 담는다.
-        ResponseCookie accessCookie = jwtProvider.createAccessCookie(id); //리프레쉬 토큰 쿠키에 담는다.
+        ResponseCookie refreshCookie = jwtProvider.createCookie("refreshToken", id);
+        ResponseCookie accessCookie = jwtProvider.createCookie("accessToken", id);
         setAuthentication(accessToken);
         setResponse(response, refreshCookie, accessCookie);
     }

@@ -7,12 +7,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import umc.teamc.youthStepUp.auth.dto.KakaoAccessTokenDTO;
-import umc.teamc.youthStepUp.auth.dto.KakaoUserInfoDTO;
+import umc.teamc.youthStepUp.auth.dto.kakao.KakaoAccessTokenDTO;
+import umc.teamc.youthStepUp.auth.dto.kakao.KakaoUserInfoDTO;
 import umc.teamc.youthStepUp.auth.service.AuthService;
 import umc.teamc.youthStepUp.auth.service.KakaoAuthService;
 import umc.teamc.youthStepUp.auth.success.AuthSuccessCode;
@@ -39,30 +38,11 @@ public class KakaoAuthController {
             @RequestParam("code") String code,
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
-        boolean isLocalhost = false;
-        String referer = request.getHeader("Referer");
-        if (referer != null && referer.contains("localhost")) {
-            isLocalhost = true;
-        }
+        boolean isLocalhost = authService.isLocalhost(request);
         KakaoAccessTokenDTO tokenDTO = kakaoAuthService.getKakaoAccessToken(code, isLocalhost);
         KakaoUserInfoDTO userInfoDTO = kakaoAuthService.getUserInfo(tokenDTO.accessToken());
         return CustomResponse.onSuccess(AuthSuccessCode.LOGIN_SUCCESS, authService.login(userInfoDTO, response));
     }
 
-    @GetMapping("/auth/logout")
-    @Operation(summary = "로그아웃", description = "로그아웃을 수행한다.")
-    public CustomResponse<?> logout(HttpServletResponse response, HttpServletRequest request) {
-        kakaoAuthService.logout(response, request);
-        return CustomResponse.onSuccess(AuthSuccessCode.LOGOUT_SUCCESS);
-    }
-
-    @GetMapping("/auth/reissue-token")
-    @Operation(summary = "토큰 재발급", description = "만료된 액세스 토큰을 재발급받는다.")
-    public CustomResponse<?> reissueToken(
-            @Parameter(description = "Refresh 토큰을 쿠키에 넣어 요청", required = true)
-            @CookieValue("refreshToken") String refreshToken, HttpServletResponse response) {
-        authService.reissueToken(refreshToken, response);
-        return CustomResponse.onSuccess(AuthSuccessCode.ACCESS_TOKEN_REISSUE_SUCCESS);
-    }
 
 }

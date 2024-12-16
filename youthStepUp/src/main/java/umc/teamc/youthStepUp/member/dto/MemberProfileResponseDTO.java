@@ -1,13 +1,12 @@
 package umc.teamc.youthStepUp.member.dto;
 
-import umc.teamc.youthStepUp.member.entity.Member;
-
 import java.util.List;
+import umc.teamc.youthStepUp.member.entity.Member;
 
 public record MemberProfileResponseDTO(
         String nickName,
         int age,
-        Long kakaoId,
+        String socialId,
         List<String> regions,
         List<String> keywords,
         List<String> majors,
@@ -17,7 +16,7 @@ public record MemberProfileResponseDTO(
         return new MemberProfileResponseDTO(
                 member.getNickName(),
                 member.getAge(),
-                member.getKakaoId(),
+                member.getSocialId(),
                 dto.regions(),
                 dto.keyword(),
                 dto.majors(),
