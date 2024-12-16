@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -95,10 +96,10 @@ public class GoogleAuthService {
                 .block();
     }
 
-    private Map<String, String> googleInfoBody(String token) {
-        Map<String, String> body = new HashMap<>();
-        body.put("idToken", token);
-        return body;
-    }
+//    private Map<String, String> googleInfoBody(String token) {
+//        Map<String, String> body = new HashMap<>();
+//        body.put("idToken", token);
+//        return body;
+//    }
 
 }

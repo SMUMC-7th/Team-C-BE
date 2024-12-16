@@ -50,7 +50,7 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
         } else {
             fcmService.pushMessage(
                     replyDTO.reply().getParentReply().getMember(),
-                    MessagePushServiceRequest.of(replyDTO.reply().getParentReply().getMember().getDeviceId(),
+                    MessagePushServiceRequest.of(replyDTO.reply().getParentReply().getMember().getDeviceToken(),
                                 FCMMessage.REPLY_TITLE.getValue(),
                                 FCMMessage.REPLY_COMMENT.format(
                                         reply.getMember().getNickName(),
