@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
-import umc.teamc.youthStepUp.auth.constant.KAKAO_URL;
+import umc.teamc.youthStepUp.auth.constant.OAUTH_URL;
 import umc.teamc.youthStepUp.auth.constant.TokenConstant;
-import umc.teamc.youthStepUp.auth.dto.KakaoAccessTokenDTO;
-import umc.teamc.youthStepUp.auth.dto.KakaoUserInfoDTO;
+import umc.teamc.youthStepUp.auth.dto.kakao.KakaoAccessTokenDTO;
+import umc.teamc.youthStepUp.auth.dto.kakao.KakaoUserInfoDTO;
 import umc.teamc.youthStepUp.auth.jwt.JwtProvider;
 
 @Service
@@ -40,7 +40,7 @@ public class KakaoAuthService {
     }
 
     private String getAuthUrl() {
-        return KAKAO_URL.KAKAO_AUTH_URL.getUrl()
+        return OAUTH_URL.KAKAO_AUTH_URL.getUrl()
                 + "?response_type=" + response_type
                 + "&client_id=" + client_id
                 + "&redirect_uri=" + redirect_uri;
@@ -50,7 +50,7 @@ public class KakaoAuthService {
         WebClient webClient = WebClient.create();
         return webClient
                 .post()
-                .uri(KAKAO_URL.KAKAO_TOKEN_URL.getUrl())
+                .uri(OAUTH_URL.KAKAO_TOKEN_URL.getUrl())
                 .headers(header -> {
                     header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                     header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
@@ -94,7 +94,7 @@ public class KakaoAuthService {
     }
 
     private String getLogoutUrl() {
-        return KAKAO_URL.KAKAO_LOGOUT_URL.getUrl()
+        return OAUTH_URL.KAKAO_LOGOUT_URL.getUrl()
                 + "?client_id=" + client_id
                 + "&logout_redirect_uri=" + "/";
     }
@@ -102,7 +102,7 @@ public class KakaoAuthService {
     public KakaoUserInfoDTO getUserInfo(String token) {
         return WebClient.create()
                 .get()
-                .uri(KAKAO_URL.KAKAO_INFO_URL.getUrl())
+                .uri(OAUTH_URL.KAKAO_INFO_URL.getUrl())
                 .headers(header -> {
                     header.setBearerAuth(token);
                     header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

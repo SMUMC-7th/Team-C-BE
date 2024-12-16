@@ -1,4 +1,4 @@
-package umc.teamc.youthStepUp.auth.dto;
+package umc.teamc.youthStepUp.auth.dto.kakao;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

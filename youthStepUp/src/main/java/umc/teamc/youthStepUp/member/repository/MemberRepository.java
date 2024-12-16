@@ -7,9 +7,9 @@ import umc.teamc.youthStepUp.member.entity.Member;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    boolean existsByKakaoId(Long kakaoId);
+    boolean existsBySocialId(String socialId);
 
-    Optional<Member> findByKakaoId(Long kakaoId);
+    Optional<Member> findBySocialId(String socialId);
 
     boolean existsByNickName(String nickname);
 

@@ -125,10 +125,14 @@ public class JwtProvider {
         }
     }
 
-    public ResponseCookie createRefreshCookie(Long id) {
-        String name = "refreshToken";
-        String value = createRefreshToken(id);
-        return ResponseCookie.from(name, value)
+    public ResponseCookie createCookie(String type, Long id) {
+        String value = "";
+        if (type.equals("refreshToken")) {
+            value = createRefreshToken(id);
+        } else {
+            value = createAccessToken(id);
+        }
+        return ResponseCookie.from(type, value)
                 .path("/")
                 .sameSite("None")
                 .httpOnly(false)
@@ -137,18 +141,4 @@ public class JwtProvider {
                 .maxAge(refreshExpiration)
                 .build();
     }
-
-    public ResponseCookie createAccessCookie(Long id) {
-        String name = "accessToken";
-        String value = createAccessToken(id);
-        return ResponseCookie.from(name, value)
-                .path("/")
-                .sameSite("None")
-                .httpOnly(false)
-                .secure(true)
-                .domain(".youthstepup.site")
-                .maxAge(accessExpiration)
-                .build();
-    }
-
 }

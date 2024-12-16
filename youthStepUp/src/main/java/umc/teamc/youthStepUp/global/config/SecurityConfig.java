@@ -49,7 +49,7 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(
                                 "/", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/webjars/**",
-                                "/auth/kakao-login", "/auth/kakao-oauth")
+                                "/auth/kakao-login", "/auth/kakao-oauth", "/auth/naver-oauth", "/auth/naver-login")
                         .permitAll()
                         .anyRequest().authenticated()
                 )

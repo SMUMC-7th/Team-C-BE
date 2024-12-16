@@ -32,8 +32,8 @@ public class Member extends BaseEntity {
     String nickName;
     @Column(name = "age")
     int age;
-    @Column(name = "kakao_id")
-    Long kakaoId;
+    @Column(name = "social_id")
+    String socialId;
     @Column(name = "profile_img")
     String imgUrl;
     @Enumerated(value = EnumType.STRING)
@@ -63,9 +63,6 @@ public class Member extends BaseEntity {
         this.age = age;
     }
 
-    public void editKakaoId(Long kakaoId) {
-        this.kakaoId = kakaoId;
-    }
 
     public void editEducation(Education education) {
         this.education = education;
