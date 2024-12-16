@@ -1,6 +1,8 @@
 package umc.teamc.youthStepUp.article.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +54,10 @@ public class ArticleController {
 
     @GetMapping
     @Operation(method = "GET", summary = "커뮤니티 글 전체 조회 API")
+    @Parameters({
+            @Parameter(name = "cursorId", description = "cursorId를 입력해주세요, 필수 입력 사항은 아닙니다."),
+            @Parameter(name = "pageSize", description = "pageSize를 입력해주세요, 기본 값은 10입니다.")
+    })
     public CustomResponse<?> getArticlesByCursor(
             @RequestParam(name = "cursorId", required = false) Long cursorId,
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize
@@ -65,6 +71,7 @@ public class ArticleController {
 
     @GetMapping("/{articleId}")
     @Operation(method = "GET", summary = "커뮤니티 글 상세 조회 API")
+    @Parameter(name = "articleId", description = "상세조회하고자 하는 글의 articleId를 입력해주세요.")
     public CustomResponse<?> getArticleById(
             @MemberInfo Member member,
             @PathVariable("articleId") Long articleId) {
@@ -79,6 +86,7 @@ public class ArticleController {
 
     @PutMapping("/{articleId}")
     @Operation(method = "PUT", summary = "커뮤니티 글 수정 API")
+    @Parameter(name = "articleId", description = "수정하고자 하는 글의 articleId를 입력해주세요.")
     public CustomResponse<?> updateArticleById(
             @MemberIdInfo Long id,
             @PathVariable Long articleId,
@@ -92,6 +100,7 @@ public class ArticleController {
 
     @DeleteMapping("/{articleId}")
     @Operation(method = "DELETE", summary = "커뮤니티 글 삭제 API")
+    @Parameter(name = "articleId", description = "삭제하고자 하는 글의 articleId를 입력해주세요.")
     public CustomResponse<?> deleteArticleById(
             @MemberIdInfo Long id,
             @PathVariable("articleId") Long articleId) {
