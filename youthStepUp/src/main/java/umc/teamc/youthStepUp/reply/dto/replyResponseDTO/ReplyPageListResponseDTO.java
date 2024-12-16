@@ -12,16 +12,13 @@ public record ReplyPageListResponseDTO(
 ) {
     public static ReplyPageListResponseDTO from(Slice<Reply> replies) {
 
-        List<ReplyResponseDTO> replyList = replies.getContent()
-                .stream()
-                .map(ReplyResponseDTO::new)
-                .toList();
+        List<ReplyResponseDTO> replyTree = ReplyResponseDTO.buildReplyTree(replies.getContent());
 
         Long nextCursorId = replies.hasNext()
                 ? replies.getContent()
                 .get(replies.getNumberOfElements() - 1)
                 .getId() : 0;
 
-        return new ReplyPageListResponseDTO(replies.hasNext(), replyList, nextCursorId);
+        return new ReplyPageListResponseDTO(replies.hasNext(), replyTree, nextCursorId);
     }
 }

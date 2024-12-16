@@ -56,10 +56,8 @@ public class ReplyController {
             @PathVariable(name = "articleId") Long articleId,
             @MemberInfo Member member
     ) {
-        Slice<Reply> replies = replyQueryService.getRepliesByArticleId(articleId, cursorId, pageSize);
-        ReplyPageListResponseDTO replyPageListResponseDTO = ReplyPageListResponseDTO.from(replies);
-
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK, replyPageListResponseDTO);
+        ReplyPageListResponseDTO replies = replyQueryService.getRepliesByArticleId(articleId, cursorId, pageSize);
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, replies);
     }
 
     @DeleteMapping("/{replyId}")

@@ -71,7 +71,7 @@ public class ArticleController {
 
         Article article = articleQueryService.getArticle(articleId);
 
-        MemberDataDTO dto = new MemberDataDTO(member.getNickName(), member.getId());
+        MemberDataDTO dto = new MemberDataDTO(member);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK,
                 ArticleResponseDTO.ArticlePreviewDTO.from(article, dto));

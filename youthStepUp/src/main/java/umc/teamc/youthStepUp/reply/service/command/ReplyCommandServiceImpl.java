@@ -28,7 +28,13 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
         Article article = articleRepository.findById(dto.articleId()).orElseThrow(
                 () -> new ArticleErrorException(ArticleErrorCode.NOT_FOUND));
 
-        return replyRepository.save(dto.toReply(dto, memberId, article));
+        // 부모 댓글 조회
+        Reply parnetReply = dto.parentId() != null ?
+                replyRepository.findById(dto.parentId()).orElseThrow(
+                        () -> new ReplyErrorException(ReplyErrorCode.NOT_FOUND)
+                ) : null;
+
+        return replyRepository.save(dto.toReply(dto, memberId, article, parnetReply));
     }
 
     @Override
@@ -36,7 +42,7 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
 
         Reply reply = replyRepository.findById(replyId).orElseThrow(
                 () -> new ReplyErrorException((ReplyErrorCode.NOT_FOUND)));
-        reply.updateArticle(dto.content());
+        reply.updateReply(dto.content());
 
         return reply;
     }
@@ -45,6 +51,6 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
     public void deleteReply(Long replyId) {
 
         Reply reply = replyRepository.findById(replyId).orElseThrow(() -> new ReplyErrorException(ReplyErrorCode.NOT_FOUND));
-        replyRepository.deleteById(reply.getId());
+        reply.delete();
     }
 }
