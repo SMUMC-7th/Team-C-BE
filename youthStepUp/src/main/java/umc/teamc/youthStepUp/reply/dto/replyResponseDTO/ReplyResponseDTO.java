@@ -27,7 +27,7 @@ public record ReplyResponseDTO(
                 reply.getId(),
                 reply.getParentReply() != null ? reply.getParentReply().getId() : null,
                 reply.getCreatedAt(),
-                reply.getChildrenReply() == null ? new ArrayList<>() : reply.getChildrenReply().stream().map(ReplyResponseDTO::new).toList(),
+                reply.getChildrenReply() == null ? new ArrayList<>() : new ArrayList<>(reply.getChildrenReply().stream().map(ReplyResponseDTO::new).toList()),
                 reply.getDeletedAt() != null ? "http://img1.kakaocdn.net/thumb/R640x640.q70/?fname=http://t1.kakaocdn.net/account_images/default_profile.jpeg" : reply.getMember().getImgUrl()
         );
 
