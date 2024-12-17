@@ -1,6 +1,8 @@
 package umc.teamc.youthStepUp.reply.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +55,11 @@ public class ReplyController {
 
     @GetMapping("/articles/{articleId}")
     @Operation(method = "GET", summary = "커뮤니티 글에 따른 댓글 조회 생성 API")
+    @Parameters({
+            @Parameter(name = "cursorId", description = "cursorId를 입력해주세요. 필수로 입력해야 하는 값은 아닙니다."),
+            @Parameter(name = "pageSize", description = "pageSize를 입력해주세요. 기본 값은 10입니다."),
+            @Parameter(name = "articleId", description = "댓글을 작성하고자 하는 글의 articleId를 입력해주세요.")
+    })
     public CustomResponse<?> getRepliesByArticleId(
             @RequestParam(name = "cursorId", required = false) Long cursorId,
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
@@ -65,6 +72,7 @@ public class ReplyController {
 
     @DeleteMapping("/{replyId}")
     @Operation(method = "DELETE", summary = "댓글 삭제 API")
+    @Parameter(name = "replyId", description = "삭제하고자 하는 댓글의 replyId를 입력해주세요.")
     public CustomResponse<?> deleteReply(
             @MemberInfo Member member,
             @PathVariable("replyId") Long replyId) {
@@ -75,6 +83,7 @@ public class ReplyController {
 
     @PutMapping("{replyId}")
     @Operation(method = "PUT", summary = "댓글 수정 API")
+    @Parameter(name = "replyId", description = "수정하고자 하는 댓글의 replyId를 입력해주세요.")
     public CustomResponse<?> updateReply(
             @MemberInfo Member member,
             @PathVariable("replyId") Long replyId,

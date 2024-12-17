@@ -1,6 +1,8 @@
 package umc.teamc.youthStepUp.profile.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -129,6 +131,10 @@ public class ProfileController {
      */
     @Operation(summary = "북마크 목록 조회")
     @GetMapping("/bookmarks")
+    @Parameters({
+            @Parameter(name = "cursor", description = "cursor값을 입력해주세요. 기본값은 0입니다."),
+            @Parameter(name = "month", description = "offset값을 입력해주세요. 기본값은 10입니다.")
+    })
     public CustomResponse<?> getBookmarks(@MemberIdInfo Long id,
                                           @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
                                           @RequestParam(value = "offset", defaultValue = "10") int offset) {
@@ -146,6 +152,7 @@ public class ProfileController {
      */
     @Operation(summary = "특정 북마크 삭제")
     @DeleteMapping("/bookmarks/{srchPolicyId}")
+    @Parameter(name = "srchPolicyId", description = "북마크 되어있는 정책 중 삭제하고자 하는 정책의 srchPolicyId를 입력해주세요.")
     public CustomResponse<?> deleteBookmark(@MemberIdInfo Long id,
                                             @PathVariable String srchPolicyId) {
         profileBookmarkCommandService.deleteBookmark(id, srchPolicyId);

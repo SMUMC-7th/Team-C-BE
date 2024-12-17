@@ -3,6 +3,7 @@ package umc.teamc.youthStepUp.calendar.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,9 @@ import umc.teamc.youthStepUp.calendar.service.query.CalendarBookmarkQueryService
 import umc.teamc.youthStepUp.global.apiPayload.CustomResponse;
 import umc.teamc.youthStepUp.global.success.GeneralSuccessCode;
 import umc.teamc.youthStepUp.policy.entity.BookMarkPolicy;
+import umc.teamc.youthStepUp.validation.annotation.CheckDay;
+import umc.teamc.youthStepUp.validation.annotation.CheckMonth;
+import umc.teamc.youthStepUp.validation.annotation.CheckYear;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -38,6 +42,10 @@ public class CalendarController {
      */
     @Operation(summary = "월 기준 정책 검색")
     @GetMapping("/month")
+    @Parameters({
+            @Parameter(name = "year", description = "연도(year)를 입력해주세요"),
+            @Parameter(name = "month", description = "달(month)을 입력해주세요")
+    })
     public CustomResponse<?> getPoliciesByMonth(
             @Parameter(hidden = true) @MemberIdInfo Long id,
             @RequestParam int year,
@@ -58,11 +66,16 @@ public class CalendarController {
      */
     @Operation(summary = "일 기준 정책 검색")
     @GetMapping("/date")
+    @Parameters({
+            @Parameter(name = "year", description = "연도(year)를 입력해주세요"),
+            @Parameter(name = "month", description = "달(month)을 입력해주세요"),
+            @Parameter(name = "date", description = "일(day)을 입력해주세요")
+    })
     public CustomResponse<?> getBookmarksByDate(
             @Parameter(hidden = true) @MemberIdInfo Long id,
-            @RequestParam int year,
-            @RequestParam int month,
-            @RequestParam int date) {
+            @CheckYear Integer year,
+            @CheckMonth Integer month,
+            @CheckDay Integer date) {
 
         LocalDate targetDate = LocalDate.of(year, month, date);
         List<BookmarkResponseByDateDTO> bookmarkPolicies = bookmarkQueryService.findByPolicyPeriodDate(id, targetDate);

@@ -4,7 +4,8 @@ import java.util.List;
 
 public record AlarmResponseDTO(
         List<AlarmDTO> alarms,
-        boolean hasNext
+        boolean hasNext,
+        Long nextCursor
 
 ) {
     public record AlarmDTO(
