@@ -9,6 +9,7 @@ import com.google.auth.oauth2.GoogleCredentials;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +33,7 @@ import umc.teamc.youthStepUp.profile.dto.response.AlarmResponseDTO.AlarmDTO;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FCMService {
     private final ObjectMapper objectMapper;
     private final FCMRepository fcmRepository;
@@ -75,9 +77,15 @@ public class FCMService {
                 .header(ACCEPT, "application/json; UTF-8")
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, (fcmRequest, fcmResponse) -> {
+                    log.error("FCM Server Error: Status={}, Body={}",
+                            fcmResponse.getStatusCode(),
+                            fcmResponse.getBody());
                     throw new FcmException(FcmErrorCode.INVALID_REQUEST_MESSAGE);
                 })
                 .onStatus(HttpStatusCode::is5xxServerError, (fcmRequest, fcmResponse) -> {
+                    log.error("FCM Server Error: Status={}, Body={}",
+                            fcmResponse.getStatusCode(),
+                            fcmResponse.getBody());
                     throw new FcmException(GeneralErrorCode.INTERNAL_SERVER_ERROR_500);
                 })
                 .toBodilessEntity();
@@ -88,6 +96,7 @@ public class FCMService {
             MessagePushRequest message = MessagePushRequest.of(request);
             return objectMapper.writeValueAsString(message);
         } catch (JsonProcessingException exception) {
+            log.error("FCM 알림 전송 실패: {}", exception.getMessage());
             throw new FcmException(FcmErrorCode.INVALID_REQUEST_MESSAGE);
         }
     }
@@ -102,6 +111,7 @@ public class FCMService {
             googleCredentials.refreshIfExpired();
             return googleCredentials.getAccessToken().getTokenValue();
         } catch (IOException exception) {
+            log.error("FCM 알림 전송 실패: {}", exception.getMessage());
             throw new FcmException(FcmErrorCode.INVALID_REQUEST_MESSAGE);
         }
     }

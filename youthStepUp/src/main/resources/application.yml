@@ -36,7 +36,7 @@ fcm:
   url: https://fcm.googleapis.com/v1/projects/${PROJECT_ID}/messages:send
   google_api: https://www.googleapis.com/auth/cloud-platform
   project_id: ${PROJECT_ID}
-  ㄴ
+
 google:
   client_id: ${GOOGLE_CLIENT_ID}
   client_secret: ${GOOGLE_CLIENT_SECRET}
