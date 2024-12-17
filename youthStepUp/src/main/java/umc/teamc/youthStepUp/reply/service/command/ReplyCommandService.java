@@ -10,7 +10,7 @@ public interface ReplyCommandService {
 
     ReplyPostDTO createReplyDTO(ReplyCreateRequestDTO dto, Member member);
 
-    Reply updateReply(Long replyId, ReplyUpdateRequestDTO dto);
+    Reply updateReply(Member member, Long replyId, ReplyUpdateRequestDTO dto);
 
-    void deleteReply(Long replyId);
+    void deleteReply(Member member, Long replyId);
 }

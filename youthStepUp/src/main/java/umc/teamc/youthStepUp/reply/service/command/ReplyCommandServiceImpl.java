@@ -64,19 +64,27 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
     }
 
     @Override
-    public Reply updateReply(Long replyId, ReplyUpdateRequestDTO dto) {
+    public Reply updateReply(Member member, Long replyId, ReplyUpdateRequestDTO dto) {
 
         Reply reply = replyRepository.findById(replyId).orElseThrow(
                 () -> new ReplyErrorException((ReplyErrorCode.NOT_FOUND)));
+
+        if (!member.getId().equals(reply.getMember().getId())) {
+            throw new ReplyErrorException(ReplyErrorCode.UNAUTHORIZED);
+        }
         reply.updateReply(dto.content());
         return reply;
     }
 
     @Override
-    public void deleteReply(Long replyId) {
+    public void deleteReply(Member member, Long replyId) {
 
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new ReplyErrorException(ReplyErrorCode.NOT_FOUND));
+
+        if (!member.getId().equals(reply.getMember().getId())) {
+            throw new ReplyErrorException(ReplyErrorCode.UNAUTHORIZED);
+        }
 
         reply.getArticle().decrementReplyCount();
 
