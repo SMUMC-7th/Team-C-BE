@@ -6,12 +6,12 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -104,9 +104,9 @@ public class FCMService {
     //access Token
     private String getAccessToken() { // FCM의 API에 요청하기 위한 Access Token 발급
         try {
+            FileInputStream serviceAccount = new FileInputStream(FIREBASE_CONFIG_PATH);
             GoogleCredentials googleCredentials = GoogleCredentials
-                    .fromStream(new ClassPathResource(
-                            "youthstepup-29a94-firebase-adminsdk-rx9v3-c8488edfc9.json").getInputStream())
+                    .fromStream(serviceAccount)
                     .createScoped(List.of(GOOGLE_API_URI));
             googleCredentials.refreshIfExpired();
             return googleCredentials.getAccessToken().getTokenValue();
