@@ -20,11 +20,12 @@ import umc.teamc.youthStepUp.policyInfo.service.PolicyInfoService;
 public class PolicyInfoController {
     private final PolicyInfoService policyInfoService;
 
-    @GetMapping("/policy/info")
-    @Operation(method = "GET", summary = "정책 용어 소개 조회 API")
-    public CustomResponse<?> getPolicyInfoUsingOffset(@RequestParam(defaultValue = "0") int pageNumber,
-                                                      @RequestParam(defaultValue = "1") int pageSize) throws PolicyInfoException {
-        Page<PolicyInfo> policyInfos = policyInfoService.getPolicyInfo(pageNumber, pageSize);
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK, PolicyInfoResponseDTO.PolicyInfoPagePreviewListDTO.from(policyInfos));
-    }
+    //사용X -> 프론트에서 바로 보여주도록 함
+//    @GetMapping("/policy/info")
+//    @Operation(method = "GET", summary = "정책 용어 소개 조회 API")
+//    public CustomResponse<?> getPolicyInfoUsingOffset(@RequestParam(defaultValue = "0") int pageNumber,
+//                                                      @RequestParam(defaultValue = "1") int pageSize) throws PolicyInfoException {
+//        Page<PolicyInfo> policyInfos = policyInfoService.getPolicyInfo(pageNumber, pageSize);
+//        return CustomResponse.onSuccess(GeneralSuccessCode.OK, PolicyInfoResponseDTO.PolicyInfoPagePreviewListDTO.from(policyInfos));
+//    }
 }
