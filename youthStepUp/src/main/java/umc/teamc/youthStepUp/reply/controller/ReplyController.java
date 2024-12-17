@@ -76,7 +76,7 @@ public class ReplyController {
     public CustomResponse<?> deleteReply(
             @MemberInfo Member member,
             @PathVariable("replyId") Long replyId) {
-        replyCommandService.deleteReply(replyId);
+        replyCommandService.deleteReply(member, replyId);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, replyId);
     }
@@ -88,7 +88,7 @@ public class ReplyController {
             @MemberInfo Member member,
             @PathVariable("replyId") Long replyId,
             @RequestBody ReplyUpdateRequestDTO dto) {
-        Reply reply = replyCommandService.updateReply(replyId, dto);
+        Reply reply = replyCommandService.updateReply(member, replyId, dto);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, new ReplyResponseUpdateDTO(reply));
     }
