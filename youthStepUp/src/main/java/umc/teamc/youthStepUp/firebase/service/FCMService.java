@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -47,21 +46,17 @@ public class FCMService {
     private String GOOGLE_API_URI;
 
     public AlarmResponseDTO getMyAlarm(Long memberId, Long cursorId, int offset) {
-        Pageable pageable = PageRequest.of(0, offset, Sort.by(Sort.Direction.DESC, "createdAt"));
-
+        Pageable pageable = PageRequest.of(0, offset);
         // 커서 조건 확인
         Slice<Alarm> sliceAlarms = fcmRepository.findAllByMemberIdAndIdLessThanOrderByCreatedAtDesc(
                 memberId, cursorId, pageable);
-
         List<AlarmDTO> alarms = sliceAlarms.getContent().stream()
                 .map(alarm -> new AlarmDTO(alarm.getTitle(), alarm.getBody()))
                 .toList();
-
         // 다음 페이지의 커서 설정 (마지막 Id)
-        Long nextCursorId = sliceAlarms.hasNext()
-                ? sliceAlarms.getContent().get(sliceAlarms.getNumberOfElements() - 1).getId()
+        Long nextCursorId = (sliceAlarms.hasNext() && !sliceAlarms.getContent().isEmpty())
+                ? sliceAlarms.getContent().get(sliceAlarms.getContent().size() - 1).getId()
                 : 0;
-
         return new AlarmResponseDTO(alarms, sliceAlarms.hasNext(), nextCursorId);
     }
 

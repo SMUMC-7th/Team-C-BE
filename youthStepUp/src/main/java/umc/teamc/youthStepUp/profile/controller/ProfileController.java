@@ -67,7 +67,7 @@ public class ProfileController {
     @Operation(summary = "알림 조회")
     @GetMapping("/alarm")
     public CustomResponse<?> getProfile(@MemberIdInfo Long memberId,
-                                        @RequestParam(value = "cursor", defaultValue = "2") Long cursorId,
+                                        @RequestParam(value = "cursor", defaultValue = "29302402390319") Long cursorId,
                                         @RequestParam(value = "offset", defaultValue = "10") int offset) {
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, fcmService.getMyAlarm(memberId, cursorId, offset));
     }
