@@ -11,5 +11,8 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     @Query("SELECT a FROM Article a WHERE a.deletedAt IS NULL AND a.member.deletedAt IS NULL AND a.id < :cursorId ORDER BY a.id DESC")
     Slice<Article> findAllByIdLessThanOrderByIdDesc(@Param("cursorId") Long cursorId, Pageable pageable);
-    
+
+    @Query("SELECT a FROM Article a WHERE a.deletedAt IS NULL AND a.member.deletedAt IS NULL ORDER BY a.id DESC")
+    Slice<Article> findAllByOrderByIdDesc(Pageable pageable);
+
 }
