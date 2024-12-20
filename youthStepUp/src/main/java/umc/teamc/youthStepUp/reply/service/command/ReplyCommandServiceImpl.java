@@ -40,26 +40,28 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
                         () -> new ReplyErrorException(ReplyErrorCode.NOT_FOUND)
                 ) : null;
 
-        Reply reply = replyRepository.save(dto.toReply(dto, member.getId(), article, parnetReply));
+        Reply reply = replyRepository.save(dto.toReply(dto, member, article, parnetReply));
 
         article.incrementReplyCount();
 
         ReplyPostDTO replyDTO = new ReplyPostDTO(reply, article);
-        if (reply.getParentReply() == null) {
-            fcmService.pushMessage(replyDTO.article().getMember(), MessagePushServiceRequest.of(replyDTO));
-        } else {
-            fcmService.pushMessage(
-                    replyDTO.reply().getParentReply().getMember(),
-                    MessagePushServiceRequest.of(replyDTO.reply().getParentReply().getMember().getDeviceToken(),
-                            FCMMessage.REPLY_TITLE.getValue(),
-                            FCMMessage.REPLY_COMMENT.format(
-                                    reply.getMember().getNickName(),
-                                    reply.getContent()
-                            )
-                    )
-            );
-        }
 
+        if (article.getMember().getDeviceToken() != null) {
+            if (reply.getParentReply() == null) {
+                fcmService.pushMessage(replyDTO.article().getMember(), MessagePushServiceRequest.of(replyDTO));
+            } else {
+                fcmService.pushMessage(
+                        replyDTO.reply().getParentReply().getMember(),
+                        MessagePushServiceRequest.of(replyDTO.reply().getParentReply().getMember().getDeviceToken(),
+                                FCMMessage.REPLY_TITLE.getValue(),
+                                FCMMessage.REPLY_COMMENT.format(
+                                        reply.getMember().getNickName(),
+                                        reply.getContent()
+                                )
+                        )
+                );
+            }
+        }
         return replyDTO;
     }
 
