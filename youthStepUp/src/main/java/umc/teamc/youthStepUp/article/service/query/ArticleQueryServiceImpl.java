@@ -32,6 +32,10 @@ public class ArticleQueryServiceImpl implements ArticleQueryService {
 
         Pageable pageable = PageRequest.of(0, pageSize);
 
+        if (cursorId == null || cursorId == 0) {
+            return articleRepository.findAllByOrderByIdDesc(pageable);
+        }
+
         return articleRepository.findAllByIdLessThanOrderByIdDesc(cursorId, pageable);
     }
 
