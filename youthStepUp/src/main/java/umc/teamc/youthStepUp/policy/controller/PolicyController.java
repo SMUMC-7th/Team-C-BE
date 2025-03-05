@@ -43,6 +43,10 @@ public class PolicyController {
 
     @GetMapping("/policy/recommend")
     @Operation(summary = "정책 맞춤 추천 조회", description = "정책을 회원 정보에 맞춰 추천받아 조회하는 API")
+    @Parameters({
+            @Parameter(name = "display", description = "한 페이지에 보이게 될 정책 개수를 입력해주시면 됩니다."),
+            @Parameter(name = "pageIndex", description = "조회하고싶은 페이지 번호(1 이상)를 입력해주시면 됩니다. ")
+    })
     public CustomResponse<?> callOpenApi(
             @Parameter(hidden = true) @MemberIdInfo Long id,
             @RequestParam(required = false, defaultValue = "10") String display,
@@ -57,6 +61,9 @@ public class PolicyController {
 
     @GetMapping("/policy/recommend/{srchPolicyId}")
     @Operation(summary = "정책 id로 정책 상세 조회", description = "정책 id를 통해서 해당 정책 상세 조회 API")
+    @Parameters({
+            @Parameter(name = "srchPolicyId", description = "조회하고자 하는 정책 아이디(srchPolicyId)를 입력하세요")
+    })
     public CustomResponse<?> getPolicyDetail(@PathVariable("srchPolicyId") String srchPolicyId) throws JAXBException {
         PolicyDetailRequest policyDetailRequest = policyDetailService.callAPI(srchPolicyId, null, null, null, null);
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, policyDetailRequest);
@@ -66,7 +73,7 @@ public class PolicyController {
     @Operation(summary = "정책 랜덤 추천 조회", description = "정책을 랜덤으로 추천받아 조회하는 API")
     @Parameters({
             @Parameter(name = "display", description = "한 페이지에 보이게 될 정책 개수를 입력해주시면 됩니다."),
-            @Parameter(name = "page", description = "조회하고싶은 페이지 번호(1 이상)를 입력해주시면 됩니다. "),
+            @Parameter(name = "pageIndex", description = "조회하고싶은 페이지 번호(1 이상)를 입력해주시면 됩니다. ")
     })
     public CustomResponse<?> callOpenApi(
 //            @RequestParam(required = false) String srchPolicyId,
@@ -86,9 +93,6 @@ public class PolicyController {
 
     @PostMapping("/policy/bookmark/request")
     @Operation(summary = "정책 북마크 요청", description = "정책 상세 페이지에서 북마크 요청을 보내는 API")
-    @Parameters({
-
-    })
     public CustomResponse<?> bookmarkRequest(@Parameter(hidden = true) @MemberIdInfo Long id,
                                              @RequestBody PolicyBookmarkRequestDTO.BookmarkRequestDTO requestDTO) {
         Policy newPolicy = policyService.createPolicy(requestDTO);
@@ -102,7 +106,7 @@ public class PolicyController {
     @GetMapping("/policy/bookmark/exist-check/{srchPolicyId}")
     @Operation(summary = "북마크에 존재하는지 확인 요청", description = "북마크에 특정 정책이 존재하는지 확인하는 요청을 보내는 API")
     @Parameters({
-            @Parameter(name = "srchPolicyId", description = "정책의 srchPolicyId를 입력해주세요"),
+            @Parameter(name = "srchPolicyId", description = "북마크가 되어있는지 확인하고자 하는 정책의 srchPolicyId를 입력해주세요"),
     })
     public CustomResponse<?> bookmarkExistCheck(@Parameter(hidden = true) @MemberInfo Member member,
                                                 @PathVariable("srchPolicyId") String srchPolicyId) {

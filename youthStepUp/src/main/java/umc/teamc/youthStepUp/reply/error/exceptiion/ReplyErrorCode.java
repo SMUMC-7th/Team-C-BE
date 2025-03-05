@@ -10,6 +10,7 @@ import umc.teamc.youthStepUp.global.error.BaseErrorCode;
 public enum ReplyErrorCode implements BaseErrorCode {
 
     NOT_FOUND(HttpStatus.NOT_FOUND, "Reply404", "댓글을 찾지 못했습니다."),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "Reply401" ,"댓글 수정 권한이 없습니다.");
     ;
 
     private final HttpStatus status;

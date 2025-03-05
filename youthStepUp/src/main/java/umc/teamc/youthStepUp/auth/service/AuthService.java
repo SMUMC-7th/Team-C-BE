@@ -74,7 +74,7 @@ public class AuthService {
     }
 
     public NewMemberResponseDTO login(GoogleUserInfoDTO infoDTO, HttpServletResponse response) {
-        String socialId = infoDTO.id();
+        String socialId = infoDTO.email();
         boolean isExistMember = memberRepository.existsBySocialId(socialId);
         Member member = null;
         if (!isExistMember) {

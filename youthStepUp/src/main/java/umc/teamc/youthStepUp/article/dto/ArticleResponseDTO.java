@@ -81,7 +81,7 @@ public class ArticleResponseDTO {
 
             List<ArticlePreviewDTO> articleList = articles.getContent()
                     .stream()
-                    .map(article -> ArticlePreviewDTO.from(article, createMemberDTO(article.getMember())))
+                    .map(article -> ArticlePreviewDTO.from(article, createMemberDTO(article, article.getMember())))
                     .toList();
 
             Long nextCursorId = articles.hasNext()
@@ -97,8 +97,8 @@ public class ArticleResponseDTO {
     }
 
 
-    public static MemberDataDTO createMemberDTO(Member member) {
-        return new MemberDataDTO(member);
+    public static MemberDataDTO createMemberDTO(Article article, Member member) {
+        return new MemberDataDTO(article, member);
     }
 
 
